@@ -1,0 +1,23 @@
+name: royal-lab
+services:
+  postgres:
+    image: postgres:17.9-alpine@sha256:c7526c0f6c3f30260a563d7bcf8ad778effac59a44f8ffa86678c35418338609
+    environment:
+      POSTGRES_USER: royal_lab
+      POSTGRES_PASSWORD: royal-lab-disposable-only
+      POSTGRES_DB: royal_lab_control
+    ports:
+      - '127.0.0.1:55432:5432'
+    tmpfs:
+      - /var/lib/postgresql/data
+    volumes:
+      - ./sandbox/postgres/init.sql:/docker-entrypoint-initdb.d/10-royal-lab.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U royal_lab -d royal_lab_control']
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    networks: [fixture]
+networks:
+  fixture:
+    driver: bridge

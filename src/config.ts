@@ -22,6 +22,19 @@ export const ConfigSchema = z.strictObject({
       model: z.string().min(1),
       parameters: z.record(z.string(), z.json()).default({}),
       apiKey: z.string().optional(),
+      apiKeyEnv: z
+        .string()
+        .regex(/^[A-Z][A-Z0-9_]*$/)
+        .optional(),
+      pricing: z
+        .strictObject({
+          version: z.string(),
+          asOf: z.iso.datetime({ offset: true }),
+          inputUsdPerMillion: z.number().nonnegative(),
+          outputUsdPerMillion: z.number().nonnegative(),
+          cachedInputUsdPerMillion: z.number().nonnegative().optional(),
+        })
+        .optional(),
     })
     .optional(),
   judge: z
@@ -32,6 +45,13 @@ export const ConfigSchema = z.strictObject({
     })
     .optional(),
   bridge: z.strictObject({ checkout: z.string(), fixtureDatabaseUrl: z.string() }).optional(),
+  binaryParser: z
+    .strictObject({
+      image: z.string(),
+      imageId: z.string().regex(/^sha256:[a-f0-9]{64}$/),
+      timeoutMs: z.number().int().positive().max(60_000).optional(),
+    })
+    .optional(),
 });
 export type Config = z.infer<typeof ConfigSchema>;
 export async function loadConfig(file?: string): Promise<Config> {

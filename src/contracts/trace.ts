@@ -2,13 +2,44 @@ import { z } from 'zod';
 import { Id, Instant, RelativePath } from '#contracts/common';
 
 const base = {
-  schemaVersion: z.literal('1.0.0'),
+  schemaVersion: z.enum(['1.0.0', '1.1.0']),
   runId: Id,
   taskId: RelativePath,
   sequence: z.number().int().nonnegative(),
   at: Instant,
 };
 export const TraceEventSchema = z.discriminatedUnion('type', [
+  z.strictObject({
+    ...base,
+    type: z.literal('model-request'),
+    requestId: Id,
+    provider: z.string(),
+    model: z.string(),
+    request: z.json(),
+  }),
+  z.strictObject({
+    ...base,
+    type: z.literal('model-response'),
+    requestId: Id,
+    response: z.json(),
+    inputTokens: z.number().int().nonnegative().nullable(),
+    outputTokens: z.number().int().nonnegative().nullable(),
+    finishReason: z.string(),
+  }),
+  z.strictObject({
+    ...base,
+    type: z.literal('question'),
+    callId: Id,
+    question: z.string(),
+    ownerId: Id,
+    sessionId: Id,
+  }),
+  z.strictObject({
+    ...base,
+    type: z.literal('termination'),
+    status: z.string(),
+    reason: z.string().nullable(),
+  }),
   z.strictObject({
     ...base,
     type: z.literal('candidate'),

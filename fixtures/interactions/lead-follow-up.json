@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "review": {"status":"draft","reviewer":null,"reviewedAt":null,"notes":"Synthetic interaction control, not a reviewed operational case."},
+  "maxUnexpectedQuestions": 1,
+  "branches": [
+    {"id":"which-amelia","type":"clarification","allWords":["amelia"],"anyWords":["which","clarify","confirm"],"response":"Use Amelia Fiction, lead 101, for the duplex enquiry.","decision":null,"responderId":"builder-owner","maxUses":1},
+    {"id":"approve-call","type":"approval","allWords":["call"],"anyWords":["approve","confirm"],"response":"Approved for the exact displayed call and arguments.","decision":"approved","responderId":"builder-owner","maxUses":1}
+  ]
+}

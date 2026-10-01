@@ -22,7 +22,7 @@ export const CriterionResult = z.strictObject({
 });
 export const ResultSchema = z
   .strictObject({
-    schemaVersion: z.literal('1.0.0'),
+    schemaVersion: z.enum(['1.0.0', '1.1.0']),
     runId: Id,
     taskId: RelativePath,
     taskVersion: Version,
@@ -36,8 +36,8 @@ export const ResultSchema = z
     criteria: z.array(CriterionResult),
     outcomeId: Id.nullable(),
     usage: z.strictObject({
-      inputTokens: z.number().int().nonnegative(),
-      outputTokens: z.number().int().nonnegative(),
+      inputTokens: z.number().int().nonnegative().nullable(),
+      outputTokens: z.number().int().nonnegative().nullable(),
       candidateCostUsd: z.number().nonnegative().nullable(),
       judgeCostUsd: z.number().nonnegative().nullable(),
       durationMs: z.number().nonnegative(),
@@ -48,6 +48,11 @@ export const ResultSchema = z
     artifacts: z.array(z.strictObject({ path: RelativePath, sha256: Hash })),
   })
   .superRefine((result, ctx) => {
+    if (
+      result.schemaVersion === '1.0.0' &&
+      (result.usage.inputTokens === null || result.usage.outputTokens === null)
+    )
+      ctx.addIssue({ code: 'custom', message: 'Unknown usage requires result schema 1.1.0' });
     if (result.criteria.some((c) => c.severity === 'critical' && !c.mandatory))
       ctx.addIssue({ code: 'custom', message: 'Critical result criteria must be mandatory' });
     const mandatory = result.criteria.filter((c) => c.mandatory);
