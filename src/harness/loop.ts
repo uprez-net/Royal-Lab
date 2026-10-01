@@ -1,6 +1,6 @@
 import { ToolLoopAgent, tool, type ToolSet } from 'ai';
 import { z } from 'zod';
-import { mkdir, writeFile, appendFile } from 'node:fs/promises';
+import { mkdir, writeFile, appendFile, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { Task } from '#contracts/task';
 import { ResultSchema, type CaseResult } from '#contracts/result';
@@ -26,6 +26,16 @@ export interface CandidateRunOptions {
   pricing: Pricing;
   schemas?: Record<string, z.ZodType>;
   execute?: (name: string, args: unknown, call: string) => Promise<unknown>;
+  executionProfile?: 'documents' | 'fixed-tools';
+  attachTrace?: (emit: (event: Record<string, unknown>) => void) => void;
+  afterExecution?: (
+    name: string,
+    result: unknown,
+    call: string,
+    emit: (event: Record<string, unknown>) => void,
+  ) => void;
+  committedEffects?: () => number;
+  environmentFingerprint?: Record<string, unknown>;
 }
 export async function runCandidate(options: CandidateRunOptions): Promise<CaseResult> {
   const { task, adapter } = options;
@@ -46,6 +56,7 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
     writes = writes.then(() => appendFile(traceFile, `${JSON.stringify(parsed)}\n`));
   };
   const usage = new Usage(task.limits, options.pricing);
+  options.attachTrace?.(emit);
   const schemas: Record<string, z.ZodType> = options.schemas ?? DOCUMENT_TOOL_SCHEMAS;
   const tools: ToolSet = {};
   const attempted = new Set<string>();
@@ -71,10 +82,10 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
           if (usage.toolAttempts > task.limits.maxToolCalls)
             throw new BudgetError('Tool-call budget exhausted');
           try {
+            executions++;
             const result = await (options.execute
               ? options.execute(declared.name, input, id)
               : options.workspace.execute(declared.name, input));
-            executions++;
             emit({
               type: 'tool-executed',
               callId: id,
@@ -82,6 +93,7 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
               outcome: 'success',
               result: json(result),
             });
+            options.afterExecution?.(declared.name, result, id, emit);
             return result;
           } catch (error) {
             const reason = String(redact(error instanceof Error ? error.message : error));
@@ -89,7 +101,11 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
               type: 'tool-executed',
               callId: id,
               tool: declared.name,
-              outcome: reason.includes('DENIED') ? 'blocked' : 'error',
+              outcome: /APPROVAL_|DENIED/.test(reason)
+                ? 'blocked'
+                : reason.includes('DOMAIN_REFUSAL')
+                  ? 'domain-refusal'
+                  : 'error',
               result: { error: reason },
             });
             if (error instanceof BudgetError) throw error;
@@ -134,6 +150,11 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
     ),
     limits: task.limits,
     pricing: options.pricing,
+    taskHash: sha256(stableJson(task)),
+    rubricHash: task.rubricHash,
+    fixtureHash: task.fixtureHash,
+    provenanceHash: task.provenanceHash,
+    environment: options.environmentFingerprint ?? {},
     parserHashes: options.workspace.snapshot().map((doc) => ({
       source: doc.id,
       rawHash: doc.rawHash,
@@ -146,6 +167,22 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
     jsonText({ ...fingerprint, configurationHash: sha256(stableJson(fingerprint)) }),
     { flag: 'wx' },
   );
+  await writeFile(path.join(options.saveDirectory, 'prompt.txt'), options.systemPrompt, {
+    flag: 'wx',
+  });
+  const documentsText = jsonText(options.workspace.snapshot());
+  try {
+    await writeFile(path.join(options.saveDirectory, 'documents.json'), documentsText, {
+      flag: 'wx',
+    });
+  } catch (error) {
+    if (
+      (error as NodeJS.ErrnoException).code !== 'EEXIST' ||
+      sha256(await readFile(path.join(options.saveDirectory, 'documents.json'))) !==
+        sha256(documentsText)
+    )
+      throw error;
+  }
   let status: CaseResult['status'] = 'completed';
   let reason: string | null = null;
   let artifacts: CaseResult['artifacts'] = [];
@@ -209,7 +246,11 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
               tool: /^[a-zA-Z0-9][\w.-]*$/.test(content.toolName)
                 ? content.toolName
                 : `unknown-${sha256(content.toolName).slice(0, 8)}`,
-              arguments: json(content.input),
+              arguments: json(
+                schemas[content.toolName]?.safeParse(content.input).success
+                  ? schemas[content.toolName]!.parse(content.input)
+                  : content.input,
+              ),
             });
           }
           if (
@@ -244,6 +285,7 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
       throw new Error('USAGE_UNVERIFIED');
     artifacts = await options.workspace.artifacts();
   } catch (error) {
+    await serial.catch(() => {});
     reason = String(redact(error instanceof Error ? error.message : error));
     status =
       error instanceof BudgetError
@@ -262,7 +304,7 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
     runId: options.runId,
     taskId: task.id,
     taskVersion: task.version,
-    profile: task.profiles.includes('fixed-tools') ? 'fixed-tools' : 'documents',
+    profile: options.executionProfile ?? 'documents',
     trial: options.trial ?? 0,
     status,
     reason,
@@ -279,12 +321,27 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
       durationMs: Date.now() - usage.started,
       toolAttempts: usage.toolAttempts,
       toolExecutions: executions,
-      committedEffects: 0,
+      committedEffects: options.committedEffects?.() ?? 0,
     },
     artifacts,
   });
   await writeFile(path.join(options.saveDirectory, 'result.json'), jsonText(result), {
     flag: 'wx',
   });
+  await writeFile(
+    path.join(options.saveDirectory, 'execution-receipt.json'),
+    jsonText({
+      schemaVersion: '1.0.0',
+      runId: options.runId,
+      resultHash: sha256(jsonText(result)),
+      traceHash: sha256(await readFile(traceFile)),
+      documentsHash: sha256(documentsText),
+      configurationHash: sha256(
+        await readFile(path.join(options.saveDirectory, 'configuration.json')),
+      ),
+      promptHash: sha256(options.systemPrompt),
+    }),
+    { flag: 'wx' },
+  );
   return result;
 }

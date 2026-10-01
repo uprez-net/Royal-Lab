@@ -12,6 +12,7 @@ export const TraceEventSchema = z.discriminatedUnion('type', [
   z.strictObject({
     ...base,
     type: z.literal('model-request'),
+    schemaVersion: z.literal('1.1.0'),
     requestId: Id,
     provider: z.string(),
     model: z.string(),
@@ -20,6 +21,7 @@ export const TraceEventSchema = z.discriminatedUnion('type', [
   z.strictObject({
     ...base,
     type: z.literal('model-response'),
+    schemaVersion: z.literal('1.1.0'),
     requestId: Id,
     response: z.json(),
     inputTokens: z.number().int().nonnegative().nullable(),
@@ -29,6 +31,7 @@ export const TraceEventSchema = z.discriminatedUnion('type', [
   z.strictObject({
     ...base,
     type: z.literal('question'),
+    schemaVersion: z.literal('1.1.0'),
     callId: Id,
     question: z.string(),
     ownerId: Id,
@@ -37,6 +40,7 @@ export const TraceEventSchema = z.discriminatedUnion('type', [
   z.strictObject({
     ...base,
     type: z.literal('termination'),
+    schemaVersion: z.literal('1.1.0'),
     status: z.string(),
     reason: z.string().nullable(),
   }),
@@ -66,6 +70,7 @@ export const TraceEventSchema = z.discriminatedUnion('type', [
     type: z.literal('approval'),
     callId: Id,
     ownerId: Id,
+    sessionId: Id.optional(),
     decision: z.enum(['requested', 'approved', 'cancelled']),
     bindingHash: z.string().min(1),
   }),
@@ -82,6 +87,8 @@ export const TraceEventSchema = z.discriminatedUnion('type', [
     type: z.literal('operator-input'),
     branchId: Id,
     response: z.string(),
+    responderId: Id.optional(),
+    sessionId: Id.optional(),
   }),
 ]);
 export type TraceEvent = z.infer<typeof TraceEventSchema>;

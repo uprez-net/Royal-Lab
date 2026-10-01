@@ -1,4 +1,3 @@
-import { execFile } from 'node:child_process';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { readFile } from 'node:fs/promises';
@@ -22,6 +21,13 @@ export class GuriBridge {
     if (
       lock.revision !== source.revision ||
       lock.schemaHash !== source.schemaHash ||
+      lock.lockfileHash !== source.lockfileHash ||
+      lock.generatedClientHash !==
+        sha256(await readFile(path.join(this.runtimeDirectory, 'client/index.js'))) ||
+      lock.generatedSchemaHash !==
+        sha256(await readFile(path.join(this.runtimeDirectory, 'schema.prisma'))) ||
+      lock.schemaSqlHash !==
+        sha256(await readFile(path.join(this.runtimeDirectory, 'schema.sql'))) ||
       lock.workerHash !== sha256(await readFile(path.join(this.runtimeDirectory, 'worker.mjs')))
     )
       throw new Error('GURI_RUNTIME_CHANGED');

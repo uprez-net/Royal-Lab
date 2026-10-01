@@ -14,6 +14,7 @@ export const DOCUMENT_TOOL_SCHEMAS = {
   read: z.strictObject({
     path: RelativePath,
     start: z.number().int().nonnegative().default(0),
+    offset: z.number().int().nonnegative().default(0),
     count: z.number().int().min(1).max(100).default(30),
   }),
   search: z.strictObject({
@@ -100,21 +101,36 @@ export class DocumentWorkspace {
       if (!doc) throw new Error('INPUT_DENIED: source is not allowlisted');
       const units = [];
       let characters = 0;
+      let next: { start: number; offset: number } | null = null;
+      if (args.offset && !doc.units[args.start]) throw new Error('INPUT_CURSOR_INVALID');
       for (const unit of doc.units.slice(args.start, args.start + args.count)) {
         const remaining = READER_LIMITS.readCharacters - characters;
         if (remaining <= 0) break;
+        const offset: number = units.length === 0 ? args.offset : 0;
+        if (offset > unit.text.length) throw new Error('INPUT_CURSOR_INVALID');
+        const text = unit.text.slice(offset, offset + remaining);
         units.push({
           ...unit,
-          text: unit.text.slice(0, remaining),
-          truncated: unit.text.length > remaining,
+          text,
+          offset,
+          truncated: offset + text.length < unit.text.length,
         });
-        characters += unit.text.length;
+        characters += text.length;
+        if (offset + text.length < unit.text.length) {
+          next = { start: args.start + units.length - 1, offset: offset + text.length };
+          break;
+        }
       }
       return {
         sourceId: doc.id,
         path: doc.path,
         units,
         next: args.start + units.length < doc.units.length ? args.start + units.length : null,
+        nextCursor:
+          next ??
+          (args.start + units.length < doc.units.length
+            ? { start: args.start + units.length, offset: 0 }
+            : null),
         gaps: doc.gaps,
       };
     }

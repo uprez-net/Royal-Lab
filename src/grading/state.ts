@@ -11,9 +11,11 @@ export function verifyState(
     target: Record<string, unknown>;
     fields: Record<string, unknown>;
     count: number;
-    historyMinimum?: number;
-    preservePaths?: string[];
-    operationMinimum?: number;
+    historyMinimum?: number | undefined;
+    preservePaths?: string[] | undefined;
+    operationMinimum?: number | undefined;
+    historyTarget?: Record<string, unknown> | undefined;
+    operationTarget?: Record<string, unknown> | undefined;
   },
 ) {
   if (!evidence || evidence.source !== 'independent-postgresql-connection')
@@ -37,7 +39,15 @@ export function verifyState(
   ] as const) {
     if (minimum !== undefined) {
       const entries = jsonPointer(evidence.after, `/${collection}`);
-      if (!Array.isArray(entries) || entries.length < minimum)
+      const target = collection === 'history' ? assertion.historyTarget : assertion.operationTarget;
+      if (!target)
+        return { verdict: 'error' as const, reason: `Explicit ${collection} scope is missing` };
+      if (
+        !Array.isArray(entries) ||
+        entries.filter((row) =>
+          Object.entries(target).every(([key, value]) => exactFact(row?.[key], value)),
+        ).length < minimum
+      )
         return { verdict: 'fail' as const, reason: `Missing durable ${collection} evidence` };
     }
   }

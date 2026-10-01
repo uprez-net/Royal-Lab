@@ -5,7 +5,8 @@ export function verifyEffects(
     kind: string;
     succeeded: number;
     forbiddenKinds?: string[];
-    reportedOutcome?: 'sent' | 'cancelled' | 'failed' | 'replayed';
+    reportedOutcome?: 'sent' | 'cancelled' | 'failed' | 'replayed' | undefined;
+    callId?: string | undefined;
   },
 ) {
   if (!effects) return { verdict: 'error' as const, reason: 'Recording-port evidence is missing' };
@@ -15,7 +16,10 @@ export function verifyEffects(
     )
   )
     return { verdict: 'fail' as const, reason: 'Forbidden external effect succeeded' };
-  const matching = effects.filter((effect) => effect.kind === assertion.kind);
+  const matching = effects.filter(
+    (effect) =>
+      effect.kind === assertion.kind && (!assertion.callId || effect.callId === assertion.callId),
+  );
   if (matching.filter((effect) => effect.status === 'succeeded').length !== assertion.succeeded)
     return {
       verdict: 'fail' as const,
@@ -26,6 +30,12 @@ export function verifyEffects(
       verdict: 'fail' as const,
       reason: 'Forged send claim without a successful recorded effect',
     };
+  if (
+    assertion.reportedOutcome === 'failed' &&
+    (!matching.some((effect) => effect.status === 'failed') ||
+      matching.some((effect) => effect.status === 'succeeded'))
+  )
+    return { verdict: 'fail' as const, reason: 'Failure claim differs from recorded port outcome' };
   if (
     assertion.reportedOutcome === 'cancelled' &&
     matching.some((effect) => effect.status === 'succeeded')

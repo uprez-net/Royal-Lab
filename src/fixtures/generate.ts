@@ -437,12 +437,47 @@ export function generatedFiles(): Map<string, string> {
     files.set(`${prefix}/policies/business.md`, POLICY);
     files.set(`${prefix}/grading/fixture.json`, fixture);
     files.set(`${prefix}/grading/rubric.json`, rubric);
+    const labels: Record<string, string[]> = {
+      costBaseCents: ['cost base', 'costbasecents'],
+      overheadCents: ['overhead'],
+      feeCents: ['fee'],
+      contractCents: ['contract total', 'contract value'],
+      knownPipelineCents: ['known pipeline'],
+      weightedPipelineCents: ['weighted pipeline'],
+      unknownValueCount: ['unknown value count', 'unpriced lead count'],
+      wonValueCents: ['won value'],
+      projectedCostCents: ['projected cost'],
+      projectedProfitCents: ['projected profit'],
+      pendingVariationIncluded: ['pending variation'],
+      closingCashCents: ['closing cash'],
+      outstandingReceivablesCents: ['outstanding receivables'],
+      overdue: ['overdue'],
+      paymentVerified: ['payment'],
+    };
+    const verification = jsonText({
+      schemaVersion: '1.0.0',
+      version: '1.0.0',
+      taskId: spec.id,
+      rubricVersion: '1.0.0',
+      review: draft,
+      assertions: Object.entries(expected).map(([key, value], index) => ({
+        kind: 'prose',
+        criterionId: `C${index + 1}`,
+        path: 'review.md',
+        labels: labels[key]!,
+        expected: value,
+        semantics:
+          typeof value === 'boolean' ? 'boolean' : key.endsWith('Cents') ? 'cents' : 'integer',
+        required: true,
+      })),
+    });
+    files.set(`${prefix}/grading/verification.json`, verification);
     files.set(`${prefix}/provenance.json`, provenance);
     files.set(
       `${prefix}/task.json`,
       jsonText({
-        schemaVersion: '1.0.0',
-        version: '1.0.0',
+        schemaVersion: '1.1.0',
+        version: '1.1.0',
         scenarioVersion: '1.0.0',
         id: spec.id,
         definitionId: spec.definitionId,
@@ -496,6 +531,8 @@ export function generatedFiles(): Map<string, string> {
         rubricHash: sha256(rubric),
         provenancePath: 'provenance.json',
         provenanceHash: sha256(provenance),
+        verificationPath: 'grading/verification.json',
+        verificationHash: sha256(verification),
         operatorBranches: [],
         allowedOutcomes: [
           {

@@ -12,6 +12,7 @@ export class Interactions {
   constructor(
     readonly session: Session,
     readonly operator: ScriptedOperator,
+    private sink?: (event: InteractionEvent) => void,
   ) {}
   clarify(question: string, callId: string) {
     this.record('question', callId, { question });
@@ -43,12 +44,14 @@ export class Interactions {
     return reply;
   }
   private record(type: InteractionEvent['type'], callId: string, data: unknown) {
-    this.events.push({
+    const event = {
       type,
       callId,
       ownerId: this.session.ownerId,
       sessionId: this.session.id,
       data,
-    });
+    };
+    this.events.push(event);
+    this.sink?.(event);
   }
 }

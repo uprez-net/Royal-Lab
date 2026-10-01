@@ -5,7 +5,7 @@ export interface Pricing {
   asOf: string;
   inputUsdPerMillion: number;
   outputUsdPerMillion: number;
-  cachedInputUsdPerMillion?: number;
+  cachedInputUsdPerMillion?: number | undefined;
 }
 export class BudgetError extends Error {}
 export class Usage {

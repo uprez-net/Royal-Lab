@@ -115,6 +115,8 @@ export async function prepareGuri(root: string, checkout: string) {
     files,
     workerHash: sha256(await readFile(path.join(directory, 'worker.mjs'))),
     generatedSchemaHash: sha256(schema),
+    generatedClientHash: sha256(await readFile(path.join(directory, 'client/index.js'))),
+    schemaSqlHash: sha256(sql.stdout),
   };
   await writeFile(path.join(directory, 'source-lock.json'), jsonText(manifest));
   return { directory, manifest };

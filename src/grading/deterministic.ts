@@ -1,10 +1,19 @@
-import { readFile } from 'node:fs/promises';
 import { z } from 'zod';
 import type { Rubric } from '#contracts/rubric';
 import { ResultSchema, type CaseResult } from '#contracts/result';
-import { readScoped } from '#src/io';
-import { exactFact, jsonPointer, inspectProse, type ProseAssertion } from '#src/grading/facts';
-import type { IndependentState } from '#src/grading/state';
+import { readScoped, sha256 } from '#src/io';
+import {
+  exactFact,
+  jsonPointer,
+  inspectProse,
+  citationReferences,
+  type ProseAssertion,
+} from '#src/grading/facts';
+import { verifyState, type IndependentState } from '#src/grading/state';
+import { verifyEffects } from '#src/grading/effects';
+import { verifyTrace } from '#src/grading/trace';
+import type { TraceEvent } from '#contracts/trace';
+import { VerificationPlanSchema, type VerificationPlan } from '#src/grading/verification';
 import type { RecordedEffect } from '#src/environments/guri/ports';
 
 export async function gradeDeterministic(
@@ -15,8 +24,30 @@ export async function gradeDeterministic(
     state?: IndependentState;
     effects?: RecordedEffect[];
     prose?: { criterionId: string; path: string; assertion: ProseAssertion }[];
+    plan?: VerificationPlan;
+    trace?: TraceEvent[];
+    sources?: { id: string; locators: string[] }[];
+    mode?: 'benchmark' | 'offline-control';
   } = {},
 ) {
+  if (rubric.taskId !== execution.taskId) throw new Error('GRADE_TASK_IDENTITY_MISMATCH');
+  if (options.plan) {
+    VerificationPlanSchema.parse(options.plan);
+    if (options.plan.taskId !== rubric.taskId || options.plan.rubricVersion !== rubric.version)
+      throw new Error('GRADE_PLAN_IDENTITY_MISMATCH');
+    if (options.mode !== 'offline-control' && options.plan.review.status !== 'approved')
+      throw new Error('VERIFIER_REVIEW_PENDING');
+    for (const assertion of options.plan.assertions)
+      if (!rubric.criteria.some((c) => c.id === assertion.criterionId))
+        throw new Error('GRADE_UNKNOWN_CRITERION');
+  }
+  const frozenRead = async (file: string) => {
+    const artifact = execution.artifacts.find((item) => item.path === file);
+    if (!artifact) throw new Error(`Missing fact artifact: ${file}`);
+    const bytes = await readScoped(outputRoot, file);
+    if (sha256(bytes) !== artifact.sha256) throw new Error(`ARTIFACT_CHANGED: ${file}`);
+    return bytes;
+  };
   const criteria: CaseResult['criteria'] = [];
   for (const criterion of rubric.criteria) {
     let verdict: 'pass' | 'fail' | 'error' | 'ungraded' = 'ungraded';
@@ -25,7 +56,7 @@ export async function gradeDeterministic(
       try {
         const check = criterion.check;
         if (check.kind === 'json-equals') {
-          const bytes = await readScoped(outputRoot, check.deliverable);
+          const bytes = await frozenRead(check.deliverable);
           const facts = z.json().parse(JSON.parse(bytes.toString('utf8')));
           const actual = jsonPointer(facts, check.pointer);
           const semantics = check.pointer.endsWith('Cents') ? 'cents' : 'json';
@@ -52,15 +83,51 @@ export async function gradeDeterministic(
               : 'fail';
           reason = 'Compared independent durable entity field';
         }
-        for (const prose of options.prose?.filter((item) => item.criterionId === criterion.id) ??
-          []) {
+        const planned =
+          options.plan?.assertions.filter((item) => item.criterionId === criterion.id) ?? [];
+        for (const prose of [
+          ...(options.prose?.filter((item) => item.criterionId === criterion.id) ?? []),
+          ...planned
+            .filter((item) => item.kind === 'prose')
+            .map((item) => ({ path: item.path, assertion: item })),
+        ]) {
           const reviewed = inspectProse(
-            (await readScoped(outputRoot, prose.path)).toString('utf8'),
+            (await frozenRead(prose.path)).toString('utf8'),
             prose.assertion,
           );
           if (reviewed.verdict === 'fail' || reviewed.verdict === 'unverified') {
             verdict = reviewed.verdict === 'fail' ? 'fail' : 'error';
             reason = reviewed.reason;
+          }
+        }
+        for (const assertion of planned.filter((item) => item.kind !== 'prose')) {
+          const checked =
+            assertion.kind === 'state'
+              ? verifyState(options.state, assertion)
+              : assertion.kind === 'effects'
+                ? verifyEffects(options.effects, { ...assertion, kind: assertion.effectKind })
+                : assertion.kind === 'trace'
+                  ? options.trace
+                    ? verifyTrace(options.trace, assertion)
+                    : { verdict: 'error', reason: 'Trace evidence is missing' }
+                  : options.sources
+                    ? (() => {
+                        return frozenRead(assertion.path).then((bytes) => {
+                          const references = citationReferences(
+                            bytes.toString('utf8'),
+                            options.sources!,
+                          );
+                          return {
+                            verdict: references.valid ? 'pass' : 'fail',
+                            reason: 'Checked normalized source IDs and exact locators',
+                          };
+                        });
+                      })()
+                    : { verdict: 'error', reason: 'Frozen citation inventory is missing' };
+          const evidence = await checked;
+          if (evidence.verdict !== 'pass') {
+            verdict = evidence.verdict as 'error' | 'fail';
+            reason = evidence.reason;
           }
         }
       } catch (error) {

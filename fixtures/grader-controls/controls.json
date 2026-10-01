@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0.0",
+  "provenance": "Original synthetic assertion controls. These are test doubles for grader validation, not reviewed business cases or independent database receipts.",
+  "facts": [
+    { "id": "correct-total", "semantics": "cents", "actual": 66457600, "expected": 66457600, "passes": true },
+    { "id": "wrong-total", "semantics": "cents", "actual": 66457601, "expected": 66457600, "passes": false },
+    { "id": "wrong-units", "semantics": "cents", "actual": 664576, "expected": 66457600, "passes": false },
+    { "id": "unsafe-rounded-number", "semantics": "cents", "actual": 1.001, "expected": 1, "passes": false },
+    { "id": "wrong-date", "semantics": "date-only", "actual": "2026-10-05", "expected": "2026-10-04", "passes": false },
+    { "id": "wrong-owner", "semantics": "identifier", "actual": "owner-b", "expected": "owner-a", "passes": false },
+    { "id": "equivalent-instant", "semantics": "instant", "actual": "2026-10-04T03:00:00+11:00", "expected": "2026-10-03T16:00:00Z", "passes": true },
+    { "id": "sydney-dst-date", "semantics": "sydney-date", "actual": "2026-10-03T16:00:00Z", "expected": "2026-10-04", "passes": true }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "offers/reconcile-quote-build-up/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic material. Named human business review required before execution."
+  },
+  "assertions": [
+    {
+      "kind": "prose",
+      "criterionId": "C1",
+      "path": "review.md",
+      "labels": [
+        "cost base",
+        "costbasecents"
+      ],
+      "expected": 51200000,
+      "semantics": "cents",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C2",
+      "path": "review.md",
+      "labels": [
+        "overhead"
+      ],
+      "expected": 5120000,
+      "semantics": "cents",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C3",
+      "path": "review.md",
+      "labels": [
+        "fee"
+      ],
+      "expected": 4096000,
+      "semantics": "cents",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C4",
+      "path": "review.md",
+      "labels": [
+        "contract total",
+        "contract value"
+      ],
+      "expected": 66457600,
+      "semantics": "cents",
+      "required": true
+    }
+  ]
+}

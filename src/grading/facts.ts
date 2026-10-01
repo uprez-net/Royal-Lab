@@ -39,7 +39,7 @@ export function exactFact(
 export interface ProseAssertion {
   labels: string[];
   expected: number | string | boolean | null;
-  semantics: 'cents' | 'identifier' | 'date-only' | 'boolean';
+  semantics: 'cents' | 'integer' | 'identifier' | 'date-only' | 'boolean';
   required: boolean;
 }
 export function inspectProse(
@@ -74,6 +74,15 @@ export function inspectProse(
             reason: 'Client-facing amount contradicts the frozen expected fact',
           };
       }
+    } else if (assertion.semantics === 'integer') {
+      for (const match of line.matchAll(/\b\d+\b/g)) {
+        observations++;
+        if (!Number.isSafeInteger(Number(match[0])) || Number(match[0]) !== assertion.expected)
+          return {
+            verdict: 'fail',
+            reason: 'Client-facing count contradicts the frozen expected fact',
+          };
+      }
     } else if (assertion.semantics === 'date-only') {
       for (const date of line.match(/\b\d{4}-\d{2}-\d{2}\b/g) ?? []) {
         observations++;
@@ -92,14 +101,19 @@ export function inspectProse(
         };
       observations++;
     } else {
-      const positive = /\b(verified|paid|sent|approved|completed|raised|synchronized)\b/i.test(
+      const positive =
+        /\b(verified|paid|sent|approved|completed|raised|synchronized|overdue|included)\b/i.test(
+          line,
+        );
+      const negative = /\b(not|no|unverified|unpaid|unsent|unknown|cancelled|excluded)\b/i.test(
         line,
       );
-      const negative = /\b(not|no|unverified|unpaid|unsent|pending|unknown|cancelled)\b/i.test(
-        line,
-      );
+      if (!positive && !negative) continue;
       observations++;
-      if (assertion.expected === false && positive && !negative)
+      if (
+        (assertion.expected === false && positive && !negative) ||
+        (assertion.expected === true && (!positive || negative))
+      )
         return { verdict: 'fail', reason: 'Client-facing claim asserts an unverified completion' };
     }
   }

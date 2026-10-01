@@ -1,9 +1,13 @@
 {
   "schemaVersion": "1.0.0",
   "id": "documents",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Closed evidence and JSON/Markdown deliverables",
   "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
     {
       "name": "read",
       "version": "1.0.0"
@@ -28,8 +32,8 @@
     "maxDurationMs": 300000,
     "maxCostUsd": 2
   },
-  "executionImplemented": false,
+  "executionImplemented": true,
   "guriRevision": null,
-  "systemPromptHash": null,
+  "systemPromptHash": "dc3d80c1e997f43f75aaf3b106507eaf2ccb5619c6dba8d7a9bd7b67e5ce3876",
   "parserProfile": "normalized-text"
 }

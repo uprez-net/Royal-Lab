@@ -1,9 +1,42 @@
 {
   "schemaVersion": "1.0.0",
   "id": "fixed-tools",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Controlled candidate and canonical-domain bridge",
-  "tools": [],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    },
+    {
+      "name": "ask_operator",
+      "version": "1.0.0"
+    },
+    {
+      "name": "find_leads",
+      "version": "1.0.0"
+    },
+    {
+      "name": "list_lead_tasks",
+      "version": "1.0.0"
+    },
+    {
+      "name": "create_lead_task",
+      "version": "1.0.0"
+    }
+  ],
   "effectPolicy": "recording-ports",
   "candidateNetwork": false,
   "candidateShell": false,
@@ -15,8 +48,8 @@
     "maxDurationMs": 300000,
     "maxCostUsd": 2
   },
-  "executionImplemented": false,
+  "executionImplemented": true,
   "guriRevision": "460895235f94e917bd855855cd6e106f93a4c7c1",
-  "systemPromptHash": null,
+  "systemPromptHash": "3818a942b86a5c9feda7a372cc12de60627549917dae35becdd996d231751c3b",
   "parserProfile": "isolated-binary"
 }

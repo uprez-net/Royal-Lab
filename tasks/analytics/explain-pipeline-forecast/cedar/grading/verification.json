@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "analytics/explain-pipeline-forecast/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic material. Named human business review required before execution."
+  },
+  "assertions": [
+    {
+      "kind": "prose",
+      "criterionId": "C1",
+      "path": "review.md",
+      "labels": [
+        "known pipeline"
+      ],
+      "expected": 100000000,
+      "semantics": "cents",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C2",
+      "path": "review.md",
+      "labels": [
+        "weighted pipeline"
+      ],
+      "expected": 88000000,
+      "semantics": "cents",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C3",
+      "path": "review.md",
+      "labels": [
+        "unknown value count",
+        "unpriced lead count"
+      ],
+      "expected": 1,
+      "semantics": "integer",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C4",
+      "path": "review.md",
+      "labels": [
+        "won value"
+      ],
+      "expected": 60000000,
+      "semantics": "cents",
+      "required": true
+    }
+  ]
+}

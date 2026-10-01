@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+    },
+    "path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mediaType": {
+      "type": "string"
+    },
+    "rawHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "parser": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parserHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "extractHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "inputProfile": {
+      "type": "string",
+      "enum": [
+        "normalized-text",
+        "binary-text"
+      ]
+    },
+    "units": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "locator": {
+            "type": "string",
+            "minLength": 1
+          },
+          "text": {
+            "type": "string"
+          },
+          "formula": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cachedValue": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "locator",
+          "text"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "id",
+    "path",
+    "mediaType",
+    "rawHash",
+    "parser",
+    "parserHash",
+    "extractHash",
+    "inputProfile",
+    "units",
+    "gaps"
+  ],
+  "additionalProperties": false
+}

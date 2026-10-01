@@ -195,7 +195,7 @@ export function Workbench({
         'DELIVERABLES',
         ...selected.deliverables.map((d) => `  ${d.path} — ${d.description}`),
         '',
-        'Review: DRAFT • Execution: not available yet',
+        'Review: DRAFT • Benchmark execution blocked until human review',
       ]
     : [];
   const wrappedDetails = detailLines.flatMap((line) => wrapTerminalText(line, contentColumns));
@@ -219,7 +219,7 @@ export function Workbench({
       <Box marginBottom={compact ? 0 : 1}>
         <Badge>NSW residential</Badge>
         <Badge color={colors.good}>Offline authoring</Badge>
-        {!narrow && <Badge color={colors.gold}>Foundation</Badge>}
+        {!narrow && <Badge color={colors.gold}>Controlled execution</Badge>}
       </Box>
       <Box flexDirection={narrow ? 'column' : 'row'}>
         <Box
@@ -273,7 +273,7 @@ export function Workbench({
                   <Text color={colors.gold}>NEXT Review synthetic cases and business policy</Text>
                   {!compact && (
                     <Text color={colors.muted}>
-                      Candidate execution and grading arrive in later issues.
+                      Readers, candidate harness and deterministic graders are available.
                     </Text>
                   )}
                   <Text color={colors.muted}>No model runs or scores have been recorded.</Text>
@@ -337,7 +337,7 @@ export function Workbench({
               <>
                 <Text color={colors.good}>Ready now: no keys, database or deployment needed.</Text>
                 <Box marginY={1} flexDirection="column">
-                  <Text color={colors.ink}>When model execution is added:</Text>
+                  <Text color={colors.ink}>Before an opt-in candidate trial:</Text>
                   <Text color={colors.muted}> Candidate provider + exact model/settings</Text>
                   <Text color={colors.muted}> Provider credential configured locally</Text>
                   <Text color={colors.muted}> Judge models + candidate/judge spend caps</Text>

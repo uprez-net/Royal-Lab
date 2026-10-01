@@ -9,6 +9,10 @@ import { TraceEventSchema } from '#contracts/trace';
 import { ProvenanceSchema } from '#fixtures/provenance';
 import { WorldSchema, FixtureSchema } from '#fixtures/world';
 import { jsonText } from '#src/io';
+import { VerificationPlanSchema } from '#src/grading/verification';
+import { InteractionScriptSchema } from '#src/harness/operator';
+import { NormalizedDocumentSchema } from '#src/documents/normalize';
+import { OracleSchema } from '#src/grading/oracles/guri';
 
 export async function exportSchemas(root: string) {
   const directory = path.join(root, 'schemas');
@@ -24,6 +28,10 @@ export async function exportSchemas(root: string) {
     provenance: ProvenanceSchema,
     world: WorldSchema,
     fixture: FixtureSchema,
+    verification: VerificationPlanSchema,
+    interactions: InteractionScriptSchema,
+    document: NormalizedDocumentSchema,
+    oracle: OracleSchema,
   };
   for (const [name, schema] of Object.entries(schemas)) {
     await writeFile(

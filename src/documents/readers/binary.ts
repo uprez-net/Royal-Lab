@@ -11,7 +11,7 @@ const Reply = z.strictObject({
 export interface BinaryParser {
   image: string;
   imageId: string;
-  timeoutMs?: number;
+  timeoutMs?: number | undefined;
 }
 export function parserDockerArguments(config: BinaryParser, name: string): string[] {
   if (!/^sha256:[a-f0-9]{64}$/.test(config.imageId))

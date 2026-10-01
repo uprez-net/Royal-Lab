@@ -6,10 +6,7 @@
       "properties": {
         "schemaVersion": {
           "type": "string",
-          "enum": [
-            "1.0.0",
-            "1.1.0"
-          ]
+          "const": "1.1.0"
         },
         "runId": {
           "type": "string",
@@ -66,10 +63,7 @@
       "properties": {
         "schemaVersion": {
           "type": "string",
-          "enum": [
-            "1.0.0",
-            "1.1.0"
-          ]
+          "const": "1.1.0"
         },
         "runId": {
           "type": "string",
@@ -148,10 +142,7 @@
       "properties": {
         "schemaVersion": {
           "type": "string",
-          "enum": [
-            "1.0.0",
-            "1.1.0"
-          ]
+          "const": "1.1.0"
         },
         "runId": {
           "type": "string",
@@ -210,10 +201,7 @@
       "properties": {
         "schemaVersion": {
           "type": "string",
-          "enum": [
-            "1.0.0",
-            "1.1.0"
-          ]
+          "const": "1.1.0"
         },
         "runId": {
           "type": "string",
@@ -477,6 +465,10 @@
           "type": "string",
           "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
         },
+        "sessionId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+        },
         "decision": {
           "type": "string",
           "enum": [
@@ -605,6 +597,14 @@
         },
         "response": {
           "type": "string"
+        },
+        "responderId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+        },
+        "sessionId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
         }
       },
       "required": [

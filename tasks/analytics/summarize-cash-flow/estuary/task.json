@@ -1,6 +1,6 @@
 {
-  "schemaVersion": "1.0.0",
-  "version": "1.0.0",
+  "schemaVersion": "1.1.0",
+  "version": "1.1.0",
   "scenarioVersion": "1.0.0",
   "id": "analytics/summarize-cash-flow/estuary",
   "definitionId": "D15",
@@ -68,6 +68,8 @@
   "rubricHash": "7ee80a689c2caec19e2cc2e1a10dc7172cb4a9d73d77259c64c440a4ca9eb53f",
   "provenancePath": "provenance.json",
   "provenanceHash": "993d536b744a1689e8f1e8a11f48b3f5d8e8dad6ef156584f8f8c94fd32acbaa",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "7b37b19388b97ef483c52dd08878043de47dc40ef6c03de9768e5b29d529f0e2",
   "operatorBranches": [],
   "allowedOutcomes": [
     {

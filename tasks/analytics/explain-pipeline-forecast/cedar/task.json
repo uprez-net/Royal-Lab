@@ -1,6 +1,6 @@
 {
-  "schemaVersion": "1.0.0",
-  "version": "1.0.0",
+  "schemaVersion": "1.1.0",
+  "version": "1.1.0",
   "scenarioVersion": "1.0.0",
   "id": "analytics/explain-pipeline-forecast/cedar",
   "definitionId": "D13",
@@ -68,6 +68,8 @@
   "rubricHash": "7c9567229c194ab91c1a61285f22de5b09bbfd248ce45507ec64e5c35a2cadf4",
   "provenancePath": "provenance.json",
   "provenanceHash": "ba4cdc4abcdb3b36574e37bc9341d7fa89e73d579df765401ed0029b28b3da13",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "a907f17c373a6c5026e6e2fb70966ebf7dd7ed54a1cea6704cad5255949efc23",
   "operatorBranches": [],
   "allowedOutcomes": [
     {

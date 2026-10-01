@@ -25,8 +25,9 @@ Usage: pnpm lab <command> [arguments] [options]
   fixtures lint                  Check privacy patterns and world references
   schemas export                 Export portable JSON Schemas
   config show [--config <file>]   Display explicit effective config with secrets redacted
-  run <task>                     Reserved for candidate execution (#8)
-  grade <run>                    Reserved for deterministic/semantic grading (#10/#11)
+  bridge prepare|check           Build or verify the pinned private canonical bridge
+  run <task> --suite <path>       One reviewed document trial (--allow-paid required)
+  grade <run-id>                 Regrade saved artifacts offline; semantic judging is #11
   report <run>                   Reserved for reports (#17)
   compare <run-a> <run-b>         Reserved for compatible comparisons (#17)
 
@@ -50,6 +51,8 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       artifact: { type: 'string' },
       kind: { type: 'string' },
       check: { type: 'boolean' },
+      'allow-paid': { type: 'boolean' },
+      verification: { type: 'string' },
     },
   });
   const [command, ...arguments_] = parsed.positionals;
@@ -105,7 +108,8 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
     required(1);
     const entry = (await discover(root)).find((x) => x.task.id === arguments_[0]);
     if (!entry) throw new Error(`Unknown task: ${arguments_[0]}`);
-    if (options.visible) output(await visibleInput(root, entry.task));
+    if (options.visible)
+      output(await visibleInput(root, entry.task, (await loadConfig(options.config)).binaryParser));
     else {
       const { provenance } = await validateTask(root, entry.task);
       output({
@@ -178,9 +182,59 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
     output(await loadConfig(options.config));
     return 0;
   }
+  if (command === 'bridge') {
+    required(1);
+    const config = await loadConfig(options.config);
+    if (!config.bridge)
+      throw new Error(
+        'BRIDGE_CONFIG_MISSING: explicit checkout and disposable local fixtureDatabaseUrl required',
+      );
+    const checkout = path.resolve(root, config.bridge.checkout);
+    if (arguments_[0] === 'prepare') {
+      const { prepareGuri } = await import('#src/environments/guri/build');
+      output(await prepareGuri(root, checkout));
+      return 0;
+    }
+    if (arguments_[0] === 'check') {
+      const { GuriBridge } = await import('#src/environments/guri/bridge');
+      await new GuriBridge(
+        checkout,
+        path.join(root, '.cache/guri'),
+        config.bridge.fixtureDatabaseUrl,
+        '2026-10-04T00:00:00Z',
+      ).verify();
+      output({
+        status: 'verified',
+        scope: 'lead-task canonical slice; this is not a model run or score',
+      });
+      return 0;
+    }
+    throw new Error('bridge requires prepare or check');
+  }
+  if (command === 'run') {
+    required(1);
+    if (!options.suite || !options.verification)
+      throw new Error('run requires --suite and --verification <case-local grading/file.json>');
+    const { executeDocumentTrial } = await import('#runs/execute');
+    const result = await executeDocumentTrial(
+      root,
+      arguments_[0]!,
+      options.suite,
+      await loadConfig(options.config),
+      options.verification,
+      options['allow-paid'] ?? false,
+    );
+    output(result);
+    return result.status === 'completed' ? 0 : 1;
+  }
+  if (command === 'grade') {
+    required(1);
+    const { securePath } = await import('#src/io');
+    const { regradeSaved } = await import('#runs/regrade');
+    output(await regradeSaved(await securePath(root, `results/${arguments_[0]}`)));
+    return 0;
+  }
   const reserved: Record<string, string> = {
-    run: '#8',
-    grade: '#10/#11',
     report: '#17',
     compare: '#17',
   };

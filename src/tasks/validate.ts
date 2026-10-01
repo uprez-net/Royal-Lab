@@ -8,6 +8,7 @@ import { FixtureSchema, WorldSchema } from '#fixtures/world';
 import { lintWorld } from '#fixtures/lint';
 import { readJson, readScoped, securePath, sha256 } from '#src/io';
 import { discover } from '#tasks/discover';
+import { VerificationPlanSchema, type VerificationPlan } from '#src/grading/verification';
 
 export function unique(values: string[], label: string) {
   if (new Set(values).size !== values.length) throw new Error(`Duplicate ${label}`);
@@ -17,6 +18,7 @@ export interface ValidatedTask {
   rubric: Rubric;
   provenance: Provenance;
   directory: string;
+  verification: VerificationPlan | null;
 }
 export async function validateTask(root: string, task: Task): Promise<ValidatedTask> {
   const directory = await securePath(root, `tasks/${task.id}`);
@@ -80,6 +82,35 @@ export async function validateTask(root: string, task: Task): Promise<ValidatedT
   const provenance = ProvenanceSchema.parse(
     JSON.parse((await readScoped(directory, task.provenancePath)).toString('utf8')),
   );
+  let verification: VerificationPlan | null = null;
+  if (task.verificationPath && task.verificationHash) {
+    if (!task.verificationPath.startsWith('grading/'))
+      throw new Error('Verifier must be hidden in grading/');
+    const bytes = await readScoped(directory, task.verificationPath);
+    if (sha256(bytes) !== task.verificationHash) throw new Error('Hidden verifier hash mismatch');
+    verification = VerificationPlanSchema.parse(JSON.parse(bytes.toString('utf8')));
+    if (verification.taskId !== task.id || verification.rubricVersion !== rubric.version)
+      throw new Error('Verifier task/rubric identity mismatch');
+    for (const assertion of verification.assertions) {
+      if (!rubric.criteria.some((criterion) => criterion.id === assertion.criterionId))
+        throw new Error('Unknown verifier criterion');
+      if ('path' in assertion && !task.deliverables.some((file) => file.path === assertion.path))
+        throw new Error('Unknown verifier deliverable');
+    }
+    if (task.profiles.includes('documents'))
+      for (const criterion of rubric.criteria.filter(
+        (item) => item.method === 'deterministic' && item.severity === 'critical',
+      ))
+        if (
+          !verification.assertions.some(
+            (assertion) =>
+              assertion.criterionId === criterion.id &&
+              assertion.kind === 'prose' &&
+              assertion.required,
+          )
+        )
+          throw new Error('Critical fact requires an explicit prose verifier');
+  }
   const fixture = FixtureSchema.parse(
     JSON.parse((await readScoped(directory, task.fixturePath)).toString('utf8')),
   );
@@ -124,7 +155,7 @@ export async function validateTask(root: string, task: Task): Promise<ValidatedT
         throw new Error('Document task requires artifact checks, not database/effect checks');
     }
   }
-  return { task, rubric, provenance, directory };
+  return { task, rubric, provenance, directory, verification };
 }
 export interface Selection {
   taskId: string;
@@ -181,6 +212,12 @@ export async function preflight(
         (validated.provenance.review.status !== 'approved' || world.review.status !== 'approved')
       )
         throw new Error('Human review is pending');
+      if (
+        forRun &&
+        suite.profile === 'documents' &&
+        validated.verification?.review.status !== 'approved'
+      )
+        throw new Error('Human verifier review is pending');
       if (forRun && !profile.executionImplemented)
         throw new Error('Profile execution is not implemented (later issues)');
       cases.push({ taskId: id, status: 'ready', reason: null });

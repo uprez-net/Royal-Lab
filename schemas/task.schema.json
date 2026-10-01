@@ -4,7 +4,10 @@
   "properties": {
     "schemaVersion": {
       "type": "string",
-      "const": "1.0.0"
+      "enum": [
+        "1.0.0",
+        "1.1.0"
+      ]
     },
     "version": {
       "type": "string",
@@ -204,6 +207,14 @@
       "minLength": 1
     },
     "provenanceHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "verificationPath": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verificationHash": {
       "type": "string",
       "pattern": "^[a-f0-9]{64}$"
     },

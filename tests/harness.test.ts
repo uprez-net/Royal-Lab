@@ -1,6 +1,6 @@
 import { test, afterEach } from 'vitest';
 import assert from 'node:assert/strict';
-import { mkdir, mkdtemp, rm, readFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { directAdapter } from '#src/harness/adapters/direct';
 import { gatewayAdapter } from '#src/harness/adapters/gateway';
@@ -8,6 +8,11 @@ import { runCandidate } from '#src/harness/loop';
 import { DocumentWorkspace } from '#src/environments/documents';
 import { discover } from '#tasks/discover';
 import { validateArtifact } from '#tasks/validate';
+import { RubricSchema } from '#contracts/rubric';
+import { VerificationPlanSchema } from '#src/grading/verification';
+import { readJson, sha256, jsonText } from '#src/io';
+import { stableJson } from '#src/environments/session';
+import { regradeSaved } from '#runs/regrade';
 
 const directories: string[] = [];
 afterEach(async () => {
@@ -134,8 +139,26 @@ async function run(transport: 'direct' | 'gateway', mode: Mode = 'correct', maxT
   const adapter = await (transport === 'direct'
     ? directAdapter(adapterOptions)
     : gatewayAdapter(adapterOptions));
-  const workspace = await DocumentWorkspace.create(root, task, path.join(directory, 'outputs'));
   const saveDirectory = path.join(directory, 'evidence');
+  await mkdir(saveDirectory);
+  const workspace = await DocumentWorkspace.create(root, task, path.join(saveDirectory, 'outputs'));
+  const rubric = RubricSchema.parse(
+    await readJson(path.join(root, `tasks/${task.id}`, task.rubricPath)),
+  );
+  const verification = VerificationPlanSchema.parse(
+    await readJson(path.join(root, `tasks/${task.id}`, 'grading/verification.json')),
+  );
+  const snapshot = {
+    task,
+    rubric,
+    verification,
+    taskHash: sha256(stableJson(task)),
+    rubricHash: sha256(jsonText(rubric)),
+    sourceRubricHash: task.rubricHash,
+    sourceVerificationHash: task.verificationHash,
+    verificationHash: sha256(jsonText(verification)),
+  };
+  await writeFile(path.join(saveDirectory, 'grading-inputs.json'), jsonText(snapshot));
   const result = await runCandidate({
     runId: 'offline-control',
     task,
@@ -144,6 +167,7 @@ async function run(transport: 'direct' | 'gateway', mode: Mode = 'correct', maxT
     saveDirectory,
     pricing,
     systemPrompt: await readFile('src/harness/prompts/documents.txt', 'utf8'),
+    environmentFingerprint: { gradingInputsHash: sha256(jsonText(snapshot)) },
   });
   return { result, directory, requests, saveDirectory };
 }
@@ -186,4 +210,18 @@ test('candidate loop exhaustion retains its artifacts and trace with an explicit
   assert.equal(result.status, 'budget-exhausted');
   assert.equal(result.artifacts.length, 2);
   assert.equal(result.strictSuccess, false);
+});
+test('saved output regrades offline, preserves semantic coverage and detects tampered trace evidence', async () => {
+  const { requests, saveDirectory } = await run('direct');
+  const graded = await regradeSaved(saveDirectory, { mode: 'offline-control' });
+  assert.equal(requests, 2);
+  assert.equal(graded.result.criteria.find((item) => item.id === 'C4')!.verdict, 'pass');
+  assert.equal(graded.result.criteria.find((item) => item.id === 'S1')!.verdict, 'ungraded');
+  assert.equal(graded.result.strictSuccess, false);
+  await assert.rejects(regradeSaved(saveDirectory), /VERIFIER_REVIEW_PENDING/);
+  await writeFile(path.join(saveDirectory, 'trace.jsonl'), '');
+  await assert.rejects(
+    regradeSaved(saveDirectory, { mode: 'offline-control' }),
+    /EXECUTION_EVIDENCE_CHANGED/,
+  );
 });
