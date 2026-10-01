@@ -1,0 +1,7 @@
+{
+  "profile": "fixed-tools",
+  "bridge": {
+    "checkout": ".guri",
+    "fixtureDatabaseUrl": "postgresql://royal_lab:royal-lab-disposable-only@127.0.0.1:55432/royal_lab_control"
+  }
+}

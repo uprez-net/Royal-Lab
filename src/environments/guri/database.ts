@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import { Pool, types } from 'pg';
 import { randomUUID } from 'node:crypto';
 
 export function fixtureControlUrl(value: string) {
@@ -14,10 +14,10 @@ export function fixtureControlUrl(value: string) {
   return url;
 }
 export class DisposableDatabase {
-  readonly name = `royal_lab_run_${randomUUID().replace(/-/g, '')}`;
   readonly writer: Pool;
   readonly verifier: Pool;
   private constructor(
+    readonly name: string,
     private admin: Pool,
     readonly url: string,
   ) {
@@ -30,45 +30,51 @@ export class DisposableDatabase {
       connectionString: url,
       max: 1,
       application_name: 'royal-lab-independent-verifier',
+      // Prisma's timestamp-without-time-zone columns encode UTC. pg's default
+      // parser applies the machine timezone; preserve canonical UTC independently.
+      types: {
+        getTypeParser: (oid, format) =>
+          oid === 1114 && format !== 'binary'
+            ? (value: string) => new Date(`${value.replace(' ', 'T')}Z`).toISOString()
+            : types.getTypeParser(oid, format),
+      },
     });
   }
   static async create(controlUrl: string, schemaSql: string) {
     const parsed = fixtureControlUrl(controlUrl);
     const admin = new Pool({ connectionString: parsed.toString(), max: 1 });
-    const instance = new DisposableDatabase(admin, parsed.toString());
+    const name = `royal_lab_run_${randomUUID().replace(/-/g, '')}`;
+    let created = false;
+    let database: DisposableDatabase | undefined;
     try {
       const marker = await admin.query(
         "SELECT value FROM royal_lab_control_metadata WHERE key = 'purpose'",
       );
       if (marker.rows[0]?.value !== 'royal-lab-synthetic-only-v1')
         throw new Error('DATABASE_DENIED: missing synthetic control marker');
-      await admin.query(`CREATE DATABASE "${instance.name}"`);
-      parsed.pathname = `/${instance.name}`;
-      // Rebuild handles after creating this unique run's database.
-      await instance.writer.end();
-      await instance.verifier.end();
-      const database = new DisposableDatabase(admin, parsed.toString());
-      Object.defineProperty(database, 'name', { value: instance.name });
-      try {
-        await database.writer.query(schemaSql);
-        await database.writer.query(
-          'CREATE TABLE "RoyalLabFixtureMetadata" ("purpose" text NOT NULL)',
-        );
-        await database.writer.query('INSERT INTO "RoyalLabFixtureMetadata" VALUES ($1)', [
-          'royal-lab-synthetic-only-v1',
-        ]);
-        await database.writer.query(
-          'CREATE TABLE "RoyalLabOperation" ("key" text PRIMARY KEY, "binding" text NOT NULL, "status" text NOT NULL, "result" jsonb)',
-        );
-        return database;
-      } catch (error) {
-        await database.dispose();
-        throw error;
-      }
+      await admin.query(`CREATE DATABASE "${name}"`);
+      created = true;
+      parsed.pathname = `/${name}`;
+      database = new DisposableDatabase(name, admin, parsed.toString());
+      await database.writer.query(schemaSql);
+      await database.writer.query(
+        'CREATE TABLE "RoyalLabFixtureMetadata" ("purpose" text NOT NULL)',
+      );
+      await database.writer.query('INSERT INTO "RoyalLabFixtureMetadata" VALUES ($1)', [
+        'royal-lab-synthetic-only-v1',
+      ]);
+      await database.writer.query(
+        'CREATE TABLE "RoyalLabOperation" ("key" text PRIMARY KEY, "binding" text NOT NULL, "status" text NOT NULL, "result" jsonb)',
+      );
+      return database;
     } catch (error) {
-      await instance.writer.end().catch(() => {});
-      await instance.verifier.end().catch(() => {});
-      await admin.end().catch(() => {});
+      await database?.writer.end().catch(() => {});
+      await database?.verifier.end().catch(() => {});
+      try {
+        if (created) await admin.query(`DROP DATABASE "${name}" WITH (FORCE)`);
+      } finally {
+        await admin.end();
+      }
       throw error;
     }
   }
@@ -104,7 +110,7 @@ export class DisposableDatabase {
       this.verifier.query('SELECT * FROM "LeadHistory" ORDER BY "id"'),
       this.verifier.query('SELECT * FROM "RoyalLabOperation" ORDER BY "key"'),
     ]);
-    return {
+    const snapshot = {
       source: 'independent-postgresql-connection' as const,
       database: this.name,
       leads: leads.rows,
@@ -112,6 +118,7 @@ export class DisposableDatabase {
       history: history.rows,
       operations: operations.rows,
     };
+    return JSON.parse(JSON.stringify(snapshot)) as typeof snapshot;
   }
   async dispose() {
     await this.writer.end();

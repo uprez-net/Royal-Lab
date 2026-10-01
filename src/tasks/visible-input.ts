@@ -1,9 +1,9 @@
 import { readScoped, sha256 } from '#src/io';
 import { validateTask } from '#tasks/validate';
 import type { Task } from '#contracts/task';
-import { readText, TEXT_PARSER } from '#src/documents/readers/text';
+import { readText, TEXT_PARSER, textReaderFingerprint } from '#src/documents/readers/text';
 import { readBinary, type BinaryParser } from '#src/documents/readers/binary';
-import { normalize } from '#src/documents/normalize';
+import { normalize, normalizationFingerprint } from '#src/documents/normalize';
 
 export async function visibleInput(root: string, task: Task, binaryParser?: BinaryParser) {
   const { directory } = await validateTask(root, task);
@@ -31,7 +31,9 @@ export async function visibleInput(root: string, task: Task, binaryParser?: Bina
       mediaType: input.mediaType,
       rawHash: input.sha256,
       parser: binary ? String('parser' in parsed ? parsed.parser : 'binary') : TEXT_PARSER,
-      parserHash: sha256(binary ? binaryParser!.imageId : TEXT_PARSER),
+      parserHash: await normalizationFingerprint(
+        binary ? binaryParser!.imageId : await textReaderFingerprint(),
+      ),
       inputProfile: binary ? 'binary-text' : 'normalized-text',
       units: parsed.units,
       gaps: parsed.gaps,

@@ -22,6 +22,9 @@ async function main() {
   const args = GURI_TOOL_SCHEMAS[tool].parse(request.arguments);
   const url = new URL(request.databaseUrl);
   if (
+    !['postgres:', 'postgresql:'].includes(url.protocol) ||
+    url.search ||
+    url.hash ||
     !['localhost', '127.0.0.1'].includes(url.hostname) ||
     !/^\/royal_lab_run_[a-f0-9]{32}$/.test(url.pathname)
   )
@@ -47,6 +50,9 @@ async function main() {
   globalThis.Date = FrozenDate as DateConstructor;
   const principal = { kind: 'user', userId: request.ownerId, role: 'ADMIN' };
   try {
+    const markers = await db.$queryRawUnsafe('SELECT "purpose" FROM "RoyalLabFixtureMetadata"');
+    if (!Array.isArray(markers) || markers[0]?.purpose !== 'royal-lab-synthetic-only-v1')
+      throw new Error('DATABASE_DENIED');
     if (tool === 'find_leads') {
       const scope = leadListScope(principal);
       const query = (args as { query: string }).query;

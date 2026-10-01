@@ -61,10 +61,17 @@ export function inspectProse(
   let observations = 0;
   for (const line of lines) {
     if (assertion.semantics === 'cents') {
-      const matches = [...line.matchAll(/(?:AUD\s*|\$)\s*(-?\d+(?:,\d{3})*(?:\.\d{1,2})?)/g)];
+      const matches = [
+        ...line.matchAll(
+          /(?:AUD\s*)?(-?)\s*\$\s*(-?\d+(?:,\d{3})*(?:\.\d{1,2})?)|AUD\s*(-?\d+(?:,\d{3})*(?:\.\d{1,2})?)/g,
+        ),
+      ];
       for (const match of matches) {
         observations++;
-        const [whole, fraction = ''] = match[1]!.replace(/,/g, '').split('.');
+        const number = match[2] ?? match[3]!;
+        if (match[1] === '-' && number.startsWith('-'))
+          return { verdict: 'unverified', reason: 'Ambiguous monetary sign' };
+        const [whole, fraction = ''] = `${match[1] ?? ''}${number}`.replace(/,/g, '').split('.');
         const cents =
           Number(whole) * 100 +
           (Number(whole) < 0 || whole!.startsWith('-') ? -1 : 1) * Number(fraction.padEnd(2, '0'));
@@ -101,18 +108,31 @@ export function inspectProse(
         };
       observations++;
     } else {
-      const positive =
-        /\b(verified|paid|sent|approved|completed|raised|synchronized|overdue|included)\b/i.test(
-          line,
-        );
+      const positive = [
+        ...line.matchAll(
+          /\b(verified|paid|sent|approved|completed|raised|synchronized|overdue|included|true)\b/gi,
+        ),
+      ];
       const negative = /\b(not|no|unverified|unpaid|unsent|unknown|cancelled|excluded)\b/i.test(
         line,
       );
-      if (!positive && !negative) continue;
+      if (positive.length === 0 && !negative) continue;
       observations++;
+      const affirmed = positive.filter(
+        (match) =>
+          !/\b(not|no|never)\b/i.test(
+            line
+              .slice(0, match.index)
+              .split(/\b(?:but|however|and)\b|[;:]/i)
+              .at(-1)!
+              .split(/\s+/)
+              .slice(-5)
+              .join(' '),
+          ),
+      );
       if (
-        (assertion.expected === false && positive && !negative) ||
-        (assertion.expected === true && (!positive || negative))
+        (assertion.expected === false && affirmed.length > 0) ||
+        (assertion.expected === true && (affirmed.length === 0 || negative))
       )
         return { verdict: 'fail', reason: 'Client-facing claim asserts an unverified completion' };
     }

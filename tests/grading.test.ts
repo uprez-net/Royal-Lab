@@ -13,6 +13,7 @@ import { TraceEventSchema, type TraceEvent } from '#contracts/trace';
 import { Session } from '#src/environments/session';
 import { readJson, sha256 } from '#src/io';
 import { VerificationPlanSchema } from '#src/grading/verification';
+import { credentialSanitizer } from '#src/harness/adapters/base';
 
 const controls = (await readJson('fixtures/grader-controls/controls.json')) as {
   facts: {
@@ -329,4 +330,36 @@ test('offline regrading fails wrong prose, retains ungraded criteria and refuses
 test('new trace event types cannot silently use the old trace version', () => {
   const event = trace([{ type: 'termination', status: 'completed', reason: null }])[0]!;
   assert.equal(TraceEventSchema.safeParse({ ...event, schemaVersion: '1.0.0' }).success, false);
+});
+test('provider diagnostics and nested raw metadata redact the actual explicit key even without a known key prefix', () => {
+  const sanitize = credentialSanitizer('opaque-provider-credential');
+  assert.deepEqual(
+    sanitize({
+      error: 'Incorrect key: opaque-provider-credential',
+      nested: { authorization: 'anything' },
+    }),
+    { error: 'Incorrect key: [REDACTED]', nested: { authorization: '[REDACTED]' } },
+  );
+});
+test('negative commercial figures preserve their sign and mixed completion claims cannot hide behind negation', () => {
+  const expected = {
+    labels: ['projected profit'],
+    expected: -8320000,
+    semantics: 'cents' as const,
+    required: true,
+  };
+  for (const prose of [
+    'Projected profit -$83,200.00.',
+    'Projected profit AUD -83,200.00.',
+    'Projected profit AUD $-83,200.00.',
+  ])
+    assert.equal(inspectProse(prose, expected).verdict, 'pass', prose);
+  const payment = {
+    labels: ['payment'],
+    expected: false,
+    semantics: 'boolean' as const,
+    required: true,
+  };
+  assert.equal(inspectProse('Payment was not verified but was paid.', payment).verdict, 'fail');
+  assert.equal(inspectProse('Payment was not verified.', payment).verdict, 'pass');
 });

@@ -1,5 +1,5 @@
 import type { AdapterOptions, CandidateAdapter } from '#src/harness/adapters/base';
-import { validateAdapter } from '#src/harness/adapters/base';
+import { validateAdapter, credentialSanitizer } from '#src/harness/adapters/base';
 export async function gatewayAdapter(options: AdapterOptions): Promise<CandidateAdapter> {
   const parameters = validateAdapter(options);
   const { createGateway } = await import('@ai-sdk/gateway');
@@ -14,5 +14,7 @@ export async function gatewayAdapter(options: AdapterOptions): Promise<Candidate
     parameters,
     transport: 'gateway',
     sdkVersion: 'ai-7.0.123/gateway-4.0.101',
+    sanitize: credentialSanitizer(options.apiKey),
+    executionMode: options.offlineControl ? 'offline-control' : 'paid',
   };
 }

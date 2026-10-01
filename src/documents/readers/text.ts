@@ -1,8 +1,13 @@
 import { parse } from 'csv-parse/sync';
 import PostalMime from 'postal-mime';
+import { readFile } from 'node:fs/promises';
+import { sha256 } from '#src/io';
 import { boundedBytes, type EvidenceUnit } from '#src/documents/normalize';
 
-export const TEXT_PARSER = 'royal-text-1.0.0/csv-parse/postal-mime';
+export const TEXT_PARSER = 'royal-text-1.0.0/csv-parse-7.0.3/postal-mime-4.0.2';
+export async function textReaderFingerprint() {
+  return `${TEXT_PARSER}:${sha256(await readFile(new URL(import.meta.url)))}`;
+}
 export async function readText(
   bytes: Uint8Array,
   mediaType: string,

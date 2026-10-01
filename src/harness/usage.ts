@@ -8,12 +8,16 @@ export interface Pricing {
   cachedInputUsdPerMillion?: number | undefined;
 }
 export class BudgetError extends Error {}
+export const knownTokens = (value: unknown): number | null =>
+  typeof value === 'number' && Number.isSafeInteger(value) && value >= 0 ? value : null;
 export class Usage {
   inputTokens: number | null = 0;
   outputTokens: number | null = 0;
   costUsd: number | null = 0;
   turns = 0;
   toolAttempts = 0;
+  requestsStarted = 0;
+  responsesReceived = 0;
   readonly started = Date.now();
   constructor(
     readonly limits: z.infer<typeof Limits>,
@@ -46,24 +50,30 @@ export class Usage {
     this.turns++;
   }
   add(usage: LanguageModelUsage) {
+    this.responsesReceived++;
+    const input = knownTokens(usage.inputTokens);
+    const output = knownTokens(usage.outputTokens);
     this.inputTokens =
-      usage.inputTokens === undefined || this.inputTokens === null
-        ? null
-        : this.inputTokens + usage.inputTokens;
+      input === null || this.inputTokens === null ? null : this.inputTokens + input;
     this.outputTokens =
-      usage.outputTokens === undefined || this.outputTokens === null
-        ? null
-        : this.outputTokens + usage.outputTokens;
-    if (!this.pricing || usage.inputTokens === undefined || usage.outputTokens === undefined)
+      output === null || this.outputTokens === null ? null : this.outputTokens + output;
+    const cached = knownTokens(usage.inputTokenDetails?.cacheReadTokens ?? 0);
+    if (!this.pricing || input === null || output === null || cached === null || cached > input)
       this.costUsd = null;
     else if (this.costUsd !== null) {
-      const cached = usage.inputTokenDetails.cacheReadTokens ?? 0;
       const rate = this.pricing.cachedInputUsdPerMillion ?? this.pricing.inputUsdPerMillion;
       this.costUsd +=
-        ((usage.inputTokens - cached) * this.pricing.inputUsdPerMillion +
+        ((input - cached) * this.pricing.inputUsdPerMillion +
           cached * rate +
-          usage.outputTokens * this.pricing.outputUsdPerMillion) /
+          output * this.pricing.outputUsdPerMillion) /
         1_000_000;
+    }
+  }
+  reconcileUnansweredRequests() {
+    if (this.requestsStarted > this.responsesReceived) {
+      this.inputTokens = null;
+      this.outputTokens = null;
+      this.costUsd = null;
     }
   }
   check() {

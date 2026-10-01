@@ -84,29 +84,19 @@ export async function generatePricingOracle(
     });
   }
   await lockGuriSource(checkout);
-  const child = execFile(
-    process.execPath,
-    [outputFile],
-    {
-      windowsHide: true,
-      timeout: 10000,
-      maxBuffer: 100000,
-      env: { PATH: process.env.PATH, SystemRoot: process.env.SystemRoot },
-    },
-    () => {},
-  );
-  // execFile's callback promise is attached before the original synthetic input is supplied.
   const output = await new Promise<string>((resolve, reject) => {
-    let stdout = '';
-    let stderr = '';
-    child.stdout!.on('data', (chunk) => (stdout += chunk));
-    child.stderr!.on('data', (chunk) => (stderr += chunk));
-    child.on('error', reject);
-    child.on('exit', (code) =>
-      code === 0
-        ? resolve(stdout)
-        : reject(new Error(`ORACLE_EXECUTION_FAILED: ${stderr.slice(0, 300)}`)),
+    const child = execFile(
+      process.execPath,
+      [outputFile],
+      {
+        windowsHide: true,
+        timeout: 10000,
+        maxBuffer: 100000,
+        env: { PATH: process.env.PATH, SystemRoot: process.env.SystemRoot },
+      },
+      (error, stdout) => (error ? reject(new Error('ORACLE_EXECUTION_FAILED')) : resolve(stdout)),
     );
+    child.stdin!.on('error', reject);
     child.stdin!.end(JSON.stringify(input));
   });
   const parsed = JSON.parse(output);

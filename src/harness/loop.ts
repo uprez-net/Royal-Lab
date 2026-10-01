@@ -6,14 +6,11 @@ import type { Task } from '#contracts/task';
 import { ResultSchema, type CaseResult } from '#contracts/result';
 import { TraceEventSchema, type TraceEvent } from '#contracts/trace';
 import type { CandidateAdapter } from '#src/harness/adapters/base';
-import { Usage, BudgetError, type Pricing } from '#src/harness/usage';
+import { Usage, BudgetError, knownTokens, type Pricing } from '#src/harness/usage';
 import { DOCUMENT_TOOL_SCHEMAS, type DocumentWorkspace } from '#src/environments/documents';
 import { sha256, jsonText } from '#src/io';
-import { redact } from '#src/config';
 import { stableJson } from '#src/environments/session';
 
-const json = (value: unknown): z.infer<typeof z.json> =>
-  JSON.parse(JSON.stringify(redact(value)) ?? 'null');
 const callId = (raw: string) => `call-${sha256(raw).slice(0, 24)}`;
 export interface CandidateRunOptions {
   runId: string;
@@ -36,42 +33,50 @@ export interface CandidateRunOptions {
   ) => void;
   committedEffects?: () => number;
   environmentFingerprint?: Record<string, unknown>;
+  allowPaid?: boolean;
 }
 export async function runCandidate(options: CandidateRunOptions): Promise<CaseResult> {
   const { task, adapter } = options;
+  if (adapter.executionMode !== 'offline-control' && !options.allowPaid)
+    throw new Error('PAID_EXECUTION_DISABLED: explicit harness opt-in required');
+  const json = (value: unknown): z.infer<typeof z.json> =>
+    JSON.parse(JSON.stringify(adapter.sanitize(value)) ?? 'null');
   await mkdir(options.saveDirectory, { recursive: true });
   const traceFile = path.join(options.saveDirectory, 'trace.jsonl');
   await writeFile(traceFile, '', { flag: 'wx' });
   let sequence = 0;
   let writes: Promise<void> = Promise.resolve();
   const emit = (event: Record<string, unknown>) => {
-    const parsed = TraceEventSchema.parse({
-      schemaVersion: '1.1.0',
-      runId: options.runId,
-      taskId: task.id,
-      sequence: sequence++,
-      at: new Date().toISOString(),
-      ...event,
-    });
+    const parsed = TraceEventSchema.parse(
+      adapter.sanitize({
+        schemaVersion: '1.1.0',
+        runId: options.runId,
+        taskId: task.id,
+        sequence: sequence++,
+        at: new Date().toISOString(),
+        ...event,
+      }),
+    );
     writes = writes.then(() => appendFile(traceFile, `${JSON.stringify(parsed)}\n`));
   };
   const usage = new Usage(task.limits, options.pricing);
+  const operationCallId = (raw: string) => callId(`${usage.turns}:${raw}`);
   options.attachTrace?.(emit);
   const schemas: Record<string, z.ZodType> = options.schemas ?? DOCUMENT_TOOL_SCHEMAS;
-  const tools: ToolSet = {};
+  const tools: ToolSet = Object.create(null);
   const attempted = new Set<string>();
   let executions = 0;
   let invalidCall = false;
   let serial: Promise<unknown> = Promise.resolve();
   let providerDowngrade: string | null = null;
   for (const declared of task.tools) {
-    const schema = schemas[declared.name];
+    const schema = Object.hasOwn(schemas, declared.name) ? schemas[declared.name] : undefined;
     if (!schema) throw new Error(`TOOL_UNIMPLEMENTED: ${declared.name}`);
     tools[declared.name] = tool({
       description: `${declared.name}: case-scoped evidence or declared output only`,
       inputSchema: schema,
       execute: async (input, context) => {
-        const id = callId(context.toolCallId);
+        const id = operationCallId(context.toolCallId);
         const operation = async () => {
           if (!attempted.has(id)) {
             attempted.add(id);
@@ -96,7 +101,7 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
             options.afterExecution?.(declared.name, result, id, emit);
             return result;
           } catch (error) {
-            const reason = String(redact(error instanceof Error ? error.message : error));
+            const reason = String(adapter.sanitize(error instanceof Error ? error.message : error));
             emit({
               type: 'tool-executed',
               callId: id,
@@ -136,7 +141,9 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
     provider: adapter.provider,
     model: adapter.modelId,
     transport: adapter.transport,
+    executionMode: adapter.executionMode,
     sdkVersion: adapter.sdkVersion,
+    callIdentityVersion: 'turn-provider-call-1.0.0',
     parameters: adapter.parameters,
     promptHash: sha256(options.systemPrompt),
     toolSchemaHash: sha256(
@@ -216,6 +223,7 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
       return { maxOutputTokens: output };
     },
     onLanguageModelCallStart: (event) => {
+      usage.requestsStarted++;
       emit({
         type: 'model-request',
         requestId: callId(event.callId),
@@ -230,13 +238,13 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
         type: 'model-response',
         requestId: callId(event.callId),
         response: json(event),
-        inputTokens: event.usage.inputTokens ?? null,
-        outputTokens: event.usage.outputTokens ?? null,
+        inputTokens: knownTokens(event.usage.inputTokens),
+        outputTokens: knownTokens(event.usage.outputTokens),
         finishReason: event.finishReason,
       });
       for (const content of event.content) {
         if (content.type === 'tool-call') {
-          const id = callId(content.toolCallId);
+          const id = operationCallId(content.toolCallId);
           if (!attempted.has(id)) {
             attempted.add(id);
             usage.toolAttempts++;
@@ -247,7 +255,8 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
                 ? content.toolName
                 : `unknown-${sha256(content.toolName).slice(0, 8)}`,
               arguments: json(
-                schemas[content.toolName]?.safeParse(content.input).success
+                Object.hasOwn(schemas, content.toolName) &&
+                  schemas[content.toolName]?.safeParse(content.input).success
                   ? schemas[content.toolName]!.parse(content.input)
                   : content.input,
               ),
@@ -255,6 +264,7 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
           }
           if (
             !tools[content.toolName] ||
+            !Object.hasOwn(schemas, content.toolName) ||
             !schemas[content.toolName]?.safeParse(content.input).success
           )
             invalidCall = true;
@@ -286,7 +296,7 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
     artifacts = await options.workspace.artifacts();
   } catch (error) {
     await serial.catch(() => {});
-    reason = String(redact(error instanceof Error ? error.message : error));
+    reason = String(adapter.sanitize(error instanceof Error ? error.message : error));
     status =
       error instanceof BudgetError
         ? 'budget-exhausted'
@@ -294,10 +304,11 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
           ? 'candidate-failure'
           : 'infrastructure-error';
     try {
-      artifacts = await options.workspace.artifacts();
+      artifacts = await options.workspace.artifacts(false);
     } catch {}
   }
   emit({ type: 'termination', status, reason });
+  usage.reconcileUnansweredRequests();
   await writes;
   const result = ResultSchema.parse({
     schemaVersion: '1.1.0',

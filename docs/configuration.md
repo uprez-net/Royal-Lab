@@ -1,52 +1,73 @@
 # Configuration inputs
 
-## Foundation: usable now without credentials
+Node 24 LTS and pnpm 11.1.2 are sufficient for offline authoring, integrity checks,
+schemas, TUI and tests. The TUI performs offline checks. Code, data and results remain
+private; no release or external business outreach is configured.
 
-Node 24 LTS and pnpm 11.1.2 are sufficient for list/describe/validate, fixture
-generation/linting, schemas, tests and TUI. There is no database, Clerk, Vercel,
-email/Xero/DocuSign credential or provider key required at this stage.
+The local pinned checkout `.guri/` and disposable Compose PostgreSQL setup are
+prepared. Their caches and credentials are ignored by Git. The verified operational
+slice is lead lookup/list/create; T03–T12 adapters remain unsupported.
 
-The user has selected 28 task definitions, intended business policy as authority,
-NSW residential construction for any builder, and private code/dataset/results.
-The remaining non-secret review input is a **named reviewing builder business or business reviewer** and approval
-of the concrete policy/case packs. Drafts stay visibly draft until that review occurs.
-Other NSW residential builder businesses may review; Royal Construction is not
-the exclusive reviewer.
+Before a paid candidate trial, supply these decisions:
 
-## When candidate execution (#8) is implemented, supply
+1. **Reviewer and actual review:** a named NSW residential builder business or its
+   designated reviewer, approval/amendments to [the review pack](review-pack.md),
+   and review of its four hidden verification plans. Other builder businesses are eligible.
+2. **Candidate configurations:** direct OpenAI API or AI Gateway route, exact model
+   IDs to compare, and supported temperature/top-p/seed/reasoning settings. Neither
+   route nor a current model is selected automatically. Live provider compatibility
+   and baseline behavior have not been measured; protocol controls used mock HTTP.
+3. **Local credentials:** set an explicit API key or the explicitly named `apiKeyEnv`
+   in an ignored config file. Do not put keys in chat, issues or committed files.
+4. **Pricing and budgets:** versioned pricing timestamp and input/output/cache rates
+   for the selected route/model; candidate token/turn/tool/time/cost caps and overall
+   spend cap. A case's effective limits can only narrow its frozen limits. The current
+   CLI runs one trial: set `repeats: 1` and `concurrency: 1`. Suite orchestration is #16.
+5. **Policy amendments:** markup/rounding/approval/negotiation/evidence assumptions
+   specific to a builder, if any. Intended policy overrides product behavior. Resolve
+   documented disagreements before enabling affected operations. Use synthetic examples.
 
-1. Candidate provider route (direct API, gateway, or later local compatible server).
-2. Exact model IDs to compare, reasoning/sampling settings, context/output limits.
-3. Provider API credentials, configured locally; do not put them in an issue or chat.
-4. Maximum spend for the entire experiment, candidate and judge caps separately,
-   trial count and desired concurrency. Current defaults are provisional.
-5. Judge provider/models and reviewer for calibration/disagreements.
-6. Any builder-specific policy amendments: markup/margin floors, approval limits,
-   negotiation constraints, evidence precedence and cash-flow assumptions. Use
-   synthetic examples; no production customer material is needed.
+Judge models, separate judge budgets and calibration reviewers are needed for #11/#19,
+not for today's offline deterministic regrading. Royal Eve deployment/session metadata
+belongs to #18. No production database, Clerk, Xero, email, Blob or DocuSign credential is needed.
 
-## When fixed-tool execution (#7/#9) is implemented, supply
+## Local configuration
 
-1. Approved pinned private Guri checkout/path and the permitted operation subset.
-2. A disposable **synthetic-only** PostgreSQL connection and reset strategy.
-3. Recording-port configuration; real recipients, invoices and envelopes are unused.
-4. Owner/principal fixture identities and approved interaction scripts.
-5. Resolution of each business-policy/product-behavior discrepancy in the matrix.
+`pnpm lab config show --config <file>` validates and redacts secrets. Unknown fields
+are rejected. No `.env` file, ambient `DATABASE_URL`, or another checkout's environment
+is loaded. Store config under ignored `tmp/`. Only the explicitly named credential
+environment variable is read, after run preflight and input preparation.
 
-## Optional Eve profile (#18)
+For bridge setup use `config/bridge.example.json`, then:
 
-Supply an explicit staging URL, evaluator identity, allowed target, authenticated
-session access, deployed revision/model/prompt/budget metadata and independent
-verification access. External-effect cases remain cancel-only on staging.
+```sh
+docker compose up -d --wait
+pnpm lab bridge prepare --config config/bridge.example.json
+pnpm lab bridge check --config config/bridge.example.json
+pnpm test:integration
+```
 
-## Explicit configuration
+For documents, create an ignored config with `profile: "documents"`, single-trial
+settings, candidate `provider`, `model`, `parameters`, `apiKeyEnv` and `pricing`.
+Pricing includes a semantic `version` such as `1.0.0`, an ISO `asOf`, and actual
+`inputUsdPerMillion`/`outputUsdPerMillion`; optional cache rates must be explicit.
+No placeholder price is treated as a verified free model.
 
-`pnpm lab config show --config <file>` validates and displays effective configuration
-with apiKey/token/secret/password/credential/database URL fields redacted. Omit the
-file for offline defaults. Unknown fields are rejected. No .env file, ambient
-DATABASE_URL or another project's configuration is automatically loaded.
+```sh
+pnpm lab run offers/reconcile-quote-build-up/cedar --suite suites/development.json --verification grading/verification.json --config tmp/candidate.json --allow-paid
+pnpm lab grade <saved-run-id>
+```
 
-Store local configuration under an ignored directory such as `tmp/`. The future
-adapters will document explicit credential injection; .env.example is only a list
-of reserved names, not a secretly active loader. Run manifests record redacted
-effective configuration and version fingerprints, never secrets.
+The current draft packs deliberately block that run command. Every selected case
+is retained in its saved preflight record. After approval, a single trial manifest
+marks other suite cases explicitly excluded; it is not a full-suite result.
+Regrading appends a new receipt and keeps execution evidence intact. Missing semantic
+judgments or verifier evidence remain ungraded/error and cannot yield strict success.
+
+## Binary parser
+
+Build `royal-lab-parser:1.0.0` using `sandbox/document-parser/Dockerfile`. Inspect the
+built image's immutable ID and set `binaryParser.image`, `imageId` and optional
+`timeoutMs` in local config. The worker runs by image ID with network, host mounts,
+privileges and write access disabled. See [reader setup](document-workspace.md).
+All four current authored specimens are normalized text; OCR is unsupported.

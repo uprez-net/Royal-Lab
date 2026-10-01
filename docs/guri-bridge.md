@@ -41,6 +41,15 @@ git -C .guri checkout --detach 460895235f94e917bd855855cd6e106f93a4c7c1
 docker compose up -d --wait
 ```
 
-Prepare the bridge through the CLI described in the operator guide, then run the
-opt-in local integration lane. Never commit `.guri`, generated runtime caches or
+Prepare the bridge with `pnpm lab bridge prepare --config config/bridge.example.json`,
+verify it with `bridge check` using the same config, then run `pnpm test:integration`.
+Never commit `.guri`, generated runtime caches or personal
 connection settings. No application dependency installation or deployment is needed.
+
+The fixed-tools harness composes the closed document workspace, deterministic
+operator and canonical bridge. Questions and supplied facts, requested/approved/
+cancelled decisions, responder/session identity, executions and durable-operation
+evidence are traced separately. API integration controls prove approval creates one
+task, cancellation creates none and same-call bridge replay creates no duplicate.
+There is no authored release-ready fixed-tools case yet; the CLI trial command
+currently executes document cases. The prepared source checkout remains unchanged.

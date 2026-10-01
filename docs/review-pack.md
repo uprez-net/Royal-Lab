@@ -38,7 +38,12 @@ Amounts below are AUD. Their structured equivalents use integer cents.
 
 Each pack also requires a cited `review.md` that explains the calculation, material
 uncertainty and a grounded next action. Hidden expectations are in each task's
-`grading/fixture.json` and `grading/rubric.json`; review those alongside its sources.
+`grading/fixture.json`, `grading/rubric.json` and `grading/verification.json`; review those alongside its sources.
+Verification plans declare scoped prose labels and expected facts. Review the
+labels, required fields and supported numeric/date/claim forms; uncertain prose
+stays unverified. Task versions are now 1.1.0 with frozen verification hashes;
+the policy and underlying source numbers are unchanged. Canonical pricing oracle
+generation passed on the pinned source, but generated expected values remain draft.
 This foundation supplies authoring examples, not calibrated model results. D16
 negotiation is defined in the catalogue and awaits its full case-authoring issue.
 
@@ -48,7 +53,8 @@ Provide the reviewing builder business or designated reviewer's name, policy/wor
 and the scope reviewed. A real approval timestamp and versioned hashes will be
 recorded after review. Offline validation and privacy scans have passed; they
 cannot establish business correctness or replace this review. Execution preflight
-continues to reject unapproved packs, and candidate execution is a later issue.
+continues to reject unapproved packs. Candidate execution is implemented and
+requires a separate explicit paid-execution flag.
 
 Configuration for later models, judges and environments is listed in
 [configuration inputs](configuration.md). No credential is needed for this review.

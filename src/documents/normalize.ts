@@ -1,6 +1,10 @@
 import { z } from 'zod';
 import { Hash, Id, RelativePath } from '#contracts/common';
 import { jsonText, sha256 } from '#src/io';
+import { readFile } from 'node:fs/promises';
+export async function normalizationFingerprint(readerIdentity: string) {
+  return sha256(`${readerIdentity}:${sha256(await readFile(new URL(import.meta.url)))}`);
+}
 
 export const READER_LIMITS = Object.freeze({
   rawBytes: 8_000_000,

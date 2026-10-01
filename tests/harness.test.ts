@@ -25,8 +25,22 @@ const pricing = {
   inputUsdPerMillion: 1,
   outputUsdPerMillion: 2,
 };
-type Mode = 'correct' | 'unknown' | 'malformed' | 'missing' | 'unknown-usage';
-async function run(transport: 'direct' | 'gateway', mode: Mode = 'correct', maxTurns = 8) {
+type Mode =
+  | 'correct'
+  | 'unknown'
+  | 'prototype-name'
+  | 'malformed'
+  | 'missing'
+  | 'unknown-usage'
+  | 'provider-error'
+  | 'partial'
+  | 'reused-id';
+async function run(
+  transport: 'direct' | 'gateway',
+  mode: Mode = 'correct',
+  maxTurns = 8,
+  offlineControl = true,
+) {
   const root = process.cwd();
   await mkdir(path.join(root, 'tmp'), { recursive: true });
   const directory = await mkdtemp(path.join(root, 'tmp/candidate-'));
@@ -42,32 +56,42 @@ async function run(transport: 'direct' | 'gateway', mode: Mode = 'correct', maxT
     );
     assert.ok(init?.body);
     const first = requests++ === 0;
+    if (mode === 'provider-error')
+      return new Response(
+        JSON.stringify({
+          error: { message: 'Rejected explicit key offline-test-key', type: 'server_error' },
+        }),
+        { status: 500, headers: { 'content-type': 'application/json' } },
+      );
     const calls =
       mode === 'unknown'
         ? [{ name: 'steal_secrets', args: '{}' }]
-        : mode === 'malformed'
-          ? [{ name: 'write', args: '{invalid' }]
-          : mode === 'missing'
-            ? []
-            : [
-                {
-                  name: 'write',
-                  args: JSON.stringify({
-                    path: 'facts.json',
-                    content:
-                      '{"costBaseCents":51200000,"overheadCents":5120000,"feeCents":4096000,"contractCents":66457600}',
-                  }),
-                },
-                {
-                  name: 'write',
-                  args: JSON.stringify({
-                    path: 'review.md',
-                    content:
-                      'Contract total AUD $664,576 [source json:/quote/contractCents]. Additive fee/overhead; review current quote.',
-                  }),
-                },
-              ];
-    const toolCalls = first && calls.length > 0;
+        : mode === 'prototype-name'
+          ? [{ name: 'constructor', args: '{}' }]
+          : mode === 'malformed'
+            ? [{ name: 'write', args: '{invalid' }]
+            : mode === 'missing'
+              ? []
+              : [
+                  {
+                    name: 'write',
+                    args: JSON.stringify({
+                      path: 'facts.json',
+                      content:
+                        '{"costBaseCents":51200000,"overheadCents":5120000,"feeCents":4096000,"contractCents":66457600}',
+                    }),
+                  },
+                  {
+                    name: 'write',
+                    args: JSON.stringify({
+                      path: 'review.md',
+                      content:
+                        'Contract total AUD $664,576 [source json:/quote/contractCents]. Additive fee/overhead; review current quote.',
+                    }),
+                  },
+                ];
+    if (mode === 'partial') calls.splice(1);
+    const toolCalls = (first || (mode === 'reused-id' && requests === 2)) && calls.length > 0;
     const body =
       transport === 'direct'
         ? {
@@ -132,6 +156,7 @@ async function run(transport: 'direct' | 'gateway', mode: Mode = 'correct', maxT
     });
   };
   const adapterOptions = {
+    offlineControl,
     model: transport === 'direct' ? 'mock-direct' : 'mock/provider-model',
     apiKey: 'offline-test-key',
     fetch: mockFetch,
@@ -190,7 +215,7 @@ test.each(['direct', 'gateway'] as const)(
     assert.ok(!JSON.stringify(config).includes('offline-test-key'));
   },
 );
-test.each(['unknown', 'malformed', 'missing'] as const)(
+test.each(['unknown', 'prototype-name', 'malformed', 'missing'] as const)(
   '%s candidate output cannot produce successful execution',
   async (mode) => {
     const { result } = await run('direct', mode);
@@ -205,10 +230,52 @@ test('unknown usage remains null and prevents further paid requests', async () =
   assert.equal(result.usage.candidateCostUsd, null);
   assert.equal(requests, 1);
 });
+test('the low-level harness also requires explicit paid opt-in and offline controls require a supplied mock transport', async () => {
+  await assert.rejects(run('direct', 'correct', 8, false), /PAID_EXECUTION_DISABLED/);
+  await assert.rejects(
+    directAdapter({ model: 'mock-only', apiKey: 'offline-test-key', offlineControl: true }),
+    /OFFLINE_TRANSPORT_REQUIRED/,
+  );
+});
+test('a failed provider request has unknown usage/cost and retains only sanitized diagnostics', async () => {
+  const { result, requests, saveDirectory } = await run('direct', 'provider-error');
+  assert.equal(requests, 1);
+  assert.equal(result.status, 'infrastructure-error');
+  assert.equal(result.usage.inputTokens, null);
+  assert.equal(result.usage.candidateCostUsd, null);
+  assert.ok(!JSON.stringify(result).includes('offline-test-key'));
+  assert.ok(
+    !(await readFile(path.join(saveDirectory, 'trace.jsonl'), 'utf8')).includes('offline-test-key'),
+  );
+});
 test('candidate loop exhaustion retains its artifacts and trace with an explicit failure', async () => {
   const { result } = await run('direct', 'correct', 1);
   assert.equal(result.status, 'budget-exhausted');
   assert.equal(result.artifacts.length, 2);
+  assert.equal(result.strictSuccess, false);
+});
+test('a provider reusing a raw call ID in a new turn receives a distinct operation identity', async () => {
+  const { result, saveDirectory, requests } = await run('direct', 'reused-id');
+  assert.equal(result.status, 'completed', result.reason ?? '');
+  assert.equal(requests, 3);
+  assert.equal(result.usage.toolAttempts, 4);
+  assert.equal(result.usage.toolExecutions, 4);
+  const events = (await readFile(path.join(saveDirectory, 'trace.jsonl'), 'utf8'))
+    .trim()
+    .split('\n')
+    .map((line) => JSON.parse(line));
+  assert.equal(
+    new Set(events.filter((event) => event.type === 'tool-attempt').map((event) => event.callId))
+      .size,
+    4,
+  );
+  await validateArtifact(path.join(saveDirectory, 'trace.jsonl'), 'trace');
+});
+test('a missing deliverable fails execution but preserves hashes of partial output for offline inspection', async () => {
+  const { result } = await run('direct', 'partial');
+  assert.equal(result.status, 'candidate-failure');
+  assert.equal(result.artifacts.length, 1);
+  assert.equal(result.artifacts[0]!.path, 'facts.json');
   assert.equal(result.strictSuccess, false);
 });
 test('saved output regrades offline, preserves semantic coverage and detects tampered trace evidence', async () => {

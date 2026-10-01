@@ -4,6 +4,8 @@ import { readFile } from 'node:fs/promises';
 import { DisposableDatabase } from '#src/environments/guri/database';
 import { GuriBridge } from '#src/environments/guri/bridge';
 import { Session } from '#src/environments/session';
+import { Pool } from 'pg';
+import { verifyState } from '#src/grading/state';
 
 test('canonical lead task commits row, history and call journal atomically; replay survives a new bridge instance', async () => {
   const root = process.cwd();
@@ -13,6 +15,7 @@ test('canonical lead task commits row, history and call journal atomically; repl
   );
   try {
     await database.seed();
+    const before = await database.snapshot();
     const bridge = new GuriBridge(
       `${root}/.guri`,
       `${root}/.cache/guri`,
@@ -45,6 +48,29 @@ test('canonical lead task commits row, history and call journal atomically; repl
     assert.ok(snapshot.history.length >= 1);
     assert.equal(snapshot.operations.length, 1);
     assert.equal(snapshot.tasks[0]?.leadId, 101);
+    assert.equal(
+      verifyState(
+        { source: 'independent-postgresql-connection', before, after: snapshot },
+        {
+          collection: 'tasks',
+          target: { leadId: 101 },
+          fields: {
+            type: 'CALL',
+            assignedId: 'builder-owner',
+            dueDate: '2026-10-05T00:00:00.000Z',
+            dueTime: '10:00',
+          },
+          count: 1,
+          historyMinimum: 1,
+          historyTarget: { leadId: 101, authorId: 'builder-owner' },
+          operationMinimum: 1,
+          operationTarget: { key: `${session.id}:create-1:create_lead_task` },
+          preservePaths: ['/leads/1'],
+        },
+      ).verdict,
+      'pass',
+      JSON.stringify(snapshot.tasks),
+    );
     const replay = await new GuriBridge(
       bridge.checkout,
       bridge.runtimeDirectory,
@@ -73,5 +99,28 @@ test('canonical lead task commits row, history and call journal atomically; repl
     );
   } finally {
     await database.dispose();
+  }
+});
+test('failed disposable schema initialization leaves no run database behind', async () => {
+  const control =
+    'postgresql://royal_lab:royal-lab-disposable-only@127.0.0.1:55432/royal_lab_control';
+  const observer = new Pool({ connectionString: control, max: 1 });
+  try {
+    const before = (
+      await observer.query(
+        "SELECT datname FROM pg_database WHERE datname LIKE 'royal_lab_run_%' ORDER BY datname",
+      )
+    ).rows;
+    await assert.rejects(
+      DisposableDatabase.create(control, 'SELECT * FROM royal_lab_missing_control'),
+    );
+    const after = (
+      await observer.query(
+        "SELECT datname FROM pg_database WHERE datname LIKE 'royal_lab_run_%' ORDER BY datname",
+      )
+    ).rows;
+    assert.deepEqual(after, before);
+  } finally {
+    await observer.end();
   }
 });

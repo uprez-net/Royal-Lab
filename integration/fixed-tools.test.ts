@@ -93,6 +93,7 @@ test.each(['approved', 'cancelled'] as const)(
         ],
       ];
       const adapter = await directAdapter({
+        offlineControl: true,
         model: 'offline-fixed-control',
         apiKey: 'offline-test-key',
         fetch: async () => {

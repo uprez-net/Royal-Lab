@@ -1,5 +1,5 @@
 import type { AdapterOptions, CandidateAdapter } from '#src/harness/adapters/base';
-import { validateAdapter } from '#src/harness/adapters/base';
+import { validateAdapter, credentialSanitizer } from '#src/harness/adapters/base';
 export async function directAdapter(options: AdapterOptions): Promise<CandidateAdapter> {
   const parameters = validateAdapter(options);
   const { createOpenAI } = await import('@ai-sdk/openai');
@@ -14,5 +14,7 @@ export async function directAdapter(options: AdapterOptions): Promise<CandidateA
     parameters,
     transport: 'direct',
     sdkVersion: 'ai-7.0.123/openai-4.0.82',
+    sanitize: credentialSanitizer(options.apiKey),
+    executionMode: options.offlineControl ? 'offline-control' : 'paid',
   };
 }

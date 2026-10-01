@@ -27,6 +27,44 @@ async function workspace() {
     workspace: await DocumentWorkspace.create(ROOT, task, path.join(directory, 'outputs')),
   };
 }
+test('long evidence units are fully reachable through a bounded cursor and inherited tool names are denied', async () => {
+  await mkdir(path.join(ROOT, 'tmp'), { recursive: true });
+  const directory = await mkdtemp(path.join(ROOT, 'tmp/read-cursor-'));
+  directories.push(directory);
+  const task = structuredClone(
+    (await discover(ROOT)).find((entry) => entry.task.definitionId === 'D01')!.task,
+  );
+  const bytes = JSON.stringify({ large: 'x'.repeat(32000) });
+  const docDirectory = path.join(directory, `tasks/${task.id}/documents`);
+  await mkdir(docDirectory, { recursive: true });
+  await writeFile(path.join(docDirectory, 'source.json'), bytes);
+  task.inputs = [
+    {
+      id: 'source',
+      path: 'documents/source.json',
+      kind: 'document',
+      mediaType: 'application/json',
+      sha256: sha256(bytes),
+    },
+  ];
+  const docs = await DocumentWorkspace.create(directory, task, path.join(directory, 'outputs'));
+  let cursor: { start: number; offset: number } | null = { start: 0, offset: 0 };
+  let collected = '';
+  let reads = 0;
+  while (cursor) {
+    const result = (await docs.execute('read', { path: 'documents/source.json', ...cursor })) as {
+      units: { text: string }[];
+      nextCursor: { start: number; offset: number } | null;
+    };
+    const text = result.units.map((unit) => unit.text).join('');
+    assert.ok(text.length <= READER_LIMITS.readCharacters);
+    collected += text;
+    cursor = result.nextCursor;
+    assert.ok(++reads <= 3);
+  }
+  assert.equal(collected, docs.snapshot()[0]!.units[0]!.text);
+  await assert.rejects(docs.execute('constructor', {}), /TOOL_UNKNOWN/);
+});
 test('stable JSON pointers and CSV logical rows survive escaping and embedded newlines', async () => {
   const json = await readText(Buffer.from('{"a/b":{"~value":123}}'), 'application/json');
   assert.equal(json.units[0]!.locator, 'json:/a~1b/~0value');

@@ -4,14 +4,17 @@ Private benchmark for NSW residential builder office work: evidence-backed
 commercial analysis, decisions, document understanding and approved operations.
 Designed for any residential builder using an explicit, versioned business policy.
 
-The foundation for issues #2–#5 is implemented. The roadmap has **28 definitions**
+The roadmap has **28 definitions**
 (16 document/analytical, 12 operational), with **four draft specimen cases** in two
-independent fictional worlds. Candidate execution, binary readers, operational
-bridge, graders and reports belong to subsequent issues. There are no model scores.
+independent fictional worlds. Closed readers, two candidate transports,
+deterministic graders and a canonical lead-task bridge are implemented for #4–#10.
+The operator harness has passed real Docker/PostgreSQL checks and offline SDK
+transport controls. Human business review and paid baseline runs remain pending;
+there are no model scores. T03–T12 operation coverage and semantic grading are unfinished.
 
 ## Start
 
-Use Node 24 LTS and pnpm 11.1.2. Node 25 is also supported by the package engines.
+Use Node 24 LTS and pnpm 11.1.2.
 
 ```sh
 pnpm install --frozen-lockfile
@@ -38,8 +41,10 @@ The first document case contains a fictional source pack and visible policy,
 requests facts.json and review.md, and keeps its fixture/rubric/provenance separate.
 `--visible` constructs a new allowlisted projection; it never emits hidden grading
 or repository configuration. `validate` checks every selected case before reporting.
-`validate --for-run` currently exits nonzero: review and execution are pending.
-Reserved run/grade/report/compare commands exit 3 and never fabricate a receipt.
+`validate --for-run` currently exits nonzero because human review is pending.
+`run` requires an explicit paid-execution flag and approved source/world/verifier
+packs; `grade` rechecks frozen saved evidence without candidate calls. Semantic
+criteria remain ungraded until #11. Reserved report/compare commands exit 3.
 
 ```sh
 pnpm schemas:export

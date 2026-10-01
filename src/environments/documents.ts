@@ -3,8 +3,13 @@ import path from 'node:path';
 import { z } from 'zod';
 import type { Task } from '#contracts/task';
 import { RelativePath } from '#contracts/common';
-import { normalize, READER_LIMITS, type NormalizedDocument } from '#src/documents/normalize';
-import { readText, TEXT_PARSER } from '#src/documents/readers/text';
+import {
+  normalize,
+  normalizationFingerprint,
+  READER_LIMITS,
+  type NormalizedDocument,
+} from '#src/documents/normalize';
+import { readText, TEXT_PARSER, textReaderFingerprint } from '#src/documents/readers/text';
 import { readBinary, type BinaryParser } from '#src/documents/readers/binary';
 import { readScoped, securePath, sha256, jsonText } from '#src/io';
 import { writeOutput } from '#src/environments/path-policy';
@@ -64,7 +69,9 @@ export class DocumentWorkspace {
         mediaType: input.mediaType,
         rawHash: input.sha256,
         parser,
-        parserHash: sha256(binary ? options.binaryParser!.imageId : TEXT_PARSER),
+        parserHash: await normalizationFingerprint(
+          binary ? options.binaryParser!.imageId : await textReaderFingerprint(),
+        ),
         inputProfile: binary ? 'binary-text' : 'normalized-text',
         units: parsed.units,
         gaps: parsed.gaps,
@@ -84,7 +91,7 @@ export class DocumentWorkspace {
     return [...this.documents.values()];
   }
   async execute(name: string, arguments_: unknown): Promise<unknown> {
-    if (!(name in DOCUMENT_TOOL_SCHEMAS)) throw new Error(`TOOL_UNKNOWN: ${name}`);
+    if (!Object.hasOwn(DOCUMENT_TOOL_SCHEMAS, name)) throw new Error(`TOOL_UNKNOWN: ${name}`);
     if (name === 'list') {
       DOCUMENT_TOOL_SCHEMAS.list.parse(arguments_);
       return [...this.documents.values()].map((doc) => ({
@@ -178,17 +185,18 @@ export class DocumentWorkspace {
     this.outputSizes.set(args.path, size);
     return { path: args.path, bytes: size, sha256: sha256(args.content) };
   }
-  async artifacts() {
+  async artifacts(strict = true) {
     const artifacts = [];
     for (const deliverable of this.task.deliverables) {
       try {
         const bytes = await readScoped(this.outputRoot, deliverable.path);
-        if (bytes.length === 0 || bytes.length > READER_LIMITS.outputBytes)
+        if (bytes.length > READER_LIMITS.outputBytes || (strict && bytes.length === 0))
           throw new Error(`OUTPUT_INVALID: ${deliverable.path}`);
-        if (deliverable.mediaType === 'application/json') JSON.parse(bytes.toString('utf8'));
+        if (strict && deliverable.mediaType === 'application/json')
+          JSON.parse(bytes.toString('utf8'));
         artifacts.push({ path: deliverable.path, sha256: sha256(bytes) });
       } catch (error) {
-        if (deliverable.required || (error as NodeJS.ErrnoException).code !== 'ENOENT')
+        if ((strict && deliverable.required) || (error as NodeJS.ErrnoException).code !== 'ENOENT')
           throw new Error(`OUTPUT_MISSING_OR_INVALID: ${deliverable.path}`);
       }
     }
