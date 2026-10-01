@@ -6,6 +6,11 @@ not a statement of current law. The sources, grading expectations and policy are
 private. Inspect both splits as a reviewer; candidate models receive only the
 allowed documents and policy.
 
+Other NSW residential builder businesses are eligible reviewers; review is not
+restricted to Royal Construction. Record the reviewing business or its designated
+reviewer's name, the actual review decision and scope. Eligibility alone does
+not approve the pack.
+
 ## Review the policy
 
 Read [the frozen candidate policy](../fixtures/policies/nsw-builder-v1.md).
@@ -39,7 +44,7 @@ negotiation is defined in the catalogue and awaits its full case-authoring issue
 
 ## Required review response
 
-Provide the reviewer's name, policy/world/case approvals or precise amendments,
+Provide the reviewing builder business or designated reviewer's name, policy/world/case approvals or precise amendments,
 and the scope reviewed. A real approval timestamp and versioned hashes will be
 recorded after review. Offline validation and privacy scans have passed; they
 cannot establish business correctness or replace this review. Execution preflight

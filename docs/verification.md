@@ -1,8 +1,9 @@
 # Foundation verification — 2026-10-01
 
 Verified locally on Windows with Node 25.2.1 and pnpm 11.1.2. The supported setup
-is Node 24 LTS; CI targets Node 24 on Linux. Local verification is not a claim that
-the remote CI job or the pinned Royal-Construction product tests have run.
+is Node 24 LTS. The first [remote offline CI run](https://github.com/uprez-net/Royal-Lab/actions/runs/36891011231)
+also passed on Linux with Node 24. The pinned Royal-Construction product tests
+were inspected and have not been executed here.
 
 | Check                            | Result                                                                                                                                                                      |
 | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

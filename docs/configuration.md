@@ -8,8 +8,10 @@ email/Xero/DocuSign credential or provider key required at this stage.
 
 The user has selected 28 task definitions, intended business policy as authority,
 NSW residential construction for any builder, and private code/dataset/results.
-The remaining non-secret review input is a **named business reviewer** and approval
+The remaining non-secret review input is a **named reviewing builder business or business reviewer** and approval
 of the concrete policy/case packs. Drafts stay visibly draft until that review occurs.
+Other NSW residential builder businesses may review; Royal Construction is not
+the exclusive reviewer.
 
 ## When candidate execution (#8) is implemented, supply
 
