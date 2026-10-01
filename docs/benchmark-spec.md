@@ -25,11 +25,11 @@ the full case library is authored under the later owning issues.
 
 ## Experiment profiles
 
-| Profile     | Experiment                                                    | Environment                                                                             | Current status                                     |
-| ----------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| Documents   | Candidate + common prompt/read/search/write harness           | Frozen source/policy pack and JSON/Markdown artifacts; no product deployment            | Offline contracts/specimens ready; execution #6/#8 |
-| Fixed tools | Candidate + common tool loop + scripted operator              | Pinned private Guri checkout, synthetic disposable PostgreSQL, recording external ports | Bridge #7; interactions #9                         |
-| Royal Eve   | Composed product agent with its own prompts/model/specialists | Authenticated staging session surface, cancel-only external effects                     | Optional #18                                       |
+| Profile     | Experiment                                                    | Environment                                                                             | Current status                                                                           |
+| ----------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Documents   | Candidate + common prompt/read/search/write harness           | Frozen source/policy pack and JSON/Markdown artifacts; no product deployment            | Readers/loop/deterministic checks implemented; draft review and semantic grading pending |
+| Fixed tools | Candidate + common tool loop + scripted operator              | Pinned private Guri checkout, synthetic disposable PostgreSQL, recording external ports | Lead-task API slice tested; broader adapters and reviewed case authoring pending         |
+| Royal Eve   | Composed product agent with its own prompts/model/specialists | Authenticated staging session surface, cancel-only external effects                     | Optional #18                                                                             |
 
 Keep these leaderboards separate. A tool's presence does not establish its state
 or port support. Eve's MCP session surface runs the composed agent; it does not

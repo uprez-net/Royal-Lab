@@ -1,0 +1,50 @@
+# Royal-Lab documentation
+
+Royal-Lab measures how reliably an LLM or agent can handle NSW residential builder
+office work. A case gives it a fictional assignment, documents and business policy;
+the harness records its explanations and actions, and independent checks assess
+its facts, artifacts, permissions and effects. Intended builder policy is the
+authority. Royal-Construction supplies canonical operational commands, not the
+expected policy for every builder.
+
+The current repository has 28 task definitions, four **draft** document specimens,
+a closed document workspace, candidate transports, deterministic verification and
+a tested three-tool lead-task bridge. It is an implementation under development,
+with no approved benchmark release or paid model baseline. Review gates are real:
+an offline validation pass does not permit execution of draft cases.
+
+## Reading order
+
+| Guide                                          | What it explains                                                                                               |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| [Getting started](getting-started.md)          | Dependencies, environment assumptions, fresh setup, Docker, private checkout, verification and troubleshooting |
+| [Architecture](architecture.md)                | Components, trust boundaries, case lifecycle, evidence, approval/replay and scoring                            |
+| [Configuration](configuration.md)              | Inputs to obtain from the owner, explicit local configuration, credentials and pricing                         |
+| [Execution](execution.md)                      | Candidate loop, budgets, current CLI/API support and saved evidence                                            |
+| [Measurement specification](benchmark-spec.md) | Domain, profiles, success definition, denominators, comparison rules and planned scope                         |
+| [Task authoring](task-authoring.md)            | Synthetic case design, hidden expectations, review and versioning                                              |
+| [Contracts](contracts.md)                      | Schemas, hashes, safe paths and cross-file validation                                                          |
+| [Business review pack](review-pack.md)         | Policies and four specimen expectations needing actual builder review                                          |
+| [Document workspace](document-workspace.md)    | Readers, citations, extraction gaps and isolated binary parsing                                                |
+| [Canonical bridge](guri-bridge.md)             | Pinned product commands, disposable databases and independently observed effects                               |
+| [Verification record](verification.md)         | Checks that have passed and the limits of that evidence                                                        |
+
+For source decisions, see [runner/domain reuse](decisions/0001-runner-and-domain-reuse.md)
+and [execution boundaries](decisions/0002-execution-boundaries.md).
+[The source audit](audit.md), [case matrix](capability-matrix.csv) and
+[tool matrix](tool-capability-matrix.csv) connect the roadmap to product capabilities.
+
+## Current readiness
+
+| Activity                                                                             | Available now                        | Required input                                                                          |
+| ------------------------------------------------------------------------------------ | ------------------------------------ | --------------------------------------------------------------------------------------- |
+| Inspect cases, use TUI, validate drafts, export schemas, build and run offline tests | Yes                                  | Node 24 and pinned pnpm dependencies                                                    |
+| Parse PDF/DOCX/XLSX locally                                                          | Yes                                  | Docker and the built parser image ID                                                    |
+| Exercise canonical lead lookup/list/create in integration controls                   | Yes                                  | Private pinned checkout, prepared bridge and disposable Compose database                |
+| Run a reviewed document trial through direct OpenAI or AI Gateway                    | Implemented, draft specimens blocked | Actual review, exact candidate configuration, local credential, pricing and paid opt-in |
+| Run the full operational catalogue                                                   | No                                   | T03–T12 adapters and authored/reviewed operational cases                                |
+| Produce a fully graded, comparable benchmark score                                   | No                                   | Semantic grading, complete reviewed cases, orchestration and calibration                |
+
+Code, datasets and results remain private/proprietary. The synthetic database is
+disposable; real client records, product templates and production credentials are
+outside this repository's inputs.

@@ -14,6 +14,11 @@ there are no model scores. T03–T12 operation coverage and semantic grading are
 
 ## Start
 
+Read the [documentation guide](docs/README.md),
+[setup and prerequisites](docs/getting-started.md) and
+[architecture](docs/architecture.md) for the case lifecycle, environment assumptions,
+dependencies, trust boundaries and current execution limits.
+
 Use Node 24 LTS and pnpm 11.1.2.
 
 ```sh

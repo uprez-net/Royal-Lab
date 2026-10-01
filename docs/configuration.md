@@ -1,5 +1,9 @@
 # Configuration inputs
 
+Start with [setup and environment assumptions](getting-started.md) and
+[architecture](architecture.md). This page lists the owner decisions needed to
+configure execution; offline authoring does not need candidate credentials.
+
 Node 24 LTS and pnpm 11.1.2 are sufficient for offline authoring, integrity checks,
 schemas, TUI and tests. The TUI performs offline checks. Code, data and results remain
 private; no release or external business outreach is configured.
