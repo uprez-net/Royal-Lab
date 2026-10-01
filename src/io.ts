@@ -3,7 +3,8 @@ import { lstat, readFile, realpath, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { RelativePath } from '#contracts/common';
 
-export const sha256 = (content: string | Uint8Array) => createHash('sha256').update(content).digest('hex');
+export const sha256 = (content: string | Uint8Array) =>
+  createHash('sha256').update(content).digest('hex');
 export const jsonText = (value: unknown) => `${JSON.stringify(value, null, 2)}\n`;
 export async function readJson(file: string): Promise<unknown> {
   return JSON.parse(await readFile(file, 'utf8')) as unknown;
@@ -31,7 +32,9 @@ export async function readScoped(root: string, relative: string): Promise<Buffer
 export async function walk(root: string): Promise<string[]> {
   const files: string[] = [];
   async function visit(directory: string, prefix: string) {
-    for (const entry of (await readdir(directory, { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name))) {
+    for (const entry of (await readdir(directory, { withFileTypes: true })).sort((a, b) =>
+      a.name.localeCompare(b.name),
+    )) {
       const relative = `${prefix}${entry.name}`;
       if (entry.isSymbolicLink()) throw new Error(`Symlink forbidden: ${relative}`);
       if (entry.isDirectory()) await visit(path.join(directory, entry.name), `${relative}/`);

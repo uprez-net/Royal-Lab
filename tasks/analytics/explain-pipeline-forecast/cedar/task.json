@@ -63,7 +63,7 @@
     }
   ],
   "fixturePath": "grading/fixture.json",
-  "fixtureHash": "f54dcee3494f0adac2a3dfb437ebcea551242d36675adccd55a22fa9bcc0c586",
+  "fixtureHash": "73b3367fa0dbab87537aac5a204a9bb22dd5bd68939d13131cf5d68fbdc1ff78",
   "rubricPath": "grading/rubric.json",
   "rubricHash": "7c9567229c194ab91c1a61285f22de5b09bbfd248ce45507ec64e5c35a2cadf4",
   "provenancePath": "provenance.json",

@@ -11,12 +11,29 @@ import { WorldSchema, FixtureSchema } from '#fixtures/world';
 import { jsonText } from '#src/io';
 
 export async function exportSchemas(root: string) {
-  const directory = path.join(root, 'schemas'); await mkdir(directory, { recursive: true });
-  const schemas = { task: TaskSchema, suite: SuiteSchema, rubric: RubricSchema, profile: ProfileSchema,
-    result: ResultSchema, manifest: RunManifestSchema, trace: TraceEventSchema,
-    provenance: ProvenanceSchema, world: WorldSchema, fixture: FixtureSchema };
+  const directory = path.join(root, 'schemas');
+  await mkdir(directory, { recursive: true });
+  const schemas = {
+    task: TaskSchema,
+    suite: SuiteSchema,
+    rubric: RubricSchema,
+    profile: ProfileSchema,
+    result: ResultSchema,
+    manifest: RunManifestSchema,
+    trace: TraceEventSchema,
+    provenance: ProvenanceSchema,
+    world: WorldSchema,
+    fixture: FixtureSchema,
+  };
   for (const [name, schema] of Object.entries(schemas)) {
-    await writeFile(path.join(directory, `${name}.schema.json`), jsonText(z.toJSONSchema(schema, { target: 'draft-2020-12' })), 'utf8');
+    await writeFile(
+      path.join(directory, `${name}.schema.json`),
+      jsonText(z.toJSONSchema(schema, { target: 'draft-2020-12' })),
+      'utf8',
+    );
   }
-  return { schemas: Object.keys(schemas), note: 'Cross-file and semantic invariants additionally require Royal-Lab preflight.' };
+  return {
+    schemas: Object.keys(schemas),
+    note: 'Cross-file and semantic invariants additionally require Royal-Lab preflight.',
+  };
 }

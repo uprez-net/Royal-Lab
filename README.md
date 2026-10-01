@@ -55,6 +55,18 @@ files and refuses to overwrite edited ones. Bump versions/review deliberately;
 the check mode detects drift. No production identities, templates or transcripts
 are inputs to the generator. Human approval is intentionally not generated.
 
+## Formatting
+
+`pnpm format` formats authored TypeScript, TSX, JSON, Markdown and YAML;
+`pnpm format:check` verifies them without edits and runs as part of `pnpm check`
+and CI. Prettier is pinned in the lockfile. EditorConfig and Git enforce LF line
+endings, including on Windows. VS Code recommends the Prettier extension and
+formats on save using this repository's configuration.
+
+Canonical generated schemas and fixture/task/suite packs are excluded from
+Prettier: their exporters own the exact bytes and frozen hashes. Check them with
+`pnpm fixtures:generate --check` and schema export/drift checks instead.
+
 ## Architecture and imports
 
 Native package imports (`#contracts/task`, `#tasks/validate`, `#fixtures/world`,
@@ -66,7 +78,7 @@ omit it. Vitest/TypeScript resolve the same development mapping.
 See [benchmark specification](docs/benchmark-spec.md), [source audit](docs/audit.md),
 [case capability matrix](docs/capability-matrix.csv), [57-tool inventory](docs/tool-capability-matrix.csv),
 [task authoring](docs/task-authoring.md), [contracts](docs/contracts.md),
-and [configuration inputs](docs/configuration.md).
+the [business review pack](docs/review-pack.md), and [configuration inputs](docs/configuration.md).
 
 Business policy outranks product behavior. A bridge limitation or disagreement is
 recorded explicitly; no competing product rule is copied into Royal-Lab.

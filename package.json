@@ -4,15 +4,35 @@
   "private": true,
   "type": "module",
   "license": "UNLICENSED",
-  "engines": { "node": ">=24 <26" },
+  "engines": {
+    "node": ">=24 <26"
+  },
   "packageManager": "pnpm@11.1.2",
   "imports": {
-    "#tui": { "development": "./src/tui.tsx", "default": "./dist/tui.js" },
-    "#src/*": { "development": "./src/*.ts", "default": "./dist/*.js" },
-    "#contracts/*": { "development": "./src/contracts/*.ts", "default": "./dist/contracts/*.js" },
-    "#tasks/*": { "development": "./src/tasks/*.ts", "default": "./dist/tasks/*.js" },
-    "#fixtures/*": { "development": "./src/fixtures/*.ts", "default": "./dist/fixtures/*.js" },
-    "#runs/*": { "development": "./src/runs/*.ts", "default": "./dist/runs/*.js" }
+    "#tui": {
+      "development": "./src/tui.tsx",
+      "default": "./dist/tui.js"
+    },
+    "#src/*": {
+      "development": "./src/*.ts",
+      "default": "./dist/*.js"
+    },
+    "#contracts/*": {
+      "development": "./src/contracts/*.ts",
+      "default": "./dist/contracts/*.js"
+    },
+    "#tasks/*": {
+      "development": "./src/tasks/*.ts",
+      "default": "./dist/tasks/*.js"
+    },
+    "#fixtures/*": {
+      "development": "./src/fixtures/*.ts",
+      "default": "./dist/fixtures/*.js"
+    },
+    "#runs/*": {
+      "development": "./src/runs/*.ts",
+      "default": "./dist/runs/*.js"
+    }
   },
   "scripts": {
     "lab": "node --conditions=development --import tsx src/cli.ts",
@@ -31,12 +51,19 @@
     "build": "tsc -p tsconfig.build.json",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "pnpm typecheck && pnpm test && pnpm fixtures:lint && pnpm validate && pnpm build"
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "check": "pnpm format:check && pnpm typecheck && pnpm test && pnpm fixtures:lint && pnpm validate && pnpm build"
   },
-  "dependencies": { "zod": "4.6.5", "ink": "7.1.1", "react": "19.3.0" },
+  "dependencies": {
+    "ink": "7.1.1",
+    "react": "19.3.0",
+    "zod": "4.6.5"
+  },
   "devDependencies": {
     "@types/node": "24.19.0",
     "@types/react": "19.3.0",
+    "prettier": "3.9.9",
     "tsx": "4.23.15",
     "typescript": "7.0.2",
     "vitest": "5.0.3"

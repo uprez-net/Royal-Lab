@@ -27,7 +27,7 @@
 9. Freeze the suite and fingerprint. Held-out results never guide prompt/rubric tuning.
 
 The included Cedar world uses two individual owners, a duplex, ambiguous similarly
-named leads and pre/post-DST evidence. Estuary uses a trust owner, two projects,
+named leads and a clock on the Sydney DST transition day. Estuary uses a trust owner, two projects,
 delayed recovery, different trades, unpaid claims and missing owner evidence. They
 differ structurally and commercially, not just linguistically. Four small specimens
 exercise authoring contracts; they are not an already calibrated benchmark.

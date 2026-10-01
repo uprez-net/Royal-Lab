@@ -25,15 +25,15 @@ unimplemented bridges are not described as shipped capabilities.
 
 ## Business lifecycle and critical examples
 
-| Area | Inspected evidence | Consequence for the benchmark |
-| --- | --- | --- |
-| Leads and pipeline | `lib/domain/leads/{queries,tasks}.ts`, `lib/leads/pipeline-math.ts`, `lib/dates/sydney.ts` | Exact party resolution, unknown values, won/lost probabilities and frozen Sydney deadlines |
+| Area                       | Inspected evidence                                                                                                    | Consequence for the benchmark                                                                                   |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Leads and pipeline         | `lib/domain/leads/{queries,tasks}.ts`, `lib/leads/pipeline-math.ts`, `lib/dates/sydney.ts`                            | Exact party resolution, unknown values, won/lost probabilities and frozen Sydney deadlines                      |
 | Offers/pricing/negotiation | `lib/offer/workspace-pricing.ts`, `offer-contract-value.ts`, `lib/domain/offers/{workspace-save,status,revisions}.ts` | Additive rounded markups, accepted price authority, stale revisions, drafted rather than unapproved concessions |
-| Contract-to-project | `lib/agent/tender-extraction-prompts.ts`, `lib/domain/projects/owners.ts` | Preserve owner block and precedence; no builder/witness/footer substitution |
-| Compliance/outreach | `lib/domain/compliance/{documents,prerequisites,outreach,title-search-owners}.ts`, extraction prompts | Sent-evidence approval prerequisite, nested requirements, conditional verdicts, unreadable identifiers |
-| Activities/trades | `lib/domain/projects/{milestones,requirements}.ts`, `lib/domain/tradies/{schedules,directory}.ts` | Required completion facts, versions, active overlaps, request-only price changes |
-| Claims/cash flow | `lib/domain/invoices/{stage-claim,sync}.ts`, `lib/projects/milestone-ledger.ts`, `lib/xero/invoice-status.ts` | Root-stage grouping, waived/nonduplicated claims; issued/synced/paid are distinct |
-| Identity/approvals | `lib/domain/identity/team.ts`, `agent/lib/{agent-approval,audited-operation,channel-auth}.ts` | Last-admin guard, owner binding, exact persistence/audit/effect evidence |
+| Contract-to-project        | `lib/agent/tender-extraction-prompts.ts`, `lib/domain/projects/owners.ts`                                             | Preserve owner block and precedence; no builder/witness/footer substitution                                     |
+| Compliance/outreach        | `lib/domain/compliance/{documents,prerequisites,outreach,title-search-owners}.ts`, extraction prompts                 | Sent-evidence approval prerequisite, nested requirements, conditional verdicts, unreadable identifiers          |
+| Activities/trades          | `lib/domain/projects/{milestones,requirements}.ts`, `lib/domain/tradies/{schedules,directory}.ts`                     | Required completion facts, versions, active overlaps, request-only price changes                                |
+| Claims/cash flow           | `lib/domain/invoices/{stage-claim,sync}.ts`, `lib/projects/milestone-ledger.ts`, `lib/xero/invoice-status.ts`         | Root-stage grouping, waived/nonduplicated claims; issued/synced/paid are distinct                               |
+| Identity/approvals         | `lib/domain/identity/team.ts`, `agent/lib/{agent-approval,audited-operation,channel-auth}.ts`                         | Last-admin guard, owner binding, exact persistence/audit/effect evidence                                        |
 
 Verified source behaviors (references are evidence, not final business-policy authority):
 

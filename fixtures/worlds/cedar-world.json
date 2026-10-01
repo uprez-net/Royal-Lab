@@ -4,7 +4,7 @@
   "id": "cedar-world",
   "split": "development",
   "seed": "cedar-2026-v1",
-  "scenario": "Two individual owners, duplex quote and ambiguous lead follow-up before DST.",
+  "scenario": "Two individual owners, duplex quote and ambiguous lead follow-up on the DST transition day.",
   "clock": {
     "instant": "2026-10-03T23:30:00Z",
     "timezone": "Australia/Sydney"
