@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "analytics/project-cost-margin/estuary",
+  "policyVersion": "1.0.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Correct projectedCostCents",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "method": "deterministic",
+      "deliverables": [
+        "facts.json"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "projectedCostCents",
+          "fact": "Under the supplied policy, projectedCostCents must equal 52000000."
+        }
+      ],
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/projectedCostCents",
+        "expected": 52000000
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Correct projectedProfitCents",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "method": "deterministic",
+      "deliverables": [
+        "facts.json"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "projectedProfitCents",
+          "fact": "Under the supplied policy, projectedProfitCents must equal -8320000."
+        }
+      ],
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/projectedProfitCents",
+        "expected": -8320000
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Correct pendingVariationIncluded",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "truthfulness",
+      "method": "deterministic",
+      "deliverables": [
+        "facts.json"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "pendingVariationIncluded",
+          "fact": "Under the supplied policy, pendingVariationIncluded must equal false."
+        }
+      ],
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/pendingVariationIncluded",
+        "expected": false
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Evidence-backed decision and uncertainty",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "method": "semantic",
+      "deliverables": [
+        "review.md"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "margin",
+          "fact": "Source facts, conflicts and missing values define the bounds of the recommendation."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "NSW residential builder benchmark policy",
+          "fact": "No invented facts, completed effects, receipts or recovery savings."
+        }
+      ],
+      "passIf": "Cites source IDs/rows, explains the calculation and consequential issue, names uncertainty and proposes a grounded next action.",
+      "failIf": "Invents evidence or savings, hides a material conflict, conflates pipeline/invoices with cash, or asserts unsupported completion."
+    }
+  ]
+}

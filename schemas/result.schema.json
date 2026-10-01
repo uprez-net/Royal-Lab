@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "runId": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+    },
+    "taskId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "taskVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "profile": {
+      "type": "string",
+      "enum": [
+        "documents",
+        "fixed-tools",
+        "royal-eve"
+      ]
+    },
+    "trial": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "excluded",
+        "invalid",
+        "pending",
+        "running",
+        "completed",
+        "candidate-failure",
+        "budget-exhausted",
+        "blocked-input",
+        "infrastructure-error"
+      ]
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "gradingStatus": {
+      "type": "string",
+      "enum": [
+        "ungraded",
+        "graded",
+        "judge-error"
+      ]
+    },
+    "strictSuccess": {
+      "type": "boolean"
+    },
+    "criticalGatesPassed": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "criteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+          },
+          "mandatory": {
+            "type": "boolean"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "critical",
+              "substantive",
+              "diagnostic"
+            ]
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail",
+              "error",
+              "ungraded"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidencePaths": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "id",
+          "mandatory",
+          "severity",
+          "verdict",
+          "reason",
+          "evidencePaths"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "outcomeId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "usage": {
+      "type": "object",
+      "properties": {
+        "inputTokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "outputTokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "candidateCostUsd": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "judgeCostUsd": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "durationMs": {
+          "type": "number",
+          "minimum": 0
+        },
+        "toolAttempts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "toolExecutions": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "committedEffects": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "inputTokens",
+        "outputTokens",
+        "candidateCostUsd",
+        "judgeCostUsd",
+        "durationMs",
+        "toolAttempts",
+        "toolExecutions",
+        "committedEffects"
+      ],
+      "additionalProperties": false
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "path",
+          "sha256"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "runId",
+    "taskId",
+    "taskVersion",
+    "profile",
+    "trial",
+    "status",
+    "reason",
+    "gradingStatus",
+    "strictSuccess",
+    "criticalGatesPassed",
+    "criteria",
+    "outcomeId",
+    "usage",
+    "artifacts"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,44 @@
+{
+  "name": "royal-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
+  "engines": { "node": ">=24 <26" },
+  "packageManager": "pnpm@11.1.2",
+  "imports": {
+    "#tui": { "development": "./src/tui.tsx", "default": "./dist/tui.js" },
+    "#src/*": { "development": "./src/*.ts", "default": "./dist/*.js" },
+    "#contracts/*": { "development": "./src/contracts/*.ts", "default": "./dist/contracts/*.js" },
+    "#tasks/*": { "development": "./src/tasks/*.ts", "default": "./dist/tasks/*.js" },
+    "#fixtures/*": { "development": "./src/fixtures/*.ts", "default": "./dist/fixtures/*.js" },
+    "#runs/*": { "development": "./src/runs/*.ts", "default": "./dist/runs/*.js" }
+  },
+  "scripts": {
+    "lab": "node --conditions=development --import tsx src/cli.ts",
+    "tui": "node --conditions=development --import tsx src/cli.ts tui",
+    "list": "node --conditions=development --import tsx src/cli.ts list",
+    "describe": "node --conditions=development --import tsx src/cli.ts describe",
+    "validate": "node --conditions=development --import tsx src/cli.ts validate",
+    "run": "node --conditions=development --import tsx src/cli.ts run",
+    "grade": "node --conditions=development --import tsx src/cli.ts grade",
+    "report": "node --conditions=development --import tsx src/cli.ts report",
+    "compare": "node --conditions=development --import tsx src/cli.ts compare",
+    "fixtures:generate": "node --conditions=development --import tsx src/cli.ts fixtures generate",
+    "fixtures:lint": "node --conditions=development --import tsx src/cli.ts fixtures lint",
+    "schemas:export": "node --conditions=development --import tsx src/cli.ts schemas export",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "pnpm typecheck && pnpm test && pnpm fixtures:lint && pnpm validate && pnpm build"
+  },
+  "dependencies": { "zod": "4.6.5", "ink": "7.1.1", "react": "19.3.0" },
+  "devDependencies": {
+    "@types/node": "24.19.0",
+    "@types/react": "19.3.0",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  }
+}

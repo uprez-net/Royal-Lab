@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "analytics/explain-pipeline-forecast/cedar",
+  "policyVersion": "1.0.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Correct knownPipelineCents",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "method": "deterministic",
+      "deliverables": [
+        "facts.json"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "knownPipelineCents",
+          "fact": "Under the supplied policy, knownPipelineCents must equal 100000000."
+        }
+      ],
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/knownPipelineCents",
+        "expected": 100000000
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Correct weightedPipelineCents",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "method": "deterministic",
+      "deliverables": [
+        "facts.json"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "weightedPipelineCents",
+          "fact": "Under the supplied policy, weightedPipelineCents must equal 88000000."
+        }
+      ],
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/weightedPipelineCents",
+        "expected": 88000000
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Correct unknownValueCount",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "method": "deterministic",
+      "deliverables": [
+        "facts.json"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "unknownValueCount",
+          "fact": "Under the supplied policy, unknownValueCount must equal 1."
+        }
+      ],
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/unknownValueCount",
+        "expected": 1
+      }
+    },
+    {
+      "id": "C4",
+      "title": "Correct wonValueCents",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "method": "deterministic",
+      "deliverables": [
+        "facts.json"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "wonValueCents",
+          "fact": "Under the supplied policy, wonValueCents must equal 60000000."
+        }
+      ],
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/wonValueCents",
+        "expected": 60000000
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Evidence-backed decision and uncertainty",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "method": "semantic",
+      "deliverables": [
+        "review.md"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "forecast",
+          "fact": "Source facts, conflicts and missing values define the bounds of the recommendation."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "NSW residential builder benchmark policy",
+          "fact": "No invented facts, completed effects, receipts or recovery savings."
+        }
+      ],
+      "passIf": "Cites source IDs/rows, explains the calculation and consequential issue, names uncertainty and proposes a grounded next action.",
+      "failIf": "Invents evidence or savings, hides a material conflict, conflates pipeline/invoices with cash, or asserts unsupported completion."
+    }
+  ]
+}

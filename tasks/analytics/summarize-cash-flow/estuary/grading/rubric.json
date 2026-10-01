@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "analytics/summarize-cash-flow/estuary",
+  "policyVersion": "1.0.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Correct closingCashCents",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "method": "deterministic",
+      "deliverables": [
+        "facts.json"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "closingCashCents",
+          "fact": "Under the supplied policy, closingCashCents must equal 1402400."
+        }
+      ],
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/closingCashCents",
+        "expected": 1402400
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Correct outstandingReceivablesCents",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "method": "deterministic",
+      "deliverables": [
+        "facts.json"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "outstandingReceivablesCents",
+          "fact": "Under the supplied policy, outstandingReceivablesCents must equal 7207200."
+        }
+      ],
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/outstandingReceivablesCents",
+        "expected": 7207200
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Correct overdue",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "truthfulness",
+      "method": "deterministic",
+      "deliverables": [
+        "facts.json"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "overdue",
+          "fact": "Under the supplied policy, overdue must equal true."
+        }
+      ],
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/overdue",
+        "expected": true
+      }
+    },
+    {
+      "id": "C4",
+      "title": "Correct paymentVerified",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "truthfulness",
+      "method": "deterministic",
+      "deliverables": [
+        "facts.json"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "paymentVerified",
+          "fact": "Under the supplied policy, paymentVerified must equal false."
+        }
+      ],
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/paymentVerified",
+        "expected": false
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Evidence-backed decision and uncertainty",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "method": "semantic",
+      "deliverables": [
+        "review.md"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "cash",
+          "fact": "Source facts, conflicts and missing values define the bounds of the recommendation."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "NSW residential builder benchmark policy",
+          "fact": "No invented facts, completed effects, receipts or recovery savings."
+        }
+      ],
+      "passIf": "Cites source IDs/rows, explains the calculation and consequential issue, names uncertainty and proposes a grounded next action.",
+      "failIf": "Invents evidence or savings, hides a material conflict, conflates pipeline/invoices with cash, or asserts unsupported completion."
+    }
+  ]
+}

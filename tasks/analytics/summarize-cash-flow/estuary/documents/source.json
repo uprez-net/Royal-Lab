@@ -1,0 +1,155 @@
+{
+  "worldId": "estuary-world",
+  "entities": [
+    {
+      "id": "builder-fe9b57a5bffe",
+      "kind": "builder",
+      "name": "Estuary Workshop Builders",
+      "email": "builder@estuary.example",
+      "address": "72 Fictional Estuary Lane, Synthetic Township, NSW (fictional)",
+      "references": []
+    },
+    {
+      "id": "owner-a-05b24088bb21",
+      "kind": "owner",
+      "name": "Invented Coastal Trust",
+      "email": "owner-a@estuary.example",
+      "address": "72 Fictional Estuary Lane, Synthetic Township, NSW (fictional)",
+      "references": []
+    },
+    {
+      "id": "lead-a-5d9dba01cb0c",
+      "kind": "lead",
+      "name": "Coastal staged build",
+      "email": "lead-a@estuary.example",
+      "address": "72 Fictional Estuary Lane, Synthetic Township, NSW (fictional)",
+      "references": [
+        "owner-a-05b24088bb21"
+      ]
+    },
+    {
+      "id": "lead-b-1d766ac47096",
+      "kind": "lead",
+      "name": "Coastal delayed extension",
+      "email": "lead-b@estuary.example",
+      "address": "72 Fictional Estuary Lane, Synthetic Township, NSW (fictional)",
+      "references": [
+        "owner-a-05b24088bb21"
+      ]
+    },
+    {
+      "id": "project-a-154b18acb8e5",
+      "kind": "project",
+      "name": "Estuary staged build",
+      "email": "project-a@estuary.example",
+      "address": "72 Fictional Estuary Lane, Synthetic Township, NSW (fictional)",
+      "references": [
+        "owner-a-05b24088bb21",
+        "offer-a-dfdb4404bb10"
+      ]
+    },
+    {
+      "id": "project-b-d60706bd2f07",
+      "kind": "project",
+      "name": "Estuary extension recovery",
+      "email": "project-b@estuary.example",
+      "address": "72 Fictional Estuary Lane, Synthetic Township, NSW (fictional)",
+      "references": [
+        "owner-a-05b24088bb21",
+        "offer-b-0b99aecd259a"
+      ]
+    },
+    {
+      "id": "offer-a-dfdb4404bb10",
+      "kind": "offer",
+      "name": "Estuary agreed revision 2",
+      "email": "offer-a@estuary.example",
+      "address": "72 Fictional Estuary Lane, Synthetic Township, NSW (fictional)",
+      "references": [
+        "lead-a-5d9dba01cb0c"
+      ]
+    },
+    {
+      "id": "offer-b-0b99aecd259a",
+      "kind": "offer",
+      "name": "Extension draft revision 1",
+      "email": "offer-b@estuary.example",
+      "address": "72 Fictional Estuary Lane, Synthetic Township, NSW (fictional)",
+      "references": [
+        "lead-b-1d766ac47096"
+      ]
+    },
+    {
+      "id": "tradie-a-7bc28fb3c9fb",
+      "kind": "tradie",
+      "name": "Fictional Tide Plumbing",
+      "email": "tradie-a@estuary.example",
+      "address": "72 Fictional Estuary Lane, Synthetic Township, NSW (fictional)",
+      "references": [
+        "project-a-154b18acb8e5",
+        "project-b-d60706bd2f07"
+      ]
+    },
+    {
+      "id": "tradie-b-5900b203cde3",
+      "kind": "tradie",
+      "name": "Invented Sand Electrical",
+      "email": "tradie-b@estuary.example",
+      "address": "72 Fictional Estuary Lane, Synthetic Township, NSW (fictional)",
+      "references": [
+        "project-b-d60706bd2f07"
+      ]
+    },
+    {
+      "id": "certifier-a-c354973fe733",
+      "kind": "certifier",
+      "name": "Estuary Synthetic Certification",
+      "email": "certifier-a@estuary.example",
+      "address": "72 Fictional Estuary Lane, Synthetic Township, NSW (fictional)",
+      "references": [
+        "project-a-154b18acb8e5"
+      ]
+    },
+    {
+      "id": "document-a-13c4ea6da441",
+      "kind": "document",
+      "name": "Missing owner annexure",
+      "email": "document-a@estuary.example",
+      "address": "72 Fictional Estuary Lane, Synthetic Township, NSW (fictional)",
+      "references": [
+        "project-b-d60706bd2f07"
+      ]
+    },
+    {
+      "id": "invoice-a-708b4846b9c1",
+      "kind": "invoice",
+      "name": "Estuary unpaid claim",
+      "email": "invoice-a@estuary.example",
+      "address": "72 Fictional Estuary Lane, Synthetic Township, NSW (fictional)",
+      "references": [
+        "project-a-154b18acb8e5"
+      ]
+    },
+    {
+      "id": "invoice-b-79f8ee6cf50b",
+      "kind": "invoice",
+      "name": "Extension paid deposit",
+      "email": "invoice-b@estuary.example",
+      "address": "72 Fictional Estuary Lane, Synthetic Township, NSW (fictional)",
+      "references": [
+        "project-b-d60706bd2f07"
+      ]
+    }
+  ],
+  "clock": {
+    "instant": "2026-10-05T22:00:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "openingCashCents": 6000000,
+  "receiptsCents": 2402400,
+  "issuedInvoiceCents": 9609600,
+  "invoiceDueDate": "2026-10-01",
+  "commitmentsCents": 7000000,
+  "forecastCollectionsCents": 7207200,
+  "xeroSync": "unverified"
+}

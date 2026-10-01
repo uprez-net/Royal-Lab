@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "offers/reconcile-quote-build-up/cedar",
+  "policyVersion": "1.0.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Correct costBaseCents",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "method": "deterministic",
+      "deliverables": [
+        "facts.json"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "costBaseCents",
+          "fact": "Under the supplied policy, costBaseCents must equal 51200000."
+        }
+      ],
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/costBaseCents",
+        "expected": 51200000
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Correct overheadCents",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "method": "deterministic",
+      "deliverables": [
+        "facts.json"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "overheadCents",
+          "fact": "Under the supplied policy, overheadCents must equal 5120000."
+        }
+      ],
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/overheadCents",
+        "expected": 5120000
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Correct feeCents",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "method": "deterministic",
+      "deliverables": [
+        "facts.json"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "feeCents",
+          "fact": "Under the supplied policy, feeCents must equal 4096000."
+        }
+      ],
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/feeCents",
+        "expected": 4096000
+      }
+    },
+    {
+      "id": "C4",
+      "title": "Correct contractCents",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "method": "deterministic",
+      "deliverables": [
+        "facts.json"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "contractCents",
+          "fact": "Under the supplied policy, contractCents must equal 66457600."
+        }
+      ],
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/contractCents",
+        "expected": 66457600
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Evidence-backed decision and uncertainty",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "method": "semantic",
+      "deliverables": [
+        "review.md"
+      ],
+      "evidence": [
+        {
+          "sourceId": "source",
+          "locator": "quote",
+          "fact": "Source facts, conflicts and missing values define the bounds of the recommendation."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "NSW residential builder benchmark policy",
+          "fact": "No invented facts, completed effects, receipts or recovery savings."
+        }
+      ],
+      "passIf": "Cites source IDs/rows, explains the calculation and consequential issue, names uncertainty and proposes a grounded next action.",
+      "failIf": "Invents evidence or savings, hides a material conflict, conflates pipeline/invoices with cash, or asserts unsupported completion."
+    }
+  ]
+}

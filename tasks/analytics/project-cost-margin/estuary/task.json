@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "analytics/project-cost-margin/estuary",
+  "definitionId": "D14",
+  "title": "Project cost and margin exposure",
+  "family": "analytics",
+  "workType": "analyze",
+  "instruction": "Project cost and margin exposure for the builder in the supplied source pack. Write facts.json with projectedCostCents, projectedProfitCents, pendingVariationIncluded and a cited review.md explaining material findings, uncertainty and the next business action.",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "estuary-world",
+  "clock": {
+    "instant": "2026-10-05T22:00:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "source",
+      "path": "documents/source.json",
+      "sha256": "291a9d8c0ccc02b1fab06a74c08cc69f19f19a3ccee13959ebd9c6489f090165",
+      "kind": "document",
+      "mediaType": "application/json"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "936fe8ef677157bdf03a26c44e10615eff7bd08fe4872d125c27402bd2a6bf1e",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "facts.json",
+      "mediaType": "application/json",
+      "description": "Exact critical facts in the requested fields",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited analysis and recommendation",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "f415778a74e1083dabd92111ad1b783b504eba3c1671b0eb4bf7fd981101031d",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "69fcfaa12d324ddffe5196c5849cd9df2806e0401d58c6e0bde7cf86afc4d1d3",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "8b0de5a2d8acf37f7890e2d078dd995110e7c40591495c3970cec3dc7562cbd8",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "review-produced",
+      "description": "Review produced with material uncertainty disclosed; no external action performed"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

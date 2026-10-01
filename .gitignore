@@ -1,0 +1,11 @@
+node_modules/
+dist/
+results/
+coverage/
+.env
+.env.*
+!.env.example
+.guri/
+.cache/
+tmp/
+*.tsbuildinfo

@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "offers/reconcile-quote-build-up/cedar",
+  "definitionId": "D01",
+  "title": "Reconcile the quote build-up",
+  "family": "offers",
+  "workType": "reconcile",
+  "instruction": "Reconcile the quote build-up for the builder in the supplied source pack. Write facts.json with costBaseCents, overheadCents, feeCents, contractCents and a cited review.md explaining material findings, uncertainty and the next business action.",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "source",
+      "path": "documents/source.json",
+      "sha256": "9344588b71ed237689962b4ce843743477607fdf4114282fb728b12213230821",
+      "kind": "document",
+      "mediaType": "application/json"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "936fe8ef677157bdf03a26c44e10615eff7bd08fe4872d125c27402bd2a6bf1e",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "facts.json",
+      "mediaType": "application/json",
+      "description": "Exact critical facts in the requested fields",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited analysis and recommendation",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "c025895f2ddd58550ce9f72585a4a8bc394a1b3e1a20883d297fd9f03b595bef",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "19c09919b07c179638536405a7ef5f12abde8506fbd204e0fa5cdcbd1f88c82b",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "5242025ac2e15e417fc950b42e7d540d6102fef4ba3173805f1e8b020893185c",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "review-produced",
+      "description": "Review produced with material uncertainty disclosed; no external action performed"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

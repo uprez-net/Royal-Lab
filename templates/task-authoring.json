@@ -1,0 +1,15 @@
+{
+  "definitionId": "D16",
+  "worldId": "new-independent-world",
+  "author": "REQUIRED: named author",
+  "owner": "REQUIRED: material owner",
+  "license": "LicenseRef-Royal-Lab-Proprietary",
+  "syntheticOrigin": "REQUIRED: original generation method; no live records/templates",
+  "sources": [{ "url": "REQUIRED", "revision": "REQUIRED", "use": "behavior-reference", "copiedMaterial": false }],
+  "reviewer": null,
+  "reviewedAt": null,
+  "reviewStatus": "draft",
+  "policyProductDiscrepancies": [],
+  "negativeControls": ["wrong-amount", "wrong-date", "wrong-party", "false-success", "injection"],
+  "manualChecks": ["source rights", "privacy", "document metadata", "facts discoverable", "world separation", "oracle realism"]
+}

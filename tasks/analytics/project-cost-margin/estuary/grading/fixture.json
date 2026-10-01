@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "worldId": "estuary-world",
+  "worldPath": "fixtures/worlds/estuary-world.json",
+  "worldHash": "9d7bcd1f4e2bfc90133d76ecec1433f9ee45ae5073ec984912b1abbb0d6607b8",
+  "entityIds": [
+    "builder-fe9b57a5bffe",
+    "owner-a-05b24088bb21",
+    "lead-a-5d9dba01cb0c",
+    "lead-b-1d766ac47096",
+    "project-a-154b18acb8e5",
+    "project-b-d60706bd2f07",
+    "offer-a-dfdb4404bb10",
+    "offer-b-0b99aecd259a",
+    "tradie-a-7bc28fb3c9fb",
+    "tradie-b-5900b203cde3",
+    "certifier-a-c354973fe733",
+    "document-a-13c4ea6da441",
+    "invoice-a-708b4846b9c1",
+    "invoice-b-79f8ee6cf50b"
+  ],
+  "expectedFacts": {
+    "projectedCostCents": 52000000,
+    "projectedProfitCents": -8320000,
+    "pendingVariationIncluded": false
+  }
+}

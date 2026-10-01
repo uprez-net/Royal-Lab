@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "worldId": "cedar-world",
+  "worldPath": "fixtures/worlds/cedar-world.json",
+  "worldHash": "624f48ea57d5adc70978b29187bf7cd0e6084075576313c96deff38d3464a6d5",
+  "entityIds": [
+    "builder-0a4d851f8c7d",
+    "owner-a-a6aa41764e57",
+    "owner-b-7c2b8cd7cdb5",
+    "lead-a-daf57e15f8fa",
+    "lead-b-c0ba330fa98c",
+    "project-a-db84b324c017",
+    "offer-a-ae79134d7faf",
+    "tradie-a-1d598b7c2731",
+    "certifier-a-81c4068ff870",
+    "document-a-9bccd7eb4323",
+    "invoice-a-166401216f23",
+    "lead-unknown-af32be939ab0",
+    "lead-lost-649785fac5de"
+  ],
+  "expectedFacts": {
+    "costBaseCents": 51200000,
+    "overheadCents": 5120000,
+    "feeCents": 4096000,
+    "contractCents": 66457600
+  }
+}

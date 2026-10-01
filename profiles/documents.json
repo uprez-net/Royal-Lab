@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "documents",
+  "version": "1.0.0",
+  "description": "Closed evidence and JSON/Markdown deliverables",
+  "tools": [
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "effectPolicy": "none",
+  "candidateNetwork": false,
+  "candidateShell": false,
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  },
+  "executionImplemented": false,
+  "guriRevision": null,
+  "systemPromptHash": null,
+  "parserProfile": "normalized-text"
+}
+

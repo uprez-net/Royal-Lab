@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "analytics/explain-pipeline-forecast/cedar",
+  "definitionId": "D13",
+  "title": "Explain the quarterly pipeline forecast",
+  "family": "analytics",
+  "workType": "analyze",
+  "instruction": "Explain the quarterly pipeline forecast for the builder in the supplied source pack. Write facts.json with knownPipelineCents, weightedPipelineCents, unknownValueCount, wonValueCents and a cited review.md explaining material findings, uncertainty and the next business action.",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "source",
+      "path": "documents/source.json",
+      "sha256": "bc9691324ac0a12e844bc61c6bcd2707adc1d249a9155bade53709cc45b508fa",
+      "kind": "document",
+      "mediaType": "application/json"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "936fe8ef677157bdf03a26c44e10615eff7bd08fe4872d125c27402bd2a6bf1e",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "facts.json",
+      "mediaType": "application/json",
+      "description": "Exact critical facts in the requested fields",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited analysis and recommendation",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "f54dcee3494f0adac2a3dfb437ebcea551242d36675adccd55a22fa9bcc0c586",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "7c9567229c194ab91c1a61285f22de5b09bbfd248ce45507ec64e5c35a2cadf4",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "ba4cdc4abcdb3b36574e37bc9341d7fa89e73d579df765401ed0029b28b3da13",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "review-produced",
+      "description": "Review produced with material uncertainty disclosed; no external action performed"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

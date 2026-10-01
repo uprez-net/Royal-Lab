@@ -1,0 +1,152 @@
+{
+  "worldId": "cedar-world",
+  "entities": [
+    {
+      "id": "builder-0a4d851f8c7d",
+      "kind": "builder",
+      "name": "Cedar Lantern Homes",
+      "email": "builder@cedar.example",
+      "address": "18 Imaginary Cedar Circuit, Synthetic Township, NSW (fictional)",
+      "references": []
+    },
+    {
+      "id": "owner-a-a6aa41764e57",
+      "kind": "owner",
+      "name": "Amelia Fiction",
+      "email": "owner-a@cedar.example",
+      "address": "18 Imaginary Cedar Circuit, Synthetic Township, NSW (fictional)",
+      "references": []
+    },
+    {
+      "id": "owner-b-7c2b8cd7cdb5",
+      "kind": "owner",
+      "name": "Leon Sample",
+      "email": "owner-b@cedar.example",
+      "address": "18 Imaginary Cedar Circuit, Synthetic Township, NSW (fictional)",
+      "references": []
+    },
+    {
+      "id": "lead-a-daf57e15f8fa",
+      "kind": "lead",
+      "name": "Amelia Fiction",
+      "email": "lead-a@cedar.example",
+      "address": "18 Imaginary Cedar Circuit, Synthetic Township, NSW (fictional)",
+      "references": [
+        "owner-a-a6aa41764e57"
+      ]
+    },
+    {
+      "id": "lead-b-c0ba330fa98c",
+      "kind": "lead",
+      "name": "Amelia Fictional",
+      "email": "lead-b@cedar.example",
+      "address": "18 Imaginary Cedar Circuit, Synthetic Township, NSW (fictional)",
+      "references": [
+        "owner-b-7c2b8cd7cdb5"
+      ]
+    },
+    {
+      "id": "project-a-db84b324c017",
+      "kind": "project",
+      "name": "Cedar duplex",
+      "email": "project-a@cedar.example",
+      "address": "18 Imaginary Cedar Circuit, Synthetic Township, NSW (fictional)",
+      "references": [
+        "owner-a-a6aa41764e57",
+        "owner-b-7c2b8cd7cdb5",
+        "offer-a-ae79134d7faf"
+      ]
+    },
+    {
+      "id": "offer-a-ae79134d7faf",
+      "kind": "offer",
+      "name": "Cedar tender revision 3",
+      "email": "offer-a@cedar.example",
+      "address": "18 Imaginary Cedar Circuit, Synthetic Township, NSW (fictional)",
+      "references": [
+        "lead-a-daf57e15f8fa"
+      ]
+    },
+    {
+      "id": "tradie-a-1d598b7c2731",
+      "kind": "tradie",
+      "name": "Paperbeam Carpentry",
+      "email": "tradie-a@cedar.example",
+      "address": "18 Imaginary Cedar Circuit, Synthetic Township, NSW (fictional)",
+      "references": [
+        "project-a-db84b324c017"
+      ]
+    },
+    {
+      "id": "certifier-a-81c4068ff870",
+      "kind": "certifier",
+      "name": "North Star Synthetic Certification",
+      "email": "certifier-a@cedar.example",
+      "address": "18 Imaginary Cedar Circuit, Synthetic Township, NSW (fictional)",
+      "references": [
+        "project-a-db84b324c017"
+      ]
+    },
+    {
+      "id": "document-a-9bccd7eb4323",
+      "kind": "document",
+      "name": "Partial insurance scan",
+      "email": "document-a@cedar.example",
+      "address": "18 Imaginary Cedar Circuit, Synthetic Township, NSW (fictional)",
+      "references": [
+        "project-a-db84b324c017"
+      ]
+    },
+    {
+      "id": "invoice-a-166401216f23",
+      "kind": "invoice",
+      "name": "Cedar frame claim",
+      "email": "invoice-a@cedar.example",
+      "address": "18 Imaginary Cedar Circuit, Synthetic Township, NSW (fictional)",
+      "references": [
+        "project-a-db84b324c017"
+      ]
+    },
+    {
+      "id": "lead-unknown-af32be939ab0",
+      "kind": "lead",
+      "name": "Invented unpriced enquiry",
+      "email": "lead-unknown@cedar.example",
+      "address": "18 Imaginary Cedar Circuit, Synthetic Township, NSW (fictional)",
+      "references": []
+    },
+    {
+      "id": "lead-lost-649785fac5de",
+      "kind": "lead",
+      "name": "Fictional cancelled build",
+      "email": "lead-lost@cedar.example",
+      "address": "18 Imaginary Cedar Circuit, Synthetic Township, NSW (fictional)",
+      "references": []
+    }
+  ],
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "quote": {
+    "directCostCents": 50000000,
+    "additionsCents": 1200000,
+    "overheadBasisPoints": 1000,
+    "feeBasisPoints": 800,
+    "gstBasisPoints": 1000,
+    "contractCents": 66457600,
+    "spendCents": 20000000,
+    "remainingCostCents": 31200000,
+    "invoiceCents": 6645760,
+    "paidCents": 6645760,
+    "revision": 3,
+    "acceptedPriceCents": null,
+    "sourceRows": {
+      "directCosts": "Q1",
+      "additions": "Q2",
+      "overhead": "Q3",
+      "fee": "Q4",
+      "gst": "Q5"
+    }
+  }
+}

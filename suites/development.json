@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "development",
+  "version": "1.0.0",
+  "split": "development",
+  "profile": "documents",
+  "cases": [
+    "offers/reconcile-quote-build-up/cedar",
+    "analytics/explain-pipeline-forecast/cedar"
+  ],
+  "description": "Draft foundation specimens; not the full 28-definition benchmark or an execution-ready release."
+}

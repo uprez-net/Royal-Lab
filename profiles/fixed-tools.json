@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "fixed-tools",
+  "version": "1.0.0",
+  "description": "Controlled candidate and canonical-domain bridge",
+  "tools": [],
+  "effectPolicy": "recording-ports",
+  "candidateNetwork": false,
+  "candidateShell": false,
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  },
+  "executionImplemented": false,
+  "guriRevision": "460895235f94e917bd855855cd6e106f93a4c7c1",
+  "systemPromptHash": null,
+  "parserProfile": "isolated-binary"
+}
+
