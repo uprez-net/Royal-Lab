@@ -25,7 +25,7 @@ Piped/CI commands use the CLI below. Set NO_COLOR=1 for uncolored output.
 
 ```sh
 pnpm lab --help
-pnpm list
+pnpm run list
 pnpm describe offers/reconcile-quote-build-up/cedar
 pnpm describe offers/reconcile-quote-build-up/cedar --visible --json
 pnpm validate
