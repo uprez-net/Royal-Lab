@@ -50,7 +50,18 @@ export async function prepareGuri(root: string, checkout: string) {
     ],
     { cwd: root, env, windowsHide: true, maxBuffer: 8_000_000 },
   );
-  await writeFile(path.join(directory, 'schema.sql'), sql.stdout);
+  // Prisma's schema diff cannot express this canonical partial index. Import the
+  // exact owning migration statement from the pin; never reimplement its rule.
+  const constraintPath =
+    'prisma/migrations/20260706120000_offer_workspace_persistence/migration.sql';
+  const migration = await readFile(path.join(lock.root, constraintPath), 'utf8');
+  const statements = migration
+    .split(/\r?\n/)
+    .filter((line) => line.startsWith('CREATE UNIQUE INDEX "Offer_leadId_active_key" '));
+  if (statements.length !== 1 || !statements[0]!.endsWith(';'))
+    throw new Error('GURI_CONSTRAINT_MISSING');
+  const schemaSql = `${sql.stdout}\n${statements[0]}\n`;
+  await writeFile(path.join(directory, 'schema.sql'), schemaSql);
   const workerSource = fileURLToPath(new URL('./worker.ts', import.meta.url));
   // In compiled builds worker.js sits beside this module; source is bundled by esbuild.
   const worker = workerSource.replace(
@@ -90,7 +101,10 @@ export async function prepareGuri(root: string, checkout: string) {
             external: true,
           }));
           builder.onResolve(
-            { filter: /^(next|server-only|dotenv|ai|@ai-sdk|@clerk)(\/|$)/ },
+            {
+              filter:
+                /^(next|server-only|dotenv|ai|@ai-sdk|@clerk|@vercel\/blob|xero-node|docusign-esign|@novu|@microsoft\/microsoft-graph-client)(\/|$)/,
+            },
             (args) => {
               throw new Error(`GURI_UNSAFE_IMPORT: ${args.path}`);
             },
@@ -111,12 +125,20 @@ export async function prepareGuri(root: string, checkout: string) {
     }
   }
   const manifest = {
+    bridgeVersion: '2.0.0',
     ...lock,
     files,
     workerHash: sha256(await readFile(path.join(directory, 'worker.mjs'))),
     generatedSchemaHash: sha256(schema),
     generatedClientHash: sha256(await readFile(path.join(directory, 'client/index.js'))),
-    schemaSqlHash: sha256(sql.stdout),
+    schemaSqlHash: sha256(schemaSql),
+    canonicalSchemaExtensions: [
+      {
+        path: constraintPath,
+        sourceHash: sha256(migration),
+        statementHash: sha256(statements[0]!),
+      },
+    ],
   };
   await writeFile(path.join(directory, 'source-lock.json'), jsonText(manifest));
   return { directory, manifest };

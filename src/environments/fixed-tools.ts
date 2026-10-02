@@ -1,6 +1,11 @@
 import { z } from 'zod';
 import { DOCUMENT_TOOL_SCHEMAS, type DocumentWorkspace } from '#src/environments/documents';
-import { GURI_TOOL_SCHEMAS, guriTool, GURI_EFFECTS } from '#src/environments/guri/tools';
+import {
+  GURI_TOOL_SCHEMAS,
+  guriTool,
+  GURI_EFFECTS,
+  parseGuriArguments,
+} from '#src/environments/guri/tools';
 import type { GuriBridge } from '#src/environments/guri/bridge';
 import { Session } from '#src/environments/session';
 import { Interactions, type InteractionEvent } from '#src/harness/interactions';
@@ -36,7 +41,7 @@ export class FixedToolsEnvironment {
       return this.interactions.clarify(args.question, callId);
     }
     const tool = guriTool(name);
-    const args = GURI_TOOL_SCHEMAS[tool].parse(arguments_);
+    const args = parseGuriArguments(tool, arguments_);
     if (GURI_EFFECTS[tool] === 'mutation') {
       this.interactions.approve(
         `Approve ${tool} with exact arguments ${JSON.stringify(args)}?`,
@@ -47,6 +52,13 @@ export class FixedToolsEnvironment {
       this.session.requireApproval(callId, tool, args);
     }
     const result = await this.bridge.execute(tool, args, this.session, callId);
+    if (result.status === 'stale-version') {
+      const reply = this.interactions.staleVersion(
+        `Refresh stale version for ${tool} before requesting new approval.`,
+        callId,
+      );
+      return { ...result, operatorResponse: reply.response };
+    }
     if (!['success', 'committed', 'replayed'].includes(result.status)) {
       throw new Error(result.status === 'domain-refusal' ? 'DOMAIN_REFUSAL' : 'GURI_COMMAND_ERROR');
     }
@@ -59,7 +71,8 @@ export class FixedToolsEnvironment {
     emit: (event: Record<string, unknown>) => void,
   ) => {
     if (
-      name === 'create_lead_task' &&
+      Object.hasOwn(GURI_EFFECTS, name) &&
+      GURI_EFFECTS[guriTool(name)] === 'mutation' &&
       typeof result === 'object' &&
       result &&
       'status' in result &&
@@ -70,7 +83,7 @@ export class FixedToolsEnvironment {
         type: 'effect-committed',
         callId: call,
         operationId: call,
-        effect: 'lead-task',
+        effect: name === 'create_lead_task' ? 'lead-task' : name,
         evidencePath: 'state.json',
       });
     }

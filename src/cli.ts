@@ -211,7 +211,9 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       ).verify();
       output({
         status: 'verified',
-        scope: 'lead-task canonical slice; this is not a model run or score',
+        scope:
+          'pinned minimum canonical bridge; integrity verification is not a model run, score or release readiness',
+        capabilities: (await import('#src/environments/guri/capabilities')).GURI_CAPABILITIES,
       });
       return 0;
     }

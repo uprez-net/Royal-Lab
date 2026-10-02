@@ -14,6 +14,15 @@ import { InteractionScriptSchema } from '#src/harness/operator';
 import { NormalizedDocumentSchema } from '#src/documents/normalize';
 import { OracleSchema } from '#src/grading/oracles/guri';
 import {
+  BridgeControlsSchema,
+  RecordingPortPolicySchema,
+  StaleVersionControlSchema,
+  CanonicalSnapshotSchema,
+  CanonicalStateEvidenceSchema,
+  FixtureInitializationSchema,
+  RecordingPortReceiptSchema,
+} from '#contracts/operational';
+import {
   JudgeProfileSchema,
   JudgeScopeSchema,
   JudgeResponseSchema,
@@ -41,6 +50,13 @@ export async function exportSchemas(root: string) {
     interactions: InteractionScriptSchema,
     document: NormalizedDocumentSchema,
     oracle: OracleSchema,
+    'bridge-controls': BridgeControlsSchema,
+    'recording-port-policy': RecordingPortPolicySchema,
+    'stale-version-control': StaleVersionControlSchema,
+    'canonical-snapshot': CanonicalSnapshotSchema,
+    'canonical-state-evidence': CanonicalStateEvidenceSchema,
+    'fixture-initialization': FixtureInitializationSchema,
+    'recording-port-receipt': RecordingPortReceiptSchema,
     'judge-profile': JudgeProfileSchema,
     'judge-scope': JudgeScopeSchema,
     'judge-response': JudgeResponseSchema,

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Synthetic offline canonical stale-version control. Release script and case review remain pending."
+  },
+  "maxUnexpectedQuestions": 0,
+  "branches": [
+    {
+      "id": "approve-requirements",
+      "type": "approval",
+      "allWords": ["approve", "project", "requirements"],
+      "anyWords": [],
+      "response": "Approve the exact requirements arguments displayed in this request.",
+      "decision": "approved",
+      "responderId": "builder-owner",
+      "maxUses": 2
+    },
+    {
+      "id": "refresh-stale-requirements",
+      "type": "stale-version",
+      "allWords": ["stale", "version", "requirements"],
+      "anyWords": [],
+      "response": "Read the new version, preserve the concurrent summary, and request fresh approval for the changed arguments.",
+      "decision": null,
+      "responderId": "builder-owner",
+      "maxUses": 1
+    }
+  ]
+}

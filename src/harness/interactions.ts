@@ -20,6 +20,13 @@ export class Interactions {
     this.record('operator-input', callId, reply);
     return reply;
   }
+  staleVersion(question: string, callId: string) {
+    this.record('question', callId, { question });
+    const reply = this.operator.answer(question, 'stale-version');
+    this.record('operator-input', callId, reply);
+    // A stale-version branch supplies guidance; it never grants approval.
+    return reply;
+  }
   approve(question: string, callId: string, tool: string, arguments_: unknown) {
     const bindingHash = this.session.binding(callId, tool, arguments_);
     this.record('approval', callId, {

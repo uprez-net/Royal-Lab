@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string"
+    },
+    "operationKey": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "email",
+        "envelope-void",
+        "envelope-status",
+        "identity-role",
+        "xero-claim"
+      ]
+    },
+    "payloadHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "succeeded",
+        "failed",
+        "unavailable"
+      ]
+    },
+    "simulation": {
+      "type": "boolean",
+      "const": true
+    }
+  },
+  "required": [
+    "key",
+    "operationKey",
+    "kind",
+    "payloadHash",
+    "status",
+    "simulation"
+  ],
+  "additionalProperties": false
+}

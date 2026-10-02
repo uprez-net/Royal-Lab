@@ -9,27 +9,28 @@ expected policy for every builder.
 
 The current repository has 28 task definitions, four **draft** document specimens,
 a closed document workspace, candidate transports, deterministic verification and
-a tested three-tool lead-task bridge. It is an implementation under development,
+a tested minimum canonical bridge covering lead tools and T03–T12 boundaries. It is an implementation under development,
 with no approved benchmark release or paid model baseline. Review gates are real:
 an offline validation pass does not permit execution of draft cases.
 
 ## Reading order
 
-| Guide                                          | What it explains                                                                                               |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| [Getting started](getting-started.md)          | Dependencies, environment assumptions, fresh setup, Docker, private checkout, verification and troubleshooting |
-| [Architecture](architecture.md)                | Components, trust boundaries, case lifecycle, evidence, approval/replay and scoring                            |
-| [Configuration](configuration.md)              | Inputs to obtain from the owner, explicit local configuration, credentials and pricing                         |
-| [Execution](execution.md)                      | Candidate loop, budgets, current CLI/API support and saved evidence                                            |
-| [Semantic grading](semantic-grading.md)        | Scoped judges, preserved disagreements, offline replay and pending real calibration                            |
-| [Issue closeout](issue-closeout.md)            | Completed checkpoints and outstanding work consolidated into issue #21                                         |
-| [Measurement specification](benchmark-spec.md) | Domain, profiles, success definition, denominators, comparison rules and planned scope                         |
-| [Task authoring](task-authoring.md)            | Synthetic case design, hidden expectations, review and versioning                                              |
-| [Contracts](contracts.md)                      | Schemas, hashes, safe paths and cross-file validation                                                          |
-| [Business review pack](review-pack.md)         | Policies and four specimen expectations needing actual builder review                                          |
-| [Document workspace](document-workspace.md)    | Readers, citations, extraction gaps and isolated binary parsing                                                |
-| [Canonical bridge](guri-bridge.md)             | Pinned product commands, disposable databases and independently observed effects                               |
-| [Verification record](verification.md)         | Checks that have passed and the limits of that evidence                                                        |
+| Guide                                           | What it explains                                                                                               |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| [Getting started](getting-started.md)           | Dependencies, environment assumptions, fresh setup, Docker, private checkout, verification and troubleshooting |
+| [Architecture](architecture.md)                 | Components, trust boundaries, case lifecycle, evidence, approval/replay and scoring                            |
+| [Configuration](configuration.md)               | Inputs to obtain from the owner, explicit local configuration, credentials and pricing                         |
+| [Execution](execution.md)                       | Candidate loop, budgets, current CLI/API support and saved evidence                                            |
+| [Semantic grading](semantic-grading.md)         | Scoped judges, preserved disagreements, offline replay and pending real calibration                            |
+| [Issue closeout](issue-closeout.md)             | Completed checkpoints and outstanding work consolidated into issue #21                                         |
+| [Measurement specification](benchmark-spec.md)  | Domain, profiles, success definition, denominators, comparison rules and planned scope                         |
+| [Task authoring](task-authoring.md)             | Synthetic case design, hidden expectations, review and versioning                                              |
+| [Contracts](contracts.md)                       | Schemas, hashes, safe paths and cross-file validation                                                          |
+| [Business review pack](review-pack.md)          | Policies and four specimen expectations needing actual builder review                                          |
+| [Document workspace](document-workspace.md)     | Readers, citations, extraction gaps and isolated binary parsing                                                |
+| [Canonical bridge](guri-bridge.md)              | Pinned product commands, disposable databases and independently observed effects                               |
+| [Operational controls](operational-controls.md) | Minimum T03–T12 adapters, canonical stale-version execution, recording ports and cleanup evidence              |
+| [Verification record](verification.md)          | Checks that have passed and the limits of that evidence                                                        |
 
 For source decisions, see [runner/domain reuse](decisions/0001-runner-and-domain-reuse.md)
 and [execution boundaries](decisions/0002-execution-boundaries.md).
@@ -42,9 +43,9 @@ and [execution boundaries](decisions/0002-execution-boundaries.md).
 | ------------------------------------------------------------------------------------ | ------------------------------------ | --------------------------------------------------------------------------------------- |
 | Inspect cases, use TUI, validate drafts, export schemas, build and run offline tests | Yes                                  | Node 24 and pinned pnpm dependencies                                                    |
 | Parse PDF/DOCX/XLSX locally                                                          | Yes                                  | Docker and the built parser image ID                                                    |
-| Exercise canonical lead lookup/list/create in integration controls                   | Yes                                  | Private pinned checkout, prepared bridge and disposable Compose database                |
+| Exercise canonical lead and minimum T03–T12 boundaries in integration controls       | Yes                                  | Private pinned checkout, prepared bridge and disposable Compose database                |
 | Run a reviewed document trial through direct OpenAI or AI Gateway                    | Implemented, draft specimens blocked | Actual review, exact candidate configuration, local credential, pricing and paid opt-in |
-| Run the full operational catalogue                                                   | No                                   | T03–T12 adapters and authored/reviewed operational cases                                |
+| Run the full operational catalogue                                                   | No                                   | Authored/reviewed operational cases and complete selected capabilities                  |
 | Produce a fully graded, comparable benchmark score                                   | No                                   | Complete reviewed cases, orchestration and actual judge calibration                     |
 
 Code, datasets and results remain private/proprietary. The synthetic database is

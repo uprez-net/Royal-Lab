@@ -38,7 +38,7 @@ export async function executeDocumentTrial(
   try {
     if (readiness.suite.profile !== 'documents' || config.profile !== 'documents')
       throw new Error(
-        'CLI_PROFILE_UNSUPPORTED: this trial command currently executes documents; use the tested fixed-tools harness API for the lead-task slice',
+        'CLI_PROFILE_UNSUPPORTED: this trial command currently executes documents; use the tested minimum canonical fixed-tools harness API',
       );
     if (config.repeats !== 1 || config.concurrency !== 1)
       throw new Error(

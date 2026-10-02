@@ -59,9 +59,10 @@ Task schema/version 1.1.0 adds mandatory frozen verifier references. Trace/resul
 explicitly upgraded without changing policy/source bytes. Comparisons must preserve
 these versions and fingerprints; no score migration or calibrated baseline exists.
 
-The fixed-tools API currently covers lead lookup/list/create and deterministic
+The fixed-tools API covers lead lookup/list/create, minimum T03–T12 adapters and deterministic
 clarification/approval/cancel/replay. Real integration controls verify one approved
 write, no cancelled write, independent history/journal and durable same-call replay.
-T03–T12 adapters, stale-version injection into those canonical commands, full operational
-case authoring and Eve deployment semantics remain unsupported. Existing journal
+Executable requirements stale-version injection, refresh and newly approved arguments
+are verified against canonical commands. See [operational controls](operational-controls.md).
+Full operational case authoring/review and Eve deployment semantics remain pending. Existing journal
 controls keep new intentions distinct and uncertain effects unretried.

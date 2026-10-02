@@ -53,3 +53,10 @@ Issue #11 adds separate version 1.0.0 judge-profile, scope, response, record,
 semantic-receipt, human-adjudication and calibration contracts and exported schemas.
 Existing result/rubric shapes and all-mandatory scoring are preserved. See
 [semantic grading](semantic-grading.md) for scoping, replay and pending real review.
+
+Issue #21 adds version 1.0.0 bridge-controls, recording-port-policy and
+stale-version-control formats, and version 2.0.0 canonical snapshot/state evidence
+and fixture-initialization formats. Durable recording receipts explicitly carry
+`simulation: true`. All seven new contracts have exported JSON Schemas. Old
+result/rubric/score meaning remains unchanged; old saved evidence is not rewritten.
+See [operational controls](operational-controls.md).

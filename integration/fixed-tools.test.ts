@@ -16,6 +16,7 @@ import { verifyTrace } from '#src/grading/trace';
 import { RecordingPorts } from '#src/environments/guri/ports';
 import { saveIndependentEvidence } from '#src/environments/guri/evidence';
 import { readJson } from '#src/io';
+import { GURI_TOOL_VERSIONS, type GuriTool } from '#src/environments/guri/tools';
 test.each(['approved', 'cancelled'] as const)(
   'SDK loop records focused clarification and %s canonical write outcome',
   async (decision) => {
@@ -35,7 +36,7 @@ test.each(['approved', 'cancelled'] as const)(
       task.profiles = ['fixed-tools'];
       task.tools = ['find_leads', 'ask_operator', 'create_lead_task', 'write'].map((name) => ({
         name,
-        version: '1.0.0',
+        version: GURI_TOOL_VERSIONS[name as GuriTool] ?? '1.0.0',
       }));
       task.limits.maxTurns = 8;
       const workspace = await DocumentWorkspace.create(root, task, path.join(directory, 'outputs'));

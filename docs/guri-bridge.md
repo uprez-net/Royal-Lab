@@ -7,10 +7,11 @@ of canonical commands. The build resolves product aliases, rejects forbidden
 Next/Clerk/model/provider imports and records source, lockfile, schema and bundle
 hashes. Commands receive an explicit database and canonical principal/access checks.
 
-The verified slice exposes `find_leads`, `list_lead_tasks` and
-`create_lead_task`. Other operations return an explicit unsupported capability.
-The remaining T03–T12 command/fixture integrations belong to the operational
-case rollout; this slice is not a claim that all 57 product tools are runnable.
+The minimum bridge exposes the lead tools and scoped offer/project/compliance/
+tradie/admin adapters for T03–T12. See [operational controls](operational-controls.md)
+for exact tool limits, canonical ownership, recording ports and stale-version
+execution. Other operations return an explicit unsupported capability.
+This is not a claim that all 57 product tools or authored release cases are runnable.
 Business-policy disagreements remain unsupported until reviewed.
 
 Each run uses a unique `royal_lab_run_<uuid>` database in the disposable Compose
@@ -46,10 +47,14 @@ verify it with `bridge check` using the same config, then run `pnpm test:integra
 Never commit `.guri`, generated runtime caches or personal
 connection settings. No application dependency installation or deployment is needed.
 
+Bridge/runtime and independent state artifacts are version 2.0.0. Reprepare old
+caches explicitly; saved score/result artifacts are never migrated.
+
 The fixed-tools harness composes the closed document workspace, deterministic
 operator and canonical bridge. Questions and supplied facts, requested/approved/
 cancelled decisions, responder/session identity, executions and durable-operation
 evidence are traced separately. API integration controls prove approval creates one
 task, cancellation creates none and same-call bridge replay creates no duplicate.
 There is no authored release-ready fixed-tools case yet; the CLI trial command
-currently executes document cases. The prepared source checkout remains unchanged.
+currently executes document cases. The expanded script/case review remains pending
+in issue #21. The prepared source checkout remains unchanged.

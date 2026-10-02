@@ -53,6 +53,9 @@ importers:
       react:
         specifier: 19.3.0
         version: 19.3.0
+      uuid:
+        specifier: 14.0.0
+        version: 14.0.0
       zod:
         specifier: 4.6.5
         version: 4.6.5
@@ -1480,6 +1483,10 @@ packages:
     resolution: {integrity: sha512-dkrQXeHSaoamnItlYbmzG0wFYrM0ZwDxCIg0A7aKjTyyhh9svRzCNFEzV+Vm05/yehjCzjDZ31KXfGEjYSztDQ==}
     engines: {node: '>=20.18.1'}
 
+  uuid@14.0.0:
+    resolution: {integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==}
+    hasBin: true
+
   valibot@1.4.2:
     resolution: {integrity: sha512-gjdCvJ6d3RyHAneqxMYMW9QMCwYMb3jpOO0IyHZV1bnRHFBHrX3VkIILt5XYR0WhwHiH7Mty8ovuPZ/O3gamrg==}
     peerDependencies:
@@ -2826,6 +2833,8 @@ snapshots:
   undici-types@7.24.6: {}
 
   undici@7.30.0: {}
+
+  uuid@14.0.0: {}
 
   valibot@1.4.2(typescript@7.0.2):
     optionalDependencies:

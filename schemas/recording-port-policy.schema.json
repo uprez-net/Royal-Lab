@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "email": {
+      "default": "unavailable",
+      "type": "string",
+      "enum": [
+        "unavailable",
+        "record-success",
+        "record-failure"
+      ]
+    },
+    "envelope": {
+      "default": "unavailable",
+      "type": "string",
+      "enum": [
+        "unavailable",
+        "record-success",
+        "record-failure"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "email",
+    "envelope"
+  ],
+  "additionalProperties": false
+}

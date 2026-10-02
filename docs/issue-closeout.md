@@ -31,3 +31,21 @@ Judge formats and pending calibration are described in
 [semantic grading](semantic-grading.md). The current operational subset is in
 [the canonical bridge guide](guri-bridge.md). The follow-up issue preserves all
 outstanding requirements and distinguishes human-dependent work from missing code.
+
+## Subsequent operational implementation — 2026-10-02
+
+The four implementation requirements in #21's operational adapter/stale-version
+section are now implemented: minimum T03–T12 canonical adapters with declared
+boundaries, canonical authorization/transaction ownership and independent cleanup
+controls, honest unavailable/recording provider boundaries, and executable stale
+requirements refusal followed by refresh and a newly bound approval.
+
+The [operational control guide](operational-controls.md) records the per-definition
+surface, durable evidence and deliberate version boundaries. The updated
+[verification record](verification.md) records 111 offline tests, 44 integration
+controls and 28 exported schemas. The migration table above describes the original
+closeout; its missing-code entries are superseded by this checkpoint.
+
+Review of expanded scripts/cases remains pending. Issue #21 stays open for that
+review and its separate real business review, calibration/adjudication and live
+candidate-validation requirements. No reviewer has been invented.

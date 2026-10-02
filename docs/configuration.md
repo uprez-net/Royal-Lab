@@ -10,7 +10,9 @@ private; no release or external business outreach is configured.
 
 The local pinned checkout `.guri/` and disposable Compose PostgreSQL setup are
 prepared. Their caches and credentials are ignored by Git. The verified operational
-slice is lead lookup/list/create; T03–T12 adapters remain unsupported.
+surface includes lead tools and minimum T03–T12 adapters with explicit provider
+boundaries. See [operational controls](operational-controls.md). Release cases and
+expanded scripts remain subject to real review.
 
 Before a paid candidate trial, supply these decisions:
 

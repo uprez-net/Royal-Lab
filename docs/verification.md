@@ -1,5 +1,32 @@
 # Foundation verification — 2026-10-01
 
+## Operational adapter checkpoint — 2026-10-02
+
+The operational implementation section of #21 now has a minimum canonical surface
+for T03–T12, explicit recording/unavailable providers, transaction/authorization
+controls and executable requirements stale-version injection. The exact boundaries
+and acceptance evidence are in [operational controls](operational-controls.md).
+The earlier lead-only implementation record below is historical.
+
+Verified using Node **24.21.0** and pinned pnpm **11.1.2**:
+
+- `pnpm check`: formatting, strict TypeScript, **111 offline tests**, both suites'
+  synthetic/privacy/reference lint and integrity checks, and ESM build.
+- `pnpm test:integration`: **44 controls across five files**, including **35
+  operational controls**, independent PostgreSQL evidence and error/timeout cleanup
+  for every newly selected case. Saved controls contain no candidate-model score.
+- `pnpm schemas:export`: **28 schemas**, including seven new controller, recording
+  and versioned state/initialization contracts.
+- Bridge prepare/check: clean unchanged private source pin, version **2.0.0** runtime,
+  generated client/schema/index/bundle hashes and explicit supported/unsupported
+  capabilities. Old runtime caches and changed replay configurations are refused.
+
+State, initialization, port receipts, control injections, raw control calls/settings
+and source hashes are saved separately in ignored local control artifacts. Synthetic
+controller approvals are not human review. Release scripts/cases remain pending
+review in #21; no live provider, paid model, real identity change or reviewer decision
+has been created. Existing score meaning and saved results are unchanged.
+
 ## Execution implementation — 2026-10-02
 
 The #4–#10 implementation was checked on Windows using the official Node **24.21.0**
