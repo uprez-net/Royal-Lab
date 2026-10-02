@@ -4,14 +4,15 @@ Private benchmark for NSW residential builder office work: evidence-backed
 commercial analysis, decisions, document understanding and approved operations.
 Designed for any residential builder using an explicit, versioned business policy.
 
-The roadmap has **28 definitions**
-(16 document/analytical, 12 operational), with **four draft specimen cases** in two
-independent fictional worlds. Closed readers, two candidate transports,
-deterministic graders and a canonical lead-task bridge are implemented for #4–#10.
-The operator harness has passed real Docker/PostgreSQL checks and offline SDK
-transport controls. Human business review and paid baseline runs remain pending;
-there are no model scores. Scoped semantic judging is implemented with
-[real calibration pending](docs/semantic-grading.md). T03–T12 operation coverage is unfinished.
+The roadmap has **28 definitions** (16 document/analytical, 12 operational).
+The [draft case library](docs/authored-cases.md) now has **45 packs**: 24 newly
+authored core cases for D01–D12/T01–T12, seven document variants, ten tool
+diagnostics and four preserved specimens. Two independent fictional worlds keep
+development and held-out evidence separate. Closed readers, two candidate
+transports, deterministic graders, scoped semantic judging and minimum canonical
+T01–T12 adapters are implemented. Human business review, actual judge calibration
+and paid baseline runs remain pending; there are no model scores. D16 remains
+unauthored, and D13–D15 still use specimens.
 
 ## Start
 
@@ -40,6 +41,7 @@ pnpm describe offers/reconcile-quote-build-up/cedar --visible --json
 pnpm validate
 pnpm fixtures:lint
 pnpm fixtures:generate --check
+pnpm lab controls
 pnpm check
 ```
 
@@ -90,6 +92,7 @@ omit it. Vitest/TypeScript resolve the same development mapping.
 See [benchmark specification](docs/benchmark-spec.md), [source audit](docs/audit.md),
 [case capability matrix](docs/capability-matrix.csv), [57-tool inventory](docs/tool-capability-matrix.csv),
 [task authoring](docs/task-authoring.md), [contracts](docs/contracts.md),
+the [draft case library](docs/authored-cases.md),
 the [business review pack](docs/review-pack.md), and [configuration inputs](docs/configuration.md).
 
 Business policy outranks product behavior. A bridge limitation or disagreement is

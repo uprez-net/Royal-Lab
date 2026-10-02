@@ -13,7 +13,8 @@ not approve the pack.
 
 ## Review the policy
 
-Read [the frozen candidate policy](../fixtures/policies/nsw-builder-v1.md).
+Read [the original specimen policy](../fixtures/policies/nsw-builder-v1.md) and
+[the new authored-case policy 1.1.0](../fixtures/policies/nsw-builder-v1.1.md).
 Confirm or amend the quote base, additive markups, rounding, accepted-price
 precedence, forecast probabilities, cost basis, cash/receivable distinction,
 negotiation approval boundaries and evidence precedence. Product behavior is
@@ -48,6 +49,16 @@ This foundation supplies authoring examples, not calibrated model results. D16
 negotiation is defined in the catalogue and awaits its full case-authoring issue.
 
 ## Required review response
+
+The [new case library](authored-cases.md) adds 24 core cases, seven document
+variants and ten tool diagnostics. Review those source packs and their hidden
+`grading/controls.json`, control artifacts, rubrics and verifiers alongside the
+worlds and policies. Fixed-tools cases also need review of the parameterized
+seed, recording/unavailable providers, fault controls and operator branches in
+`grading/environment.json`. Reference controls are authored drafts, not
+expert-approved correct outputs. Simulated errors and decisions are not real
+specialist runs, human approvals or model calibration. Issues #12–#15 stay open
+until their actual reviewed-pack acceptance requirements are satisfied.
 
 Provide the reviewing builder business or designated reviewer's name, policy/world/case approvals or precise amendments,
 and the scope reviewed. A real approval timestamp and versioned hashes will be

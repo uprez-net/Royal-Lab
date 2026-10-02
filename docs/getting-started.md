@@ -9,7 +9,7 @@ or a POSIX shell unless a block is explicitly labeled for one shell.
 | ------------------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
 | Offline authoring   | Node 24 LTS, pnpm 11.1.2, installed lockfile dependencies                                            | TUI, inspect/validate draft packs, schemas, fixtures, offline tests and build |
 | Binary readers      | Offline prerequisites plus Docker Engine/Desktop with Linux containers and Compose v2                | Local PDF/DOCX/XLSX extraction and parser integration controls                |
-| Canonical bridge    | Docker, Git, private Royal-Construction access and the audited source pin                            | Synthetic PostgreSQL lead-task integration controls                           |
+| Canonical bridge    | Docker, Git, private Royal-Construction access and the audited source pin                            | Synthetic PostgreSQL T01–T12 and authored trajectory controls                 |
 | Paid document trial | Reviewed case/world/policy/verifier packs, clean checkpoint, exact model/settings/key/pricing/budget | One explicitly opted-in candidate trial; current drafts remain blocked        |
 
 Installation and image downloads require network access. Once dependencies are
@@ -75,7 +75,7 @@ pnpm tui
 ```
 
 `pnpm check` covers formatting, strict TypeScript, offline Vitest tests, fixture
-privacy/reference lint, both selected suites and the compiled build. It does not
+privacy/reference lint, every suite and the compiled build. It does not
 require Docker or a private source checkout. Schema export and fixture drift
 checks run separately in CI as shown above.
 

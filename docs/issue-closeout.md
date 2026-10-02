@@ -49,3 +49,17 @@ closeout; its missing-code entries are superseded by this checkpoint.
 Review of expanded scripts/cases remains pending. Issue #21 stays open for that
 review and its separate real business review, calibration/adjudication and live
 candidate-validation requirements. No reviewer has been invented.
+
+## Subsequent case authoring — 2026-10-02
+
+Checkpoints `248d00f`, `8bd7bc4` and `7387c28` recover the interrupted authoring
+work, preserve frozen email bytes across Git checkout, enforce review of the new
+hidden controls/environments/scripts and add missing compliance alternates and
+capability/fault diagnostics. The [case library](authored-cases.md) records all
+45 draft packs, seven suite selections, exact denominators and execution limits.
+
+Issues #12–#15 remain open: their acceptance requires actual named expert review
+of the sources, policy, correct/incorrect outputs and scripts. Draft authoring and
+offline control passes do not satisfy that review. D13–D15 still have specimens;
+D16 authoring remains in #20. Repeated experiments (#16), reports/comparisons
+(#17), Royal Eve (#18) and reviewed calibration/release (#19/#21) remain separate.

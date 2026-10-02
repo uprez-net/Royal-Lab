@@ -31,6 +31,11 @@ named leads and a clock on the Sydney DST transition day. Estuary uses a trust o
 delayed recovery, different trades, unpaid claims and missing owner evidence. They
 differ structurally and commercially, not just linguistically. Four small specimens
 exercise authoring contracts; they are not an already calibrated benchmark.
+The [authored case library](authored-cases.md) adds D01–D12/T01–T12 core drafts,
+labelled variants and diagnostics. Its source specs live in
+`src/fixtures/authoring/`; the generated task schema is 1.2.0 with explicit roles,
+hidden frozen controls and seeded environments for fixed-tools cases. Original
+specimens retain their 1.1.0 contracts. No generated pack supplies human approval.
 
 `pnpm fixtures:generate --check` checks canonical generated material. Generation
 will create missing files and refuses edited existing files. Reviewed/versioned

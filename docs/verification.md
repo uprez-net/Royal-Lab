@@ -1,5 +1,43 @@
 # Foundation verification — 2026-10-01
 
+## Authored case checkpoint — 2026-10-02
+
+The [case library](authored-cases.md) is implemented through `7387c28`, following
+the recovered authoring checkpoint `248d00f` and portability/review-gate fix
+`8bd7bc4`. It includes 24 new core drafts for D01–D12/T01–T12, seven document
+variants, ten tool diagnostics and four preserved specimens: 45 packs in seven
+suite selections. No human review or model score has been created.
+
+Verified on Windows with Node **24.21.0** and pinned pnpm **11.1.2**:
+
+- `pnpm check` passed: formatting, strict TypeScript, **125 offline tests**,
+  privacy/reference lint, all seven suite integrity checks and the ESM build.
+- `pnpm test:integration` passed: **112 controls across six files**, including
+  **66 authored trajectories**, their cleanup check and **35 operational controls**.
+  The first full run passed its assertions but failed with a PostgreSQL shutdown
+  error; connection closure now completes before the disposable database is
+  dropped. The final full run completed without unhandled errors.
+- `pnpm fixtures:generate --check`: **574 files**, no drift. Schema export:
+  **31 schemas**, including task 1.2.0 and the three case-authoring contracts.
+- A fresh Git archive of `7387c28` matched all 574 generated files and all
+  31 exported schemas. All seven archived suites passed offline integrity;
+  all 45 selected cases remained blocked by actual human review. All 19 authored
+  document packs passed their hidden reference/negative controls.
+- The [private Linux Node 24 CI run for `7387c28`](https://github.com/uprez-net/Royal-Lab/actions/runs/36976225062)
+  passed. The initial recovered checkpoint failed CI because Git normalized email
+  bytes; `.gitattributes` now preserves CRLF in RFC 822 fixtures and subsequent
+  checkpoints pass without changing their task input hashes.
+- Final bridge check verified the unchanged clean private pin
+  `460895235f94e917bd855855cd6e106f93a4c7c1` and runtime/source hashes.
+  An independent control-database query found **zero remaining run databases**.
+
+These are offline synthetic implementation and measurement controls. Semantic
+criteria remain ungraded in the control lane; scripts supply synthetic decisions,
+not human approvals. Reader faults simulate transport/child-reader failures;
+they do not exercise real model providers or a deployed specialist. No paid
+candidate/judge request, production record, real external send or release approval
+was created. Issues #12–#15 remain open for their reviewed-pack acceptance criteria.
+
 ## Operational adapter checkpoint — 2026-10-02
 
 The operational implementation section of #21 now has a minimum canonical surface

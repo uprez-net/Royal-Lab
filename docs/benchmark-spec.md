@@ -20,16 +20,17 @@ The core roadmap contains D01–D16 and T01–T12: 28 definitions. D13 covers pi
 forecasting, D14 cost/margin projection, D15 cash-flow summaries and D16 negotiation
 recommendations. `scope/catalogue.json` and the case matrix name every assignment,
 source, relevant test, profile and effect class. These are definitions, not 28
-authored/run-ready cases. Four specimens exercise contracts and fixture generation;
-the full case library is authored under the later owning issues.
+authored/run-ready cases. The [draft case library](authored-cases.md) now includes
+D01–D12/T01–T12 core packs, labelled variants and diagnostics. D13–D15 retain
+their specimens and D16 remains unauthored. All packs await actual review.
 
 ## Experiment profiles
 
-| Profile     | Experiment                                                    | Environment                                                                             | Current status                                                                           |
-| ----------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| Documents   | Candidate + common prompt/read/search/write harness           | Frozen source/policy pack and JSON/Markdown artifacts; no product deployment            | Readers/loop/deterministic checks implemented; draft review and semantic grading pending |
-| Fixed tools | Candidate + common tool loop + scripted operator              | Pinned private Guri checkout, synthetic disposable PostgreSQL, recording external ports | Lead-task API slice tested; broader adapters and reviewed case authoring pending         |
-| Royal Eve   | Composed product agent with its own prompts/model/specialists | Authenticated staging session surface, cancel-only external effects                     | Optional #18                                                                             |
+| Profile     | Experiment                                                    | Environment                                                                             | Current status                                                                                         |
+| ----------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Documents   | Candidate + common prompt/read/search/write harness           | Frozen source/policy pack and JSON/Markdown artifacts; no product deployment            | Readers/loop/deterministic/scoped semantic grading implemented; real review and calibration pending    |
+| Fixed tools | Candidate + common tool loop + scripted operator              | Pinned private Guri checkout, synthetic disposable PostgreSQL, recording external ports | Minimum T01–T12 adapters and draft cases tested offline; actual review and suite CLI execution pending |
+| Royal Eve   | Composed product agent with its own prompts/model/specialists | Authenticated staging session surface, cancel-only external effects                     | Optional #18                                                                                           |
 
 Keep these leaderboards separate. A tool's presence does not establish its state
 or port support. Eve's MCP session surface runs the composed agent; it does not

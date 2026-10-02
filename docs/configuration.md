@@ -61,7 +61,7 @@ Pricing includes a semantic `version` such as `1.0.0`, an ISO `asOf`, and actual
 No placeholder price is treated as a verified free model.
 
 ```sh
-pnpm lab run offers/reconcile-quote-build-up/cedar --suite suites/development.json --verification grading/verification.json --config tmp/candidate.json --allow-paid
+pnpm lab run offers/reconcile-quote-build-up/estuary --suite suites/held-out.json --verification grading/verification.json --config tmp/candidate.json --allow-paid
 pnpm lab grade <saved-run-id>
 ```
 
@@ -77,4 +77,4 @@ Build `royal-lab-parser:1.0.0` using `sandbox/document-parser/Dockerfile`. Inspe
 built image's immutable ID and set `binaryParser.image`, `imageId` and optional
 `timeoutMs` in local config. The worker runs by image ID with network, host mounts,
 privileges and write access disabled. See [reader setup](document-workspace.md).
-All four current authored specimens are normalized text; OCR is unsupported.
+The specimens and current authored packs supply normalized text; OCR is unsupported.

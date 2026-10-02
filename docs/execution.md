@@ -64,5 +64,6 @@ clarification/approval/cancel/replay. Real integration controls verify one appro
 write, no cancelled write, independent history/journal and durable same-call replay.
 Executable requirements stale-version injection, refresh and newly approved arguments
 are verified against canonical commands. See [operational controls](operational-controls.md).
-Full operational case authoring/review and Eve deployment semantics remain pending. Existing journal
+The [new operational cases](authored-cases.md) and their offline trajectories are
+authored; actual case/script review, suite CLI execution and Eve deployment remain pending. Existing journal
 controls keep new intentions distinct and uncertain effects unretried.

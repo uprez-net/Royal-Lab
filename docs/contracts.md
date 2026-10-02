@@ -60,3 +60,14 @@ and fixture-initialization formats. Durable recording receipts explicitly carry
 `simulation: true`. All seven new contracts have exported JSON Schemas. Old
 result/rubric/score meaning remains unchanged; old saved evidence is not rewritten.
 See [operational controls](operational-controls.md).
+
+Issues #12–#15 add task schema 1.2.0 with explicit denominator roles and hidden
+control/environment references, plus three exported contracts: case-seed,
+case-environment and case-controls. Reference and negative controls declare a verdict
+for every rubric criterion; exact locator and output hashes are checked offline.
+Run preflight requires actual control/environment/operator review as well as the
+existing world/provenance/verifier gates. Seed table/column identifiers are bounded,
+values are parameterized and seed rows contain no manufactured execution evidence.
+Read-fault environments use version 1.1.0; their faults are limited to declared
+canonical read tools. See [the case library](authored-cases.md). Existing result,
+rubric and strict-success score meaning is preserved.

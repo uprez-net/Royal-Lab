@@ -26,7 +26,8 @@ an offline validation pass does not permit execution of draft cases.
 | [Measurement specification](benchmark-spec.md)  | Domain, profiles, success definition, denominators, comparison rules and planned scope                         |
 | [Task authoring](task-authoring.md)             | Synthetic case design, hidden expectations, review and versioning                                              |
 | [Contracts](contracts.md)                       | Schemas, hashes, safe paths and cross-file validation                                                          |
-| [Business review pack](review-pack.md)          | Policies and four specimen expectations needing actual builder review                                          |
+| [Business review pack](review-pack.md)          | Policies, worlds, specimens and authored expectations needing actual builder review                            |
+| [Draft case library](authored-cases.md)         | D01–D12/T01–T12 packs, variants, diagnostics, controls and review boundaries                                   |
 | [Document workspace](document-workspace.md)     | Readers, citations, extraction gaps and isolated binary parsing                                                |
 | [Canonical bridge](guri-bridge.md)              | Pinned product commands, disposable databases and independently observed effects                               |
 | [Operational controls](operational-controls.md) | Minimum T03–T12 adapters, canonical stale-version execution, recording ports and cleanup evidence              |
@@ -45,7 +46,7 @@ and [execution boundaries](decisions/0002-execution-boundaries.md).
 | Parse PDF/DOCX/XLSX locally                                                          | Yes                                  | Docker and the built parser image ID                                                    |
 | Exercise canonical lead and minimum T03–T12 boundaries in integration controls       | Yes                                  | Private pinned checkout, prepared bridge and disposable Compose database                |
 | Run a reviewed document trial through direct OpenAI or AI Gateway                    | Implemented, draft specimens blocked | Actual review, exact candidate configuration, local credential, pricing and paid opt-in |
-| Run the full operational catalogue                                                   | No                                   | Authored/reviewed operational cases and complete selected capabilities                  |
+| Run the full operational catalogue                                                   | No                                   | Actual case/script review, suite execution and remaining capability support             |
 | Produce a fully graded, comparable benchmark score                                   | No                                   | Complete reviewed cases, orchestration and actual judge calibration                     |
 
 Code, datasets and results remain private/proprietary. The synthetic database is
