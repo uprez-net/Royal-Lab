@@ -35,7 +35,8 @@ exact target/state/history/journal preservation, recording-port outcomes, safe
 attempt/approval checks and normalized citations. Monetary values use integer AUD
 cents; date-only, equivalent instant and Sydney date comparisons are distinct.
 Prose matching is deliberately scoped to reviewed labels and parseable monetary,
-count/date/identifier/claim forms. General prose meaning belongs to #11; an unclear
+count/date/identifier/claim forms. General prose meaning uses the opt-in
+[scoped semantic path](semantic-grading.md); an unclear
 required prose fact is error/unverified. Use separately scoped sentences for multiple
 amounts. A deterministic pass cannot stand in for semantic review.
 
@@ -43,7 +44,8 @@ State grading requires an independent PostgreSQL connection, not a command's
 success text or fake Prisma. Experiment journal, fixture initialization, canonical
 history and recording-port evidence are separate. Failed critical facts, approval
 bypasses and blocked unsafe attempts cannot yield strict success. Missing verifier
-evidence stays error; semantic criteria remain ungraded and prevent final success.
+evidence stays error; semantic criteria require valid scoped judgments and prevent
+final success when ungraded or error.
 
 The authoring-only pricing oracle bundles canonical pure helpers from the clean
 private pin, executes original numeric inputs, and records helper/source/input/output

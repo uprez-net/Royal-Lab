@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "reviewer-calibration-pending",
+  "version": "1.0.0",
+  "profileHash": null,
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "No reviewer-labeled examples or human adjudications are available. The empty pack is intentional and cannot authorize release judging. Required scenarios: missing issue, wrong amount, alternate wording, abstention, conditional approval, false success, prompt injection."
+  },
+  "examples": []
+}

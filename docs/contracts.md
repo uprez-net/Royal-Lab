@@ -47,4 +47,9 @@ Task schema 1.1.0 requires a hidden verification path/hash, with approved verifi
 metadata for run preflight. New trace event types require 1.1.0; unknown token counts
 are supported only in result 1.1.0. The four draft tasks explicitly moved to task
 version 1.1.0; policy/source bytes remained unchanged. See [execution](execution.md)
-for the current grading boundaries and retained evidence. Semantic judging remains #11.
+for the current grading boundaries and retained evidence.
+
+Issue #11 adds separate version 1.0.0 judge-profile, scope, response, record,
+semantic-receipt, human-adjudication and calibration contracts and exported schemas.
+Existing result/rubric shapes and all-mandatory scoring are preserved. See
+[semantic grading](semantic-grading.md) for scoping, replay and pending real review.

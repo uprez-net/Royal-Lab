@@ -27,7 +27,9 @@ Usage: pnpm lab <command> [arguments] [options]
   config show [--config <file>]   Display explicit effective config with secrets redacted
   bridge prepare|check           Build or verify the pinned private canonical bridge
   run <task> --suite <path>       One reviewed document trial (--allow-paid required)
-  grade <run-id>                 Regrade saved artifacts offline; semantic judging is #11
+  grade <run-id>                 Regrade saved artifacts offline (--replay-judge <receipt>)
+  grade <run-id> --judge-profile <file> --judge-credentials <file> --suite <path> --allow-paid
+                                Opt-in scoped semantic judging of saved evidence
   report <run>                   Reserved for reports (#17)
   compare <run-a> <run-b>         Reserved for compatible comparisons (#17)
 
@@ -53,6 +55,10 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       check: { type: 'boolean' },
       'allow-paid': { type: 'boolean' },
       verification: { type: 'string' },
+      'judge-profile': { type: 'string' },
+      'judge-credentials': { type: 'string' },
+      'replay-judge': { type: 'string' },
+      calibration: { type: 'string' },
     },
   });
   const [command, ...arguments_] = parsed.positionals;
@@ -231,7 +237,47 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
     required(1);
     const { securePath } = await import('#src/io');
     const { regradeSaved } = await import('#runs/regrade');
-    output(await regradeSaved(await securePath(root, `results/${arguments_[0]}`)));
+    if (
+      options['replay-judge'] &&
+      (options['judge-profile'] || options['judge-credentials'] || options['allow-paid'])
+    )
+      throw new Error('JUDGE_REPLAY_EXECUTION_CONFLICT');
+    if (options['judge-profile']) {
+      if (!options['allow-paid']) throw new Error('PAID_JUDGING_DISABLED');
+      if (!options['judge-credentials'] || !options.suite)
+        throw new Error('JUDGE_EXPLICIT_CREDENTIALS_AND_SUITE_REQUIRED');
+      const { JudgeProfileSchema } = await import('#contracts/judge');
+      const { z } = await import('zod');
+      const { Id } = await import('#contracts/common');
+      const profile = JudgeProfileSchema.parse(
+        await readJson(await securePath(root, options['judge-profile'])),
+      );
+      const credentials = z
+        .record(Id, z.string().min(1))
+        .parse(await readJson(await securePath(root, options['judge-credentials'])));
+      output(
+        await regradeSaved(await securePath(root, `results/${arguments_[0]}`), {
+          semantic: {
+            profile,
+            credentials,
+            allowPaid: true,
+            ...(options.calibration
+              ? { calibration: { directory: root, file: options.calibration } }
+              : {}),
+          },
+          readiness: { root, suite: options.suite },
+        }),
+      );
+    } else {
+      if (options['allow-paid'] || options['judge-credentials'] || options.calibration)
+        throw new Error('JUDGE_PROFILE_REQUIRED');
+      output(
+        await regradeSaved(
+          await securePath(root, `results/${arguments_[0]}`),
+          options['replay-judge'] ? { replayReceipt: options['replay-judge'] } : {},
+        ),
+      );
+    }
     return 0;
   }
   const reserved: Record<string, string> = {

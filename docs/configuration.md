@@ -31,8 +31,9 @@ Before a paid candidate trial, supply these decisions:
    specific to a builder, if any. Intended policy overrides product behavior. Resolve
    documented disagreements before enabling affected operations. Use synthetic examples.
 
-Judge models, separate judge budgets and calibration reviewers are needed for #11/#19,
-not for today's offline deterministic regrading. Royal Eve deployment/session metadata
+Judge models, separate judge budgets and real calibration reviewers are needed for
+opt-in [semantic grading](semantic-grading.md); default deterministic regrading and
+saved judge replay remain offline. Royal Eve deployment/session metadata
 belongs to #18. No production database, Clerk, Xero, email, Blob or DocuSign credential is needed.
 
 ## Local configuration

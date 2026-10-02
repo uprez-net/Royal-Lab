@@ -51,7 +51,8 @@ export async function gradeDeterministic(
   const criteria: CaseResult['criteria'] = [];
   for (const criterion of rubric.criteria) {
     let verdict: 'pass' | 'fail' | 'error' | 'ungraded' = 'ungraded';
-    let reason = 'Semantic judging belongs to issue #11';
+    let reason =
+      'Semantic criterion requires an explicitly selected judge profile or saved judge receipt';
     if (criterion.method === 'deterministic') {
       try {
         const check = criterion.check;

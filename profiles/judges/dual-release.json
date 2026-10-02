@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "dual-release",
+  "version": "1.0.0",
+  "purpose": "release",
+  "scorePolicy": "all-mandatory-1.0.0",
+  "promptVersion": "criterion-1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Release judging is blocked pending real reviewer-labeled calibration and resolution of actual disagreements. Model and pricing settings must be pinned privately. Temperature zero and judge agreement do not establish correctness."
+  },
+  "calibrationHash": null,
+  "limits": {
+    "maxRequests": 56,
+    "maxRequestBytes": 24000,
+    "maxOutputTokensPerRequest": 2000,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 32000,
+    "maxCostUsd": 4,
+    "timeoutMs": 30000,
+    "maxDurationMs": 300000
+  },
+  "judges": [
+    {
+      "id": "release-a",
+      "transport": "direct",
+      "model": null,
+      "parameters": { "temperature": 0 },
+      "pricing": null
+    },
+    {
+      "id": "release-b",
+      "transport": "gateway",
+      "model": null,
+      "parameters": { "temperature": 0 },
+      "pricing": null
+    }
+  ]
+}

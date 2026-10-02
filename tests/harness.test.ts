@@ -13,6 +13,7 @@ import { VerificationPlanSchema } from '#src/grading/verification';
 import { readJson, sha256, jsonText } from '#src/io';
 import { stableJson } from '#src/environments/session';
 import { regradeSaved } from '#runs/regrade';
+import { JudgeProfileSchema } from '#contracts/judge';
 
 const directories: string[] = [];
 afterEach(async () => {
@@ -291,4 +292,34 @@ test('saved output regrades offline, preserves semantic coverage and detects tam
     regradeSaved(saveDirectory, { mode: 'offline-control' }),
     /EXECUTION_EVIDENCE_CHANGED/,
   );
+});
+
+test('saved candidate evidence retains unresolved semantic scopes and replays judge receipts without candidate or judge requests', async () => {
+  const { requests, saveDirectory } = await run('direct');
+  const profile = JudgeProfileSchema.parse(
+    await readJson('profiles/judges/single-exploratory.json'),
+  );
+  const mock: typeof fetch = async () =>
+    assert.fail('Unresolved draft evidence must not reach a judge');
+  const judged = await regradeSaved(saveDirectory, {
+    mode: 'offline-control',
+    semantic: { profile, mode: 'offline-control', fetch: mock },
+  });
+  assert.equal(requests, 2);
+  assert.equal(judged.result.criteria.find((item) => item.id === 'S1')!.verdict, 'error');
+  assert.equal(judged.result.strictSuccess, false);
+  assert.ok(judged.semanticReceiptFile);
+  const receiptBytes = await readFile(path.join(saveDirectory, judged.semanticReceiptFile));
+  const replay = await regradeSaved(saveDirectory, {
+    mode: 'offline-control',
+    replayReceipt: judged.semanticReceiptFile,
+  });
+  assert.deepEqual(replay.result, judged.result);
+  assert.equal(requests, 2);
+  assert.deepEqual(
+    await readFile(path.join(saveDirectory, judged.semanticReceiptFile)),
+    receiptBytes,
+  );
+  const original = JSON.parse(await readFile(path.join(saveDirectory, 'result.json'), 'utf8'));
+  assert.equal(original.gradingStatus, 'ungraded');
 });

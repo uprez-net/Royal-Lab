@@ -13,6 +13,15 @@ import { VerificationPlanSchema } from '#src/grading/verification';
 import { InteractionScriptSchema } from '#src/harness/operator';
 import { NormalizedDocumentSchema } from '#src/documents/normalize';
 import { OracleSchema } from '#src/grading/oracles/guri';
+import {
+  JudgeProfileSchema,
+  JudgeScopeSchema,
+  JudgeResponseSchema,
+  JudgeRecordSchema,
+  SemanticReceiptSchema,
+  HumanAdjudicationSchema,
+  JudgeCalibrationSchema,
+} from '#contracts/judge';
 
 export async function exportSchemas(root: string) {
   const directory = path.join(root, 'schemas');
@@ -32,6 +41,13 @@ export async function exportSchemas(root: string) {
     interactions: InteractionScriptSchema,
     document: NormalizedDocumentSchema,
     oracle: OracleSchema,
+    'judge-profile': JudgeProfileSchema,
+    'judge-scope': JudgeScopeSchema,
+    'judge-response': JudgeResponseSchema,
+    'judge-record': JudgeRecordSchema,
+    'semantic-receipt': SemanticReceiptSchema,
+    'human-adjudication': HumanAdjudicationSchema,
+    'judge-calibration': JudgeCalibrationSchema,
   };
   for (const [name, schema] of Object.entries(schemas)) {
     await writeFile(

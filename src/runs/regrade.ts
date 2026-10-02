@@ -1,4 +1,4 @@
-import { writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { ResultSchema } from '#contracts/result';
@@ -10,10 +10,24 @@ import { NormalizedDocumentSchema } from '#src/documents/normalize';
 import { gradeDeterministic } from '#src/grading/deterministic';
 import { readScoped, jsonText, sha256, securePath } from '#src/io';
 import { stableJson } from '#src/environments/session';
+import {
+  gradeSemantic,
+  replaySemantic,
+  scopeCriterion,
+  hashObject,
+  JUDGE_SDK_VERSION,
+  type JudgeOptions,
+} from '#src/grading/judge';
 export async function regradeSaved(
   directory: string,
-  options: { mode?: 'benchmark' | 'offline-control' } = {},
+  options: {
+    mode?: 'benchmark' | 'offline-control';
+    semantic?: Omit<JudgeOptions, 'runtime' | 'executionEvidenceHash'>;
+    replayReceipt?: string;
+    readiness?: { root: string; suite: string };
+  } = {},
 ) {
+  if (options.semantic && options.replayReceipt) throw new Error('JUDGE_REPLAY_EXECUTION_CONFLICT');
   const receipt = JSON.parse(
     (await readScoped(directory, 'execution-receipt.json')).toString('utf8'),
   );
@@ -88,8 +102,9 @@ export async function regradeSaved(
     )
   )
     throw new Error('GRADING_TRACE_IDENTITY_MISMATCH');
-  const graded = await gradeDeterministic(rubric, await securePath(directory, 'outputs'), result, {
-    ...options,
+  const outputRoot = await securePath(directory, 'outputs');
+  const deterministic = await gradeDeterministic(rubric, outputRoot, result, {
+    ...(options.mode ? { mode: options.mode } : {}),
     plan,
     trace,
     sources: documents.map((document) => ({
@@ -97,7 +112,50 @@ export async function regradeSaved(
       locators: document.units.map((unit) => unit.locator),
     })),
   });
+  let graded = deterministic;
+  let semanticReceiptFile: string | null = null;
+  const executionEvidenceHash = hashObject(receipt);
+  if (options.replayReceipt) {
+    const replayed = replaySemantic(
+      JSON.parse((await readScoped(directory, options.replayReceipt)).toString('utf8')),
+      rubric,
+      deterministic,
+      executionEvidenceHash,
+    );
+    // Rebuild the allowlist from original frozen evidence, never trust a saved request alone.
+    for (const selection of replayed.receipt.criteria) {
+      const criterion = rubric.criteria.find((item) => item.id === selection.criterionId);
+      if (!criterion || criterion.method !== 'semantic')
+        throw new Error('JUDGE_REPLAY_UNKNOWN_CRITERION');
+      if (selection.scope) {
+        const scope = await scopeCriterion(criterion, outputRoot, result.artifacts, documents);
+        if (hashObject(scope) !== hashObject(selection.scope))
+          throw new Error('JUDGE_REPLAY_SCOPE_CHANGED');
+      }
+    }
+    graded = replayed.result;
+    semanticReceiptFile = options.replayReceipt;
+  } else if (options.semantic) {
+    if (options.mode !== 'offline-control') {
+      if (!options.semantic.allowPaid) throw new Error('PAID_JUDGING_DISABLED');
+      if (!options.readiness) throw new Error('JUDGE_FULL_SUITE_PREFLIGHT_REQUIRED');
+    } else if (options.semantic.mode !== 'offline-control')
+      throw new Error('OFFLINE_JUDGE_MODE_REQUIRED');
+    const semantic = await gradeSemantic(rubric, deterministic, outputRoot, documents, {
+      ...options.semantic,
+      ...(options.readiness ? { readiness: options.readiness } : {}),
+      executionEvidenceHash,
+      runtime: {
+        nodeVersion: process.version,
+        lockfileHash: sha256(await readFile(new URL('../../pnpm-lock.yaml', import.meta.url))),
+        sdkVersion: JUDGE_SDK_VERSION,
+      },
+    });
+    semanticReceiptFile = `${semantic.id}.json`;
+    await writeFile(path.join(directory, semanticReceiptFile), jsonText(semantic), { flag: 'wx' });
+    graded = semantic.result;
+  }
   const file = `grade-${randomUUID()}.json`;
   await writeFile(path.join(directory, file), jsonText(graded), { flag: 'wx' });
-  return { file, result: graded };
+  return { file, result: graded, semanticReceiptFile };
 }

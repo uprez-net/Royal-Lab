@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "single-exploratory",
+  "version": "1.0.0",
+  "purpose": "exploratory",
+  "scorePolicy": "all-mandatory-1.0.0",
+  "promptVersion": "criterion-1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Exploratory configuration template; no calibration or business approval claimed. Pin a model and pricing in an explicit private profile before opting in."
+  },
+  "calibrationHash": null,
+  "limits": {
+    "maxRequests": 28,
+    "maxRequestBytes": 24000,
+    "maxOutputTokensPerRequest": 2000,
+    "maxInputTokens": 100000,
+    "maxOutputTokens": 16000,
+    "maxCostUsd": 2,
+    "timeoutMs": 30000,
+    "maxDurationMs": 300000
+  },
+  "judges": [
+    {
+      "id": "exploratory",
+      "transport": "direct",
+      "model": null,
+      "parameters": { "temperature": 0 },
+      "pricing": null
+    }
+  ]
+}

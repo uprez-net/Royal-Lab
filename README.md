@@ -10,7 +10,8 @@ independent fictional worlds. Closed readers, two candidate transports,
 deterministic graders and a canonical lead-task bridge are implemented for #4–#10.
 The operator harness has passed real Docker/PostgreSQL checks and offline SDK
 transport controls. Human business review and paid baseline runs remain pending;
-there are no model scores. T03–T12 operation coverage and semantic grading are unfinished.
+there are no model scores. Scoped semantic judging is implemented with
+[real calibration pending](docs/semantic-grading.md). T03–T12 operation coverage is unfinished.
 
 ## Start
 
@@ -49,7 +50,8 @@ or repository configuration. `validate` checks every selected case before report
 `validate --for-run` currently exits nonzero because human review is pending.
 `run` requires an explicit paid-execution flag and approved source/world/verifier
 packs; `grade` rechecks frozen saved evidence without candidate calls. Semantic
-criteria remain ungraded until #11. Reserved report/compare commands exit 3.
+criteria require explicit opt-in judges or preserved judge-response replay;
+real calibration remains pending. Reserved report/compare commands exit 3.
 
 ```sh
 pnpm schemas:export

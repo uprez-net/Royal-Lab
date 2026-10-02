@@ -41,8 +41,9 @@ flowchart TD
 
 The document CLI is implemented for one reviewed trial. The fixed-tools API and
 integration controls compose the bridge and operator; there is no release-ready
-operational case or full operational CLI run yet. Semantic judges, repeated suite
-execution, reports/comparisons and the composed Royal Eve profile are later work.
+operational case or full operational CLI run yet. Scoped semantic judging and saved
+replay are implemented; real calibration and human review remain pending. Repeated
+suite execution, reports/comparisons and the composed Royal Eve profile are later work.
 
 | Layer                    | Main paths                                                   | Responsibility                                                                           |
 | ------------------------ | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |

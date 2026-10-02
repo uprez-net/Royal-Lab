@@ -190,8 +190,9 @@ Remove-Variable candidateCredential
 
 Use `apiKeyEnv: "ROYAL_LAB_CANDIDATE_API_KEY"` to refer to it. `.env` and
 `.env.example` are never automatically loaded. Bridge checkout/database settings
-are JSON fields, not ambient environment overrides. A future judge credential
-does not enable a semantic judge today.
+are JSON fields, not ambient environment overrides. Semantic grading uses separate
+explicit judge profiles/credential files and paid opt-in; see
+[semantic grading](semantic-grading.md).
 
 ```sh
 pnpm lab config show --config tmp/candidate.json

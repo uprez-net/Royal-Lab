@@ -21,6 +21,7 @@ an offline validation pass does not permit execution of draft cases.
 | [Architecture](architecture.md)                | Components, trust boundaries, case lifecycle, evidence, approval/replay and scoring                            |
 | [Configuration](configuration.md)              | Inputs to obtain from the owner, explicit local configuration, credentials and pricing                         |
 | [Execution](execution.md)                      | Candidate loop, budgets, current CLI/API support and saved evidence                                            |
+| [Semantic grading](semantic-grading.md)        | Scoped judges, preserved disagreements, offline replay and pending real calibration                            |
 | [Measurement specification](benchmark-spec.md) | Domain, profiles, success definition, denominators, comparison rules and planned scope                         |
 | [Task authoring](task-authoring.md)            | Synthetic case design, hidden expectations, review and versioning                                              |
 | [Contracts](contracts.md)                      | Schemas, hashes, safe paths and cross-file validation                                                          |
@@ -43,7 +44,7 @@ and [execution boundaries](decisions/0002-execution-boundaries.md).
 | Exercise canonical lead lookup/list/create in integration controls                   | Yes                                  | Private pinned checkout, prepared bridge and disposable Compose database                |
 | Run a reviewed document trial through direct OpenAI or AI Gateway                    | Implemented, draft specimens blocked | Actual review, exact candidate configuration, local credential, pricing and paid opt-in |
 | Run the full operational catalogue                                                   | No                                   | T03–T12 adapters and authored/reviewed operational cases                                |
-| Produce a fully graded, comparable benchmark score                                   | No                                   | Semantic grading, complete reviewed cases, orchestration and calibration                |
+| Produce a fully graded, comparable benchmark score                                   | No                                   | Complete reviewed cases, orchestration and actual judge calibration                     |
 
 Code, datasets and results remain private/proprietary. The synthetic database is
 disposable; real client records, product templates and production credentials are
