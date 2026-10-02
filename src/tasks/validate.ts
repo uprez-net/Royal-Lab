@@ -297,10 +297,19 @@ export async function preflight(
         throw new Error('Human review is pending');
       if (
         forRun &&
-        suite.profile === 'documents' &&
+        (suite.profile === 'documents' || selected.task.schemaVersion === '1.2.0') &&
         validated.verification?.review.status !== 'approved'
       )
         throw new Error('Human verifier review is pending');
+      if (forRun && validated.controls && validated.controls.review.status !== 'approved')
+        throw new Error('Human control review is pending');
+      if (
+        forRun &&
+        validated.environment &&
+        (validated.environment.review.status !== 'approved' ||
+          validated.environment.operator.review.status !== 'approved')
+      )
+        throw new Error('Human environment/operator review is pending');
       if (forRun && !profile.executionImplemented)
         throw new Error('Profile execution is not implemented (later issues)');
       cases.push({ taskId: id, status: 'ready', reason: null });

@@ -112,17 +112,18 @@ export function verifyTrace(
 export function unobservedCommits(
   events: TraceEvent[],
   operations: { key: string; status: string }[],
+  sessionId: string,
 ) {
   const observed = new Set(
     events
       .filter((event) => event.type === 'tool-executed' && event.outcome === 'success')
-      .map((event) => (event as Extract<TraceEvent, { type: 'tool-executed' }>).callId),
+      .map((event) => {
+        const execution = event as Extract<TraceEvent, { type: 'tool-executed' }>;
+        return `${sessionId}:${execution.callId}:${execution.tool}`;
+      }),
   );
   return operations
     .filter((operation) => operation.status === 'committed')
-    .filter((operation) => {
-      const [, callId] = operation.key.split(':');
-      return !callId || !observed.has(callId);
-    })
+    .filter((operation) => !observed.has(operation.key))
     .map((operation) => operation.key);
 }

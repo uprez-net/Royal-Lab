@@ -1,4 +1,6 @@
 * text=auto eol=lf
+# RFC 822 fixtures use CRLF and are hashed byte-for-byte by task manifests.
+*.eml -text
 *.png binary
 *.jpg binary
 *.pdf binary

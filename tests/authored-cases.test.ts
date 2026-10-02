@@ -9,7 +9,7 @@ import { AUTHORED_CASES } from '#fixtures/authoring/index';
 import { POLICY_V11 } from '#fixtures/authoring/policy';
 import { generatedFiles } from '#fixtures/generate';
 import { discover } from '#tasks/discover';
-import { validateTask } from '#tasks/validate';
+import { preflight, validateTask } from '#tasks/validate';
 import { visibleInput } from '#tasks/visible-input';
 import { gradeArtifactControls } from '#src/grading/controls';
 import { jsonText, readJson, sha256 } from '#src/io';
@@ -153,6 +153,79 @@ describe('authored case library (#12-#15)', () => {
       false,
     );
   });
+  test('run preflight independently requires authored controls, environment and operator review', async () => {
+    const root = await workspace();
+    // Synthetic completed-review metadata exists only inside this disposable test.
+    const review = {
+      status: 'approved',
+      reviewer: 'Synthetic gate-test reviewer',
+      reviewedAt: '2026-10-02T00:00:00Z',
+      notes: 'Test-only gate exercise; no actual human approval.',
+    };
+    for (const spec of [
+      specs.find((item) => item.profile === 'documents')!,
+      specs.find((item) => item.profile === 'fixed-tools')!,
+    ]) {
+      const taskFile = path.join(root, `tasks/${spec.id}/task.json`);
+      const task = TaskSchema.parse(await readJson(taskFile));
+      const patchHidden = async (
+        relative: string,
+        hash: 'provenanceHash' | 'verificationHash' | 'controlsHash' | 'environmentHash',
+        change: (value: any) => void,
+      ) => {
+        const file = path.join(root, `tasks/${spec.id}`, relative);
+        const value = await readJson(file);
+        change(value);
+        const text = jsonText(value);
+        await writeFile(file, text);
+        task[hash] = sha256(text);
+        await writeFile(taskFile, jsonText(task));
+      };
+      const worldFile = path.join(root, `fixtures/worlds/${task.worldId}.json`);
+      const world = (await readJson(worldFile)) as Record<string, unknown>;
+      world.review = review;
+      await writeFile(worldFile, jsonText(world));
+      const fixtureFile = path.join(root, `tasks/${spec.id}`, task.fixturePath);
+      const fixture = (await readJson(fixtureFile)) as Record<string, unknown>;
+      fixture.worldHash = sha256(jsonText(world));
+      await writeFile(fixtureFile, jsonText(fixture));
+      task.fixtureHash = sha256(jsonText(fixture));
+      await patchHidden(task.provenancePath, 'provenanceHash', (value) => {
+        value.review = review;
+      });
+      await patchHidden(task.verificationPath!, 'verificationHash', (value) => {
+        value.review = review;
+      });
+      // Select exactly this case; other suite entries/worlds still undergo isolation.
+      const suite =
+        spec.profile === 'documents'
+          ? 'suites/development.json'
+          : 'suites/fixed-tools-development.json';
+      const selection = SuiteSchema.parse(await readJson(path.join(root, suite)));
+      selection.split = spec.split;
+      selection.cases = [task.id];
+      await writeFile(path.join(root, suite), jsonText(selection));
+      assert.match((await preflight(root, suite, true)).cases[0]!.reason!, /Human control review/);
+      await patchHidden(task.controlsPath!, 'controlsHash', (value) => {
+        value.review = review;
+      });
+      if (spec.profile === 'fixed-tools') {
+        assert.match(
+          (await preflight(root, suite, true)).cases[0]!.reason!,
+          /Human environment\/operator review/,
+        );
+        await patchHidden(task.environmentPath!, 'environmentHash', (value) => {
+          value.review = review;
+        });
+        assert.match(
+          (await preflight(root, suite, true)).cases[0]!.reason!,
+          /Human environment\/operator review/,
+        );
+      } else {
+        assert.equal((await preflight(root, suite, true)).cases[0]!.status, 'ready');
+      }
+    }
+  });
 });
 
 describe('measurement-system controls (#15)', () => {
@@ -169,11 +242,36 @@ describe('measurement-system controls (#15)', () => {
         }),
       );
       assert.deepEqual(
-        unobservedCommits(trace, control.operations),
+        unobservedCommits(trace, control.operations, 'case-session'),
         control.expectedUnobserved,
         control.id,
       );
     }
+  });
+  test('a parent execution cannot hide a child commit with the same call ID or a different tool', () => {
+    const events = [
+      TraceEventSchema.parse({
+        schemaVersion: '1.1.0',
+        runId: 'collision-control',
+        taskId: 'safety/nested-trace',
+        sequence: 0,
+        at: '2026-10-04T00:00:00Z',
+        type: 'tool-executed',
+        callId: 'call-a',
+        tool: 'get_lead',
+        outcome: 'success',
+        result: {},
+      }),
+    ];
+    const keys = ['child-session:call-a:get_lead', 'case-session:call-a:create_lead_task'];
+    assert.deepEqual(
+      unobservedCommits(
+        events,
+        keys.map((key) => ({ key, status: 'committed' })),
+        'case-session',
+      ),
+      keys,
+    );
   });
   test('the additive markup control rejects the compounded total', () => {
     const { expectedCents, wrongCompoundedContractCents } = ADDITIVE_MARKUP_CONTROL;
