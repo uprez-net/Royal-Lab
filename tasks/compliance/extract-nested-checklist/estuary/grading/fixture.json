@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "worldId": "estuary-world",
+  "worldPath": "fixtures/worlds/estuary-world.json",
+  "worldHash": "9d7bcd1f4e2bfc90133d76ecec1433f9ee45ae5073ec984912b1abbb0d6607b8",
+  "entityIds": [
+    "builder-fe9b57a5bffe",
+    "project-a-154b18acb8e5",
+    "certifier-a-c354973fe733"
+  ],
+  "expectedFacts": {
+    "checklist.json#/itemCount": 8,
+    "checklist.json#/clauses": [
+      "1",
+      "2",
+      "3",
+      "4a",
+      "4b",
+      "4c",
+      "5",
+      "6"
+    ],
+    "checklist.json#/items/3/requirements": [
+      "Show the 900 mm setback to the eastern boundary on sheet A-02.",
+      "Add the finished floor level RL 12.450 to the ground floor plan.",
+      "Dimension the garage door opening."
+    ],
+    "checklist.json#/items/5/references": [
+      "AS/NZS 3500.3:2021"
+    ],
+    "checklist.json#/items/6/label": "Home Building Compensation Fund certificate",
+    "checklist.json#/items/3/group": "Design documentation",
+    "checklist.json#/items/7/description": "Receipt of payment of the levy to the Long Service Corporation (fictional) for the full construction cost."
+  }
+}

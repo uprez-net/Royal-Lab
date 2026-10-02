@@ -1,0 +1,14 @@
+{
+  "directCostCents": 38750000,
+  "additionsCents": 250000,
+  "costBaseCents": 39000000,
+  "overheadCents": 2730000,
+  "feeCents": 2086500,
+  "gstCents": 4381650,
+  "contractCents": 48198150,
+  "ratePerSqmCents": 286894,
+  "excludedLines": [
+    "L07",
+    "L11"
+  ]
+}

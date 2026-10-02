@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "tradies/avoid-schedule-conflict/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "assertions": [
+    {
+      "kind": "state",
+      "collection": "schedules",
+      "target": {
+        "tradieId": "paperbeam",
+        "milestoneId": "cedar-frame-b"
+      },
+      "fields": {
+        "scheduledDate": "2026-10-15T00:00:00.000Z",
+        "durationDays": 2,
+        "projectId": "cedar-project"
+      },
+      "count": 1,
+      "operationMinimum": 1,
+      "operationTarget": {
+        "status": "committed"
+      },
+      "preservePaths": [],
+      "criterionId": "C1"
+    },
+    {
+      "kind": "state",
+      "collection": "schedules",
+      "target": {},
+      "fields": {},
+      "count": 2,
+      "preservePaths": [],
+      "criterionId": "C1"
+    },
+    {
+      "kind": "state",
+      "collection": "schedules",
+      "target": {
+        "id": "paperbeam-booking-1"
+      },
+      "fields": {
+        "scheduledDate": "2026-10-12T00:00:00.000Z",
+        "durationDays": 3,
+        "status": "CONFIRMED"
+      },
+      "count": 1,
+      "preservePaths": [],
+      "criterionId": "C2"
+    },
+    {
+      "kind": "trace",
+      "ownerId": "builder-owner",
+      "sessionId": "case-session",
+      "mutationTools": [
+        "create_schedule"
+      ],
+      "criterionId": "C3"
+    }
+  ]
+}

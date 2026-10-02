@@ -8,7 +8,7 @@ import { loadConfig, redact } from '#src/config';
 import { generate } from '#fixtures/generate';
 import { lint } from '#fixtures/lint';
 import { exportSchemas } from '#contracts/export';
-import { readJson } from '#src/io';
+import { readJson, walk } from '#src/io';
 
 const HELP = `Royal-Lab 0.1 • NSW residential builder benchmark
 
@@ -18,11 +18,12 @@ Usage: pnpm lab <command> [arguments] [options]
   list                           List authored cases and their review status
   describe <family/case>          Describe an authored case
   describe <family/case> --visible Inspect only the candidate-visible projection
-  validate [--suite <path>]       Offline suite integrity (both splits by default)
+  validate [--suite <path>]       Offline suite integrity (every suite by default)
   validate --for-run              Strict review/tool/execution readiness preflight
   validate --artifact <file> --kind result|trace|manifest
   fixtures generate [--check]     Create deterministic draft specimens / check drift
   fixtures lint                  Check privacy patterns and world references
+  controls [<family/case>]        Grade hidden document reference/negative controls offline
   schemas export                 Export portable JSON Schemas
   config show [--config <file>]   Display explicit effective config with secrets redacted
   bridge prepare|check           Build or verify the pinned private canonical bridge
@@ -35,7 +36,7 @@ Usage: pnpm lab <command> [arguments] [options]
 
 Options: --root <directory> --json --help
 No API credentials are needed for authoring. See docs/configuration.md.
-The 28-definition roadmap contains four draft specimens; no model scores exist.
+Authored cases and specimens are draft and unreviewed; no model scores exist.
 `;
 export async function main(argv = process.argv.slice(2)): Promise<number> {
   const parsed = parseArgs({
@@ -147,7 +148,9 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
     }
     const files = options.suite
       ? [options.suite]
-      : ['suites/development.json', 'suites/held-out.json'];
+      : (await walk(path.join(root, 'suites')))
+          .filter((file) => file.endsWith('.json'))
+          .map((file) => `suites/${file}`);
     const reports = [];
     for (const file of files)
       reports.push(await preflight(root, file, options['for-run'] ?? false));
@@ -175,6 +178,39 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       return result.valid ? 0 : 1;
     }
     throw new Error('fixtures requires generate or lint');
+  }
+  if (command === 'controls') {
+    if (arguments_.length > 1) throw new Error('controls accepts at most one case ID');
+    const { gradeArtifactControls } = await import('#src/grading/controls');
+    const selected = (await discover(root)).filter(
+      ({ task }) =>
+        task.schemaVersion === '1.2.0' &&
+        task.profiles.includes('documents') &&
+        (!arguments_[0] || task.id === arguments_[0]),
+    );
+    if (arguments_[0] && selected.length === 0)
+      throw new Error(`No authored document case: ${arguments_[0]}`);
+    const reports: Awaited<ReturnType<typeof gradeArtifactControls>>[] = [];
+    for (const { task } of selected) reports.push(await gradeArtifactControls(root, task));
+    const describe = (report: (typeof reports)[number]) => [
+      `${report.valid ? 'ok  ' : 'FAIL'} ${report.taskId}`,
+      ...report.outcomes.flatMap((outcome) => [
+        `     ${outcome.matches ? 'ok  ' : 'FAIL'} ${outcome.kind.padEnd(9)} ${outcome.controlId}`,
+        ...outcome.mismatches.map(
+          (m) =>
+            `          ${m.criterionId}: expected ${m.expected}, got ${m.actual} (${m.reason})`,
+        ),
+      ]),
+    ];
+    output(
+      options.json
+        ? reports
+        : [
+            ...reports.flatMap(describe),
+            'Offline measurement controls only: no candidate or judge call, score or human review.',
+          ].join('\n'),
+    );
+    return reports.every((report) => report.valid) ? 0 : 1;
   }
   if (command === 'schemas') {
     required(1);

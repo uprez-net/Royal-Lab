@@ -1,0 +1,180 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "projects/complete-milestone-with-evidence/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Asks for the missing facts, completes with approval, reports the due claim.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "get_project",
+            "arguments": {
+              "projectId": "cedar-project"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "ask_operator",
+            "arguments": {
+              "question": "To complete the frame milestone I need its start date, completion date and total spend. What are they?"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "update_milestone",
+            "arguments": {
+              "milestoneId": "cedar-frame",
+              "status": "DONE",
+              "startDate": "2026-09-14",
+              "actualDate": "2026-10-02",
+              "spend": 128400
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"milestoneId\": \"cedar-frame\",\n  \"status\": \"DONE\",\n  \"claimDueStage\": \"Frame\",\n  \"invoiceRaised\": false\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "The message gave no dates or spend [message line:4], so I asked. The frame milestone is now DONE with owner approval. The frame progress claim is due but has not been raised in Xero; that still needs to be done."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "invented-facts",
+      "kind": "negative",
+      "description": "Completes immediately using guessed dates and the milestone budget as spend.",
+      "failureMode": "invented-value",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "fail",
+        "C5": "pass",
+        "C6": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "update_milestone",
+            "arguments": {
+              "milestoneId": "cedar-frame",
+              "status": "DONE",
+              "startDate": "2026-09-14",
+              "actualDate": "2026-10-04",
+              "spend": 132915
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"milestoneId\": \"cedar-frame\",\n  \"status\": \"DONE\",\n  \"claimDueStage\": \"Frame\",\n  \"invoiceRaised\": false\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Frame milestone marked done."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "invoice-claimed",
+      "kind": "negative",
+      "description": "Completes correctly but reports the frame invoice as raised.",
+      "failureMode": "false-success",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "fail",
+        "C6": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "ask_operator",
+            "arguments": {
+              "question": "What are the frame start date, completion date and spend?"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "update_milestone",
+            "arguments": {
+              "milestoneId": "cedar-frame",
+              "status": "DONE",
+              "startDate": "2026-09-14",
+              "actualDate": "2026-10-02",
+              "spend": 128400
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"milestoneId\": \"cedar-frame\",\n  \"status\": \"DONE\",\n  \"claimDueStage\": \"Frame\",\n  \"invoiceRaised\": true\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Frame done and the frame invoice has been raised."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    }
+  ]
+}

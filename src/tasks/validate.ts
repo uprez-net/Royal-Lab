@@ -6,9 +6,16 @@ import { SuiteSchema, type Suite, type Task } from '#contracts/task';
 import { ProvenanceSchema, type Provenance } from '#fixtures/provenance';
 import { FixtureSchema, WorldSchema } from '#fixtures/world';
 import { lintWorld } from '#fixtures/lint';
-import { readJson, readScoped, securePath, sha256 } from '#src/io';
+import { readJson, readScoped, securePath, sha256, walk } from '#src/io';
 import { discover } from '#tasks/discover';
 import { VerificationPlanSchema, type VerificationPlan } from '#src/grading/verification';
+import {
+  CaseControlsSchema,
+  CaseEnvironmentSchema,
+  type CaseControls,
+  type CaseEnvironment,
+} from '#contracts/authoring';
+import { readText } from '#src/documents/readers/text';
 
 export function unique(values: string[], label: string) {
   if (new Set(values).size !== values.length) throw new Error(`Duplicate ${label}`);
@@ -19,6 +26,81 @@ export interface ValidatedTask {
   provenance: Provenance;
   directory: string;
   verification: VerificationPlan | null;
+  controls: CaseControls | null;
+  environment: CaseEnvironment | null;
+}
+const TEXT_MEDIA = [
+  'text/markdown',
+  'text/plain',
+  'application/json',
+  'text/csv',
+  'message/rfc822',
+];
+async function validateAuthored(directory: string, task: Task, rubric: Rubric) {
+  if (task.schemaVersion !== '1.2.0') return { controls: null, environment: null };
+  const hidden = async (file: string, hash: string) => {
+    if (!file.startsWith('grading/')) throw new Error(`Authored material must be hidden: ${file}`);
+    const bytes = await readScoped(directory, file);
+    if (sha256(bytes) !== hash) throw new Error(`Hidden file hash mismatch: ${file}`);
+    return JSON.parse(bytes.toString('utf8')) as unknown;
+  };
+  const controls = CaseControlsSchema.parse(await hidden(task.controlsPath!, task.controlsHash!));
+  if (controls.taskId !== task.id || controls.rubricVersion !== rubric.version)
+    throw new Error('Controls task/rubric identity mismatch');
+  const criterionIds = rubric.criteria.map((criterion) => criterion.id).sort();
+  for (const control of controls.controls) {
+    if (JSON.stringify(Object.keys(control.expected).sort()) !== JSON.stringify(criterionIds))
+      throw new Error(`Control ${control.id} must state an expectation for every criterion`);
+    for (const [id, verdict] of Object.entries(control.expected)) {
+      const criterion = rubric.criteria.find((item) => item.id === id)!;
+      if (control.kind === 'negative' && verdict === 'fail' && !criterion.mandatory)
+        throw new Error(`Control ${control.id} relies on an optional criterion`);
+    }
+    if (control.mode === 'artifacts') {
+      if (!task.profiles.includes('documents'))
+        throw new Error('Artifact controls are for document cases');
+      for (const output of control.outputs) {
+        if (!task.deliverables.some((file) => file.path === output.path))
+          throw new Error(`Control ${control.id} writes an undeclared deliverable`);
+        const file = `grading/controls/${control.id}/${output.path}`;
+        if (sha256(await readScoped(directory, file)) !== output.sha256)
+          throw new Error(`Control output hash mismatch: ${file}`);
+      }
+    } else if (!task.profiles.includes('fixed-tools'))
+      throw new Error('Trajectory controls are for fixed-tools cases');
+    else if (control.kind === 'reference')
+      // Negative controls may deliberately call undeclared tools.
+      for (const turn of control.steps)
+        for (const call of turn)
+          if (!task.tools.some((tool) => tool.name === call.tool))
+            throw new Error(`Control ${control.id} calls undeclared tool ${call.tool}`);
+  }
+  const environment = task.environmentPath
+    ? CaseEnvironmentSchema.parse(await hidden(task.environmentPath, task.environmentHash!))
+    : null;
+  if (environment && environment.taskId !== task.id)
+    throw new Error('Environment task identity mismatch');
+  if (environment && environment.bridge.mode !== 'benchmark')
+    throw new Error('Authored environments use benchmark-mode recording ports');
+  // Every criterion locator must name exactly one normalized unit; reviewers and
+  // judges must never receive whole-document or fuzzy evidence.
+  const units = new Map<string, string[]>();
+  for (const input of task.inputs) {
+    if (!TEXT_MEDIA.includes(input.mediaType))
+      throw new Error(`Authored evidence must be text-normalized: ${input.path}`);
+    const parsed = await readText(await readScoped(directory, input.path), input.mediaType);
+    units.set(
+      input.id,
+      parsed.units.map((unit) => unit.locator),
+    );
+  }
+  for (const criterion of rubric.criteria)
+    for (const evidence of criterion.evidence)
+      if ((units.get(evidence.sourceId) ?? []).filter((l) => l === evidence.locator).length !== 1)
+        throw new Error(
+          `Unresolved evidence locator: ${criterion.id} ${evidence.sourceId} ${evidence.locator}`,
+        );
+  return { controls, environment };
 }
 export async function validateTask(root: string, task: Task): Promise<ValidatedTask> {
   const directory = await securePath(root, `tasks/${task.id}`);
@@ -155,7 +237,8 @@ export async function validateTask(root: string, task: Task): Promise<ValidatedT
         throw new Error('Document task requires artifact checks, not database/effect checks');
     }
   }
-  return { task, rubric, provenance, directory, verification };
+  const { controls, environment } = await validateAuthored(directory, task, rubric);
+  return { task, rubric, provenance, directory, verification, controls, environment };
 }
 export interface Selection {
   taskId: string;
@@ -225,16 +308,41 @@ export async function preflight(
       cases.push({ taskId: id, status: 'invalid', reason: String(error) });
     }
   }
-  // Whole-world isolation, including cases that are not selected in this suite.
-  const development = SuiteSchema.parse(
-    await readJson(await securePath(root, 'suites/development.json')),
+  // Whole-world isolation across every suite, including unselected cases.
+  const suites = await Promise.all(
+    (await walk(path.join(root, 'suites')))
+      .filter((file) => file.endsWith('.json'))
+      .map(async (file) =>
+        SuiteSchema.parse(await readJson(await securePath(root, `suites/${file}`))),
+      ),
   );
-  const heldOut = SuiteSchema.parse(await readJson(await securePath(root, 'suites/held-out.json')));
-  const worlds = (ids: string[]) =>
-    ids.map((id) => discovered.find((x) => x.task.id === id)?.task.worldId);
-  const devWorlds = new Set(worlds(development.cases).filter(Boolean));
-  if (worlds(heldOut.cases).some((id) => id && devWorlds.has(id)))
+  const worlds = (split: Suite['split']) =>
+    new Set(
+      suites
+        .filter((item) => item.split === split)
+        .flatMap((item) => item.cases)
+        .map((id) => discovered.find((x) => x.task.id === id)?.task.worldId)
+        .filter(Boolean),
+    );
+  const devWorlds = worlds('development');
+  if ([...worlds('held-out')].some((id) => devWorlds.has(id)))
     errors.push('Development/held-out world leakage');
+  // A core denominator holds one authored core case per definition and no variants.
+  const core =
+    suite.id === 'development' || suite.id === 'held-out' || suite.id.startsWith('fixed-tools-');
+  const definitions = new Set<string>();
+  for (const id of suite.cases) {
+    const task = discovered.find((x) => x.task.id === id)?.task;
+    if (!task) continue;
+    if (core && task.role && task.role !== 'core')
+      errors.push(`Non-core case in core suite: ${id}`);
+    if (!core && task.role === 'core') errors.push(`Core case outside a core suite: ${id}`);
+    if (core) {
+      if (definitions.has(task.definitionId))
+        errors.push(`Duplicate core definition: ${task.definitionId}`);
+      definitions.add(task.definitionId);
+    }
+  }
   if (!cases.some((item) => item.status !== 'excluded'))
     errors.push('Suite has no compatible selected cases');
   return {

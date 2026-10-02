@@ -1,0 +1,103 @@
+{
+  "project": "Estuary extension recovery",
+  "exportedAt": "2026-10-06T08:30:00+11:00",
+  "milestones": [
+    {
+      "id": "m-deposit",
+      "name": "Contract deposit",
+      "projectStage": "Deposit",
+      "status": "DONE",
+      "parentId": null,
+      "actualDate": "2026-08-14"
+    },
+    {
+      "id": "m-slab",
+      "name": "Slab works",
+      "projectStage": "Slab",
+      "status": "NOT_REQUIRED",
+      "parentId": null
+    },
+    {
+      "id": "m-slab-footings",
+      "name": "Footings",
+      "projectStage": "Slab",
+      "status": "NOT_REQUIRED",
+      "parentId": "m-slab"
+    },
+    {
+      "id": "m-slab-pour",
+      "name": "Slab pour",
+      "projectStage": "Slab",
+      "status": "NOT_REQUIRED",
+      "parentId": "m-slab"
+    },
+    {
+      "id": "m-frame",
+      "name": "Frame - extension walls",
+      "projectStage": "Frame",
+      "status": "DONE",
+      "parentId": null,
+      "actualDate": "2026-09-25"
+    },
+    {
+      "id": "m-frame-trusses",
+      "name": "Roof trusses",
+      "projectStage": "Frame",
+      "status": "DONE",
+      "parentId": "m-frame",
+      "actualDate": "2026-09-24"
+    },
+    {
+      "id": "m-frame-window",
+      "name": "Window rough-in (added 2026-10-01)",
+      "projectStage": "Lockup",
+      "status": "PENDING",
+      "parentId": "m-frame"
+    },
+    {
+      "id": "m-lockup",
+      "name": "Lock-up",
+      "projectStage": "Lockup",
+      "status": "DONE",
+      "parentId": null,
+      "actualDate": "2026-10-05"
+    },
+    {
+      "id": "m-lockup-doors",
+      "name": "External doors hung",
+      "projectStage": "Lockup",
+      "status": "DONE",
+      "parentId": "m-lockup",
+      "actualDate": "2026-10-02"
+    },
+    {
+      "id": "m-lockup-roof",
+      "name": "Roof sheeting",
+      "projectStage": "Lockup",
+      "status": "DONE",
+      "parentId": "m-lockup",
+      "actualDate": "2026-10-05"
+    },
+    {
+      "id": "m-fitout",
+      "name": "Interior fit-out",
+      "projectStage": "Interior_Fit_Out",
+      "status": "ACTIVE",
+      "parentId": null
+    },
+    {
+      "id": "m-fitout-plaster",
+      "name": "Plasterboard",
+      "projectStage": "Interior_Fit_Out",
+      "status": "ACTIVE",
+      "parentId": "m-fitout"
+    },
+    {
+      "id": "m-final",
+      "name": "Handover",
+      "projectStage": "Final",
+      "status": "PENDING",
+      "parentId": null
+    }
+  ]
+}

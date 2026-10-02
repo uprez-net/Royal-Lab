@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
@@ -24,7 +25,7 @@ import { fixtureControlUrl } from '#src/environments/guri/database';
 
 test('fixed-tools profile and capability declarations pin the expanded surface without migrating saved versions', async () => {
   const profile = JSON.parse(await readFile('profiles/fixed-tools.json', 'utf8'));
-  assert.equal(profile.version, '2.0.0');
+  assert.equal(profile.version, '2.1.0');
   assert.deepEqual(
     profile.tools.map((tool: { name: string }) => tool.name).sort(),
     Object.keys(FIXED_TOOL_SCHEMAS).sort(),
@@ -43,6 +44,22 @@ test('fixed-tools profile and capability declarations pin the expanded surface w
   );
   assert.equal(GURI_TOOL_VERSIONS.find_leads, '2.0.0');
   assert.equal(GURI_TOOL_VERSIONS.create_lead_task, '1.0.0');
+  assert.equal(GURI_TOOL_VERSIONS.update_project_requirements, '1.1.0');
+});
+
+test('fixed-tools transport schemas avoid constructs an OpenAI-compatible transport strips', () => {
+  // A stripped constraint is reported as a provider downgrade and aborts a run.
+  for (const [name, schema] of Object.entries(FIXED_TOOL_SCHEMAS)) {
+    const text = JSON.stringify(z.toJSONSchema(schema));
+    assert.ok(!text.includes('propertyNames'), `${name} advertises propertyNames`);
+  }
+  assert.throws(() =>
+    parseGuriArguments('update_project_requirements', {
+      projectId: 'p',
+      expectedUpdatedAt: '2026-10-04T00:00:00Z',
+      patch: { ['k'.repeat(101)]: 1 },
+    }),
+  );
 });
 
 test('minimum operational tools declare read/write boundaries; privileged arguments and undeclared providers are rejected', () => {

@@ -170,53 +170,42 @@ These example expectations remain draft until a human reviews the evidence and
 rubric together. Benchmark-wide scope approval does not imply individual case review.
 `;
 
-export function generatedFiles(): Map<string, string> {
+// Original draft foundation specimens (task schema 1.1.0). They keep policy 1.0.0
+// and are not the authored core suite; see src/fixtures/authoring.
+export const SPECIMENS = [
+  {
+    split: 'development' as const,
+    id: 'offers/reconcile-quote-build-up/cedar',
+    definitionId: 'D01',
+    kind: 'quote',
+  },
+  {
+    split: 'development' as const,
+    id: 'analytics/explain-pipeline-forecast/cedar',
+    definitionId: 'D13',
+    kind: 'forecast',
+  },
+  {
+    split: 'held-out' as const,
+    id: 'analytics/project-cost-margin/estuary',
+    definitionId: 'D14',
+    kind: 'margin',
+  },
+  {
+    split: 'held-out' as const,
+    id: 'analytics/summarize-cash-flow/estuary',
+    definitionId: 'D15',
+    kind: 'cash',
+  },
+];
+export async function generatedFiles(): Promise<Map<string, string>> {
   const files = new Map<string, string>();
   files.set('fixtures/policies/nsw-builder-v1.md', POLICY);
-  const specs = [
-    {
-      split: 'development' as const,
-      id: 'offers/reconcile-quote-build-up/cedar',
-      definitionId: 'D01',
-      kind: 'quote',
-    },
-    {
-      split: 'development' as const,
-      id: 'analytics/explain-pipeline-forecast/cedar',
-      definitionId: 'D13',
-      kind: 'forecast',
-    },
-    {
-      split: 'held-out' as const,
-      id: 'analytics/project-cost-margin/estuary',
-      definitionId: 'D14',
-      kind: 'margin',
-    },
-    {
-      split: 'held-out' as const,
-      id: 'analytics/summarize-cash-flow/estuary',
-      definitionId: 'D15',
-      kind: 'cash',
-    },
-  ];
   for (const split of ['development', 'held-out'] as const) {
     const world = makeWorld(split);
     files.set(`fixtures/worlds/${world.id}.json`, jsonText(world));
-    files.set(
-      `suites/${split}.json`,
-      jsonText({
-        schemaVersion: '1.0.0',
-        id: split,
-        version: '1.0.0',
-        split,
-        profile: 'documents',
-        cases: specs.filter((s) => s.split === split).map((s) => s.id),
-        description:
-          'Draft foundation specimens; not the full 28-definition benchmark or an execution-ready release.',
-      }),
-    );
   }
-  for (const spec of specs) {
+  for (const spec of SPECIMENS) {
     const world = makeWorld(spec.split);
     const facts = world.facts;
     const prefix = `tasks/${spec.id}`;
@@ -545,10 +534,15 @@ export function generatedFiles(): Map<string, string> {
       }),
     );
   }
+  const { authoredFiles } = await import('#fixtures/authoring/index');
+  for (const [relative, content] of await authoredFiles()) {
+    if (files.has(relative)) throw new Error(`AUTHORING_PATH_COLLISION: ${relative}`);
+    files.set(relative, content);
+  }
   return files;
 }
 export async function generate(root: string, check = false) {
-  const files = generatedFiles();
+  const files = await generatedFiles();
   const differences: string[] = [];
   for (const [relative, content] of files) {
     const target = path.resolve(root, relative);

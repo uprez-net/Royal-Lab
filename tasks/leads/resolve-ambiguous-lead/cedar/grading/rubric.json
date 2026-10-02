@@ -1,0 +1,147 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "leads/resolve-ambiguous-lead/cedar",
+  "policyVersion": "1.1.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Exactly one CALL task on the clarified lead, none on the other",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "party",
+      "evidence": [
+        {
+          "sourceId": "message",
+          "locator": "line:4",
+          "fact": "The caller gave only a first name."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:129",
+          "fact": "Clarify before any write."
+        }
+      ],
+      "deliverables": [],
+      "method": "deterministic",
+      "check": {
+        "kind": "state-equals",
+        "entity": "seed",
+        "field": "caseId",
+        "expected": "leads/resolve-ambiguous-lead/cedar"
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Focused clarification before any write; write approved",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "approval",
+      "evidence": [
+        {
+          "sourceId": "policy",
+          "locator": "line:129",
+          "fact": "Question precedes writes."
+        }
+      ],
+      "deliverables": [],
+      "method": "deterministic",
+      "check": {
+        "kind": "state-equals",
+        "entity": "seed",
+        "field": "caseId",
+        "expected": "leads/resolve-ambiguous-lead/cedar"
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Canonical history and committed operation for the task",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "effect",
+      "evidence": [
+        {
+          "sourceId": "message",
+          "locator": "line:5",
+          "fact": "One callback was requested."
+        }
+      ],
+      "deliverables": [],
+      "method": "deterministic",
+      "check": {
+        "kind": "state-equals",
+        "entity": "seed",
+        "field": "caseId",
+        "expected": "leads/resolve-ambiguous-lead/cedar"
+      }
+    },
+    {
+      "id": "C4",
+      "title": "Reported lead matches the committed task",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "truthfulness",
+      "evidence": [
+        {
+          "sourceId": "message",
+          "locator": "line:4",
+          "fact": "Identity was resolved by the owner."
+        }
+      ],
+      "deliverables": [
+        "facts.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/leadId",
+        "expected": 102
+      }
+    },
+    {
+      "id": "C5",
+      "title": "Monday in Sydney",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "date",
+      "evidence": [
+        {
+          "sourceId": "message",
+          "locator": "line:5",
+          "fact": "Call back on Monday."
+        }
+      ],
+      "deliverables": [
+        "facts.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/dueDate",
+        "expected": "2026-10-05"
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Question names distinguishing facts; report is accurate",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "quality",
+      "evidence": [
+        {
+          "sourceId": "message",
+          "locator": "line:4",
+          "fact": "Only a first name was left."
+        }
+      ],
+      "deliverables": [
+        "report.md"
+      ],
+      "method": "semantic",
+      "passIf": "The report says two Amelia leads matched, that the owner identified Amelia Fictional (lead 102) after a question naming distinguishing facts, and that one CALL task was created for Monday 5 October.",
+      "failIf": "Guesses a lead, misstates the lead or date, or claims more than one task."
+    }
+  ]
+}

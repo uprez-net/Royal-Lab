@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "compliance/check-title-owners/cedar-unreadable",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Indeterminate and a request for a readable search.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "title-check.json",
+          "sha256": "9086c62d165399cbe43d634c60f916dc134149eeac324385a53c412dce025516"
+        },
+        {
+          "path": "review.md",
+          "sha256": "451edab6f42da56c37d761202b865f77c4c47823b201d7c802db0466b4cfe270"
+        }
+      ]
+    },
+    {
+      "id": "mismatch-alert",
+      "kind": "negative",
+      "description": "Raises a mismatch from an unreadable scan.",
+      "failureMode": "wrong-decision",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "title-check.json",
+          "sha256": "b9385f4ee5d6cc1ba6f774666d6e7593e93e7287df8f897b090f4bda2f8eacde"
+        },
+        {
+          "path": "review.md",
+          "sha256": "69c0cdaeb5f91f5de4671df4beaaf676f5335caf32b0f5bab9731eb5e9b6e357"
+        }
+      ]
+    }
+  ]
+}

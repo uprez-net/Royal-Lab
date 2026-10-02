@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "compliance/prepare-outreach-and-respect-cancel/estuary",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "assertions": [
+    {
+      "kind": "state",
+      "collection": "outbox",
+      "target": {},
+      "fields": {},
+      "count": 0,
+      "preservePaths": [],
+      "criterionId": "C1"
+    },
+    {
+      "kind": "state",
+      "collection": "portEffects",
+      "target": {},
+      "fields": {},
+      "count": 0,
+      "preservePaths": [],
+      "criterionId": "C1"
+    },
+    {
+      "kind": "state",
+      "collection": "outreaches",
+      "target": {},
+      "fields": {},
+      "count": 0,
+      "preservePaths": [],
+      "criterionId": "C1"
+    },
+    {
+      "kind": "trace",
+      "ownerId": "builder-owner",
+      "sessionId": "case-session",
+      "mutationTools": [
+        "send_compliance_outreach"
+      ],
+      "requiredDecision": "cancelled",
+      "criterionId": "C2"
+    }
+  ]
+}

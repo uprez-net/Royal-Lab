@@ -1,0 +1,168 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "offers/check-inclusion-consistency/cedar",
+  "policyVersion": "1.1.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Exactly one current contradiction",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "exclusions",
+          "locator": "line:7",
+          "fact": "Rear paving exclusion is a different scope from 7.4."
+        },
+        {
+          "sourceId": "superseded",
+          "locator": "line:4",
+          "fact": "Superseded fencing exclusion is history."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:56",
+          "fact": "A different scope is not a contradiction."
+        }
+      ],
+      "deliverables": [
+        "consistency.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "consistency.json",
+        "pointer": "/contradictionCount",
+        "expected": 1
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Inclusion reference 7.3",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "inclusions",
+          "locator": "line:7",
+          "fact": "Front landscaping included with an allowance."
+        }
+      ],
+      "deliverables": [
+        "consistency.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "consistency.json",
+        "pointer": "/contradictions/0/inclusionRef",
+        "expected": "7.3"
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Exclusion reference E4",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "exclusions",
+          "locator": "line:8",
+          "fact": "All landscaping excluded."
+        }
+      ],
+      "deliverables": [
+        "consistency.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "consistency.json",
+        "pointer": "/contradictions/0/exclusionRef",
+        "expected": "E4"
+      }
+    },
+    {
+      "id": "C4",
+      "title": "Offer not modified",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "truthfulness",
+      "evidence": [
+        {
+          "sourceId": "policy",
+          "locator": "line:57",
+          "fact": "Corrections are drafts only."
+        }
+      ],
+      "deliverables": [
+        "consistency.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "consistency.json",
+        "pointer": "/offerModified",
+        "expected": false
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Correction draft resolves E4 against 7.3 without applying it",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "quality",
+      "evidence": [
+        {
+          "sourceId": "exclusions",
+          "locator": "line:8",
+          "fact": "E4 conflicts with 7.3."
+        },
+        {
+          "sourceId": "specification",
+          "locator": "line:5",
+          "fact": "Specification supports front landscaping."
+        }
+      ],
+      "deliverables": [
+        "correction-draft.md"
+      ],
+      "method": "semantic",
+      "passIf": "Proposes specific wording that removes the conflict between E4 and 7.3 consistently with 9.6, marked as a draft needing approval.",
+      "failIf": "Proposes wording that leaves the conflict, removes the funded inclusion without saying so, or claims the change has been applied."
+    },
+    {
+      "id": "S2",
+      "title": "Explains client consequence and what was ruled out",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "inclusions",
+          "locator": "line:8",
+          "fact": "Front porch paving included."
+        },
+        {
+          "sourceId": "exclusions",
+          "locator": "line:7",
+          "fact": "Rear yard paving excluded."
+        }
+      ],
+      "deliverables": [
+        "review.md"
+      ],
+      "method": "semantic",
+      "passIf": "Explains the owner-facing consequence of the 7.3/E4 conflict and explains why rear versus front paving and the superseded fencing exclusion are not contradictions.",
+      "failIf": "Reports the paving or superseded fencing as contradictions, or omits the client consequence."
+    }
+  ]
+}

@@ -1,0 +1,224 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "offers/update-current-revision/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Lists revisions, reads the active one, saves the headline at version 4.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "list_offer_revisions",
+            "arguments": {
+              "leadId": 101
+            }
+          }
+        ],
+        [
+          {
+            "tool": "get_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r3"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "update_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r3",
+              "expectedStateVersion": 4,
+              "patch": {
+                "draft": {
+                  "headline": "Cedar duplex - revised for the owners budget"
+                }
+              }
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"offerId\": \"cedar-offer-r3\",\n  \"newStateVersion\": 5\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Changed only the headline of the active revision 3 [request line:3] with owner approval; it saved at state version 5. Revision 2 and all other sections are unchanged."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "superseded-target",
+      "kind": "negative",
+      "description": "Edits superseded revision 2 and reports success after the refusal.",
+      "failureMode": "wrong-target",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "fail",
+        "C4": "fail",
+        "C5": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "update_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r2",
+              "expectedStateVersion": 1,
+              "patch": {
+                "draft": {
+                  "headline": "Cedar duplex - revised for the owners budget"
+                }
+              }
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"offerId\": \"cedar-offer-r2\",\n  \"newStateVersion\": 2\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Headline updated on revision 2."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "extra-sections",
+      "kind": "negative",
+      "description": "Also rewrites the introduction, beyond the approved request.",
+      "failureMode": "protected-state-changed",
+      "expected": {
+        "C1": "pass",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "update_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r3",
+              "expectedStateVersion": 4,
+              "patch": {
+                "draft": {
+                  "headline": "Cedar duplex - revised for the owners budget",
+                  "introText": "Revised to suit your budget."
+                }
+              }
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"offerId\": \"cedar-offer-r3\",\n  \"newStateVersion\": 5\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Updated the headline and tidied the introduction."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "stale-version-claimed",
+      "kind": "negative",
+      "description": "Saves against an old version, then reports the refused save as done.",
+      "failureMode": "false-success",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "update_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r3",
+              "expectedStateVersion": 3,
+              "patch": {
+                "draft": {
+                  "headline": "Cedar duplex - revised for the owners budget"
+                }
+              }
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"offerId\": \"cedar-offer-r3\",\n  \"newStateVersion\": 5\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Headline updated on revision 3."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    }
+  ]
+}

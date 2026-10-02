@@ -1,0 +1,166 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "projects/handle-missing-owner-evidence/estuary",
+  "policyVersion": "1.1.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Owners left empty without the Owner block",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "party",
+      "evidence": [
+        {
+          "sourceId": "contract",
+          "locator": "line:7",
+          "fact": "Owner details are in Annexure A."
+        },
+        {
+          "sourceId": "contract",
+          "locator": "line:23",
+          "fact": "Annexure A is not supplied."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:66",
+          "fact": "No Owner block means no owners."
+        }
+      ],
+      "deliverables": [
+        "particulars.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "particulars.json",
+        "pointer": "/owners",
+        "expected": []
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Owner block reported absent",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "contract",
+          "locator": "line:7",
+          "fact": "Item 1 only points to the annexure."
+        }
+      ],
+      "deliverables": [
+        "particulars.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "particulars.json",
+        "pointer": "/ownerBlockPresent",
+        "expected": false
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Requests the exact missing annexure",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "contract",
+          "locator": "line:23",
+          "fact": "Annexure A page 13 is missing."
+        }
+      ],
+      "deliverables": [
+        "particulars.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "particulars.json",
+        "pointer": "/requestedSource",
+        "expected": "Annexure A"
+      }
+    },
+    {
+      "id": "C4",
+      "title": "Contract price still extracted",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "contract",
+          "locator": "line:15",
+          "fact": "Contract price $186,450.00."
+        }
+      ],
+      "deliverables": [
+        "particulars.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "particulars.json",
+        "pointer": "/contractPriceCents",
+        "expected": 18645000
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Focused evidence request",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "contract",
+          "locator": "line:23",
+          "fact": "Annexure A is missing."
+        }
+      ],
+      "deliverables": [
+        "evidence-request.md"
+      ],
+      "method": "semantic",
+      "passIf": "Requests Annexure A (Owner details) of the signed contract for this job specifically and explains what is needed from it.",
+      "failIf": "Makes a generic request, asks the wrong party for unrelated documents, or assumes the owners."
+    },
+    {
+      "id": "S2",
+      "title": "Does not build owners from other cues",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "party",
+      "evidence": [
+        {
+          "sourceId": "contract",
+          "locator": "line:20",
+          "fact": "Marcus Mockwell is the witness."
+        },
+        {
+          "sourceId": "lead",
+          "locator": "line:4",
+          "fact": "The trust is only an unverified enquiry note."
+        },
+        {
+          "sourceId": "tender",
+          "locator": "line:3",
+          "fact": "The enquirer is not an owner."
+        }
+      ],
+      "deliverables": [
+        "review.md"
+      ],
+      "method": "semantic",
+      "passIf": "Explains that the signature page, witness, builder details, enquirer and unverified trust note cannot establish owners.",
+      "failIf": "Suggests or records any of those parties as owner, even provisionally."
+    }
+  ]
+}

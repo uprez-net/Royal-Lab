@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "worldId": "estuary-world",
+  "worldPath": "fixtures/worlds/estuary-world.json",
+  "worldHash": "9d7bcd1f4e2bfc90133d76ecec1433f9ee45ae5073ec984912b1abbb0d6607b8",
+  "entityIds": [
+    "builder-fe9b57a5bffe",
+    "owner-a-05b24088bb21",
+    "lead-a-5d9dba01cb0c",
+    "offer-a-dfdb4404bb10",
+    "project-a-154b18acb8e5"
+  ],
+  "expectedFacts": {
+    "pricing.json#/directCostCents": 38750000,
+    "pricing.json#/additionsCents": 250000,
+    "pricing.json#/costBaseCents": 39000000,
+    "pricing.json#/overheadCents": 2730000,
+    "pricing.json#/feeCents": 1950000,
+    "pricing.json#/gstCents": 4368000,
+    "pricing.json#/contractCents": 48048000,
+    "pricing.json#/ratePerSqmCents": 286000,
+    "pricing.json#/excludedLines": [
+      "L07",
+      "L11"
+    ]
+  }
+}

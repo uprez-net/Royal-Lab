@@ -1,0 +1,234 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "projects/complete-milestone-with-evidence/cedar",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "session": {
+    "sessionId": "case-session",
+    "ownerId": "builder-owner"
+  },
+  "seed": {
+    "schemaVersion": "1.0.0",
+    "rows": [
+      {
+        "table": "User",
+        "values": {
+          "id": "builder-owner",
+          "name": "Fictional Cedar Office Admin",
+          "email": "builder-owner@staff.example",
+          "phone": "fictional-phone-builder-owner",
+          "role": "ADMIN",
+          "clerkId": "synthetic-clerk-builder-owner",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Lead",
+        "values": {
+          "id": 101,
+          "name": "Amelia Fiction",
+          "type": [],
+          "stage": "QUALIFIED",
+          "assignedId": "builder-owner",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Customer",
+        "values": {
+          "id": "cedar-customer",
+          "name": "Amelia Fiction and Leon Sample",
+          "email": "cedar-customer@client.example",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Project",
+        "values": {
+          "id": "cedar-project",
+          "leadId": 101,
+          "name": "Cedar duplex",
+          "description": "Cedar duplex (fictional)",
+          "customerId": "cedar-customer",
+          "location": "Cedar duplex site (fictional)",
+          "totalBudget": 664576,
+          "startDate": "2026-08-03T00:00:00Z",
+          "estimatedEndDate": "2027-07-30T00:00:00Z",
+          "requirements": {
+            "$json": {
+              "version": 1,
+              "projectName": "Cedar duplex",
+              "projectType": "synthetic-case",
+              "summary": "Original synthetic requirements.",
+              "sourceDocuments": {},
+              "validations": [],
+              "conflicts": [],
+              "automationTriggers": {
+                "orderReminders": false,
+                "rainDelayCalculations": false,
+                "noticeCountdowns": false
+              },
+              "legalAdministration": {},
+              "commercialsAndClaims": {},
+              "subStructureAndGround": {},
+              "inclusionsAndExclusions": {},
+              "utilityInfrastructure": {},
+              "wetAreaCompliance": {},
+              "safetyAndSiteLogistics": {}
+            }
+          },
+          "status": "ACTIVE",
+          "updatedAt": "2026-10-03T20:00:00Z",
+          "spent": 98000
+        }
+      },
+      {
+        "table": "Milestone",
+        "values": {
+          "id": "cedar-slab",
+          "projectId": "cedar-project",
+          "name": "Slab",
+          "order": 1,
+          "projectStage": "Slab",
+          "targetDate": "2026-10-09T00:00:00Z",
+          "budget": 10000,
+          "status": "DONE",
+          "updatedAt": "2026-10-03T20:00:00Z",
+          "startDate": "2026-08-10T00:00:00Z",
+          "actualDate": "2026-08-28T00:00:00Z",
+          "spend": 98000
+        }
+      },
+      {
+        "table": "Milestone",
+        "values": {
+          "id": "cedar-frame",
+          "projectId": "cedar-project",
+          "name": "Frame",
+          "order": 2,
+          "projectStage": "Frame",
+          "targetDate": "2026-10-09T00:00:00Z",
+          "budget": 132915,
+          "status": "ACTIVE",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Milestone",
+        "values": {
+          "id": "cedar-frame-trusses",
+          "projectId": "cedar-project",
+          "name": "Roof trusses",
+          "order": 3,
+          "projectStage": "Frame",
+          "targetDate": "2026-10-09T00:00:00Z",
+          "budget": 10000,
+          "status": "DONE",
+          "updatedAt": "2026-10-03T20:00:00Z",
+          "parentId": "cedar-frame",
+          "startDate": "2026-09-14T00:00:00Z",
+          "actualDate": "2026-09-30T00:00:00Z"
+        }
+      },
+      {
+        "table": "Milestone",
+        "values": {
+          "id": "cedar-lockup",
+          "projectId": "cedar-project",
+          "name": "Lock-up",
+          "order": 4,
+          "projectStage": "Lockup",
+          "targetDate": "2026-10-09T00:00:00Z",
+          "budget": 10000,
+          "status": "PENDING",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Invoice",
+        "values": {
+          "id": "cedar-invoice-slab",
+          "projectId": "cedar-project",
+          "projectStage": "Slab",
+          "xeroInvoiceId": "synthetic-xero-slab",
+          "invoiceNumber": "INV-C-002",
+          "status": "AUTHORISED",
+          "subTotal": 90620.8,
+          "totalTax": 9062.08,
+          "total": 99682.88,
+          "amountDue": 99682.88,
+          "issuedDate": "2026-08-29T00:00:00Z",
+          "dueDate": "2026-09-05T00:00:00Z",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      }
+    ]
+  },
+  "operator": {
+    "schemaVersion": "1.0.0",
+    "version": "1.0.0",
+    "review": {
+      "status": "draft",
+      "reviewer": null,
+      "reviewedAt": null,
+      "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+    },
+    "maxUnexpectedQuestions": 1,
+    "branches": [
+      {
+        "id": "completion-facts",
+        "type": "clarification",
+        "allWords": [
+          "frame"
+        ],
+        "anyWords": [
+          "start",
+          "started",
+          "completion",
+          "completed",
+          "finish",
+          "finished",
+          "spend",
+          "spent",
+          "cost",
+          "date",
+          "dates"
+        ],
+        "response": "Frame works started on 14 September 2026, were completed on 2 October 2026, and total frame spend was $128,400.",
+        "decision": null,
+        "responderId": "builder-owner",
+        "maxUses": 1
+      },
+      {
+        "id": "approve-milestone",
+        "type": "approval",
+        "allWords": [
+          "approve",
+          "update",
+          "milestone"
+        ],
+        "anyWords": [],
+        "response": "Approved for the exact displayed call and arguments.",
+        "decision": "approved",
+        "responderId": "builder-owner",
+        "maxUses": 1
+      }
+    ]
+  },
+  "bridge": {
+    "schemaVersion": "1.0.0",
+    "mode": "benchmark",
+    "ports": {
+      "schemaVersion": "1.0.0",
+      "email": "unavailable",
+      "envelope": "unavailable"
+    },
+    "timeoutMs": 20000
+  },
+  "controller": {}
+}

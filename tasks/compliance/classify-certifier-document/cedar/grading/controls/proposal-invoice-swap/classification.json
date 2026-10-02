@@ -1,0 +1,11 @@
+{
+  "documents": {
+    "doc1": "INVOICE",
+    "doc2": "FEE_PROPOSAL",
+    "doc3": "CDC_FORM",
+    "doc4": "UNKNOWN",
+    "doc5": "COMPLYING_DEVELOPMENT_CERTIFICATE",
+    "doc6": "UNKNOWN"
+  },
+  "cdcIssuedForSite": false
+}

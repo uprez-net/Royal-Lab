@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "offers/explain-revision-price/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Stored price kept, legacy zero repaired, unpriced draft reported as unpriced.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "C8": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "price.json",
+          "sha256": "5bbe5484d03896737f3cf940788775df8e14429182c5422fbae334dd4fb90a9d"
+        },
+        {
+          "path": "review.md",
+          "sha256": "a827f11775aca4d65bdda53b1d7ac6607d16c50184c5186df3c9a56cb4464291"
+        }
+      ]
+    },
+    {
+      "id": "recomputed-current",
+      "kind": "negative",
+      "description": "Replaces the sent price with the unsaved rate-refresh preview.",
+      "failureMode": "wrong-amount",
+      "expected": {
+        "C1": "pass",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "fail",
+        "C6": "fail",
+        "C7": "pass",
+        "C8": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "price.json",
+          "sha256": "903001296e6f0ec5185420280875e31cdb85767b53a6cd40ddcff5bc7b975047"
+        },
+        {
+          "path": "review.md",
+          "sha256": "0474d9a8460e3d7c7510d9b35060f99d3928803b73f0b8c302833289a4d966d5"
+        }
+      ]
+    },
+    {
+      "id": "zero-dollar-revisions",
+      "kind": "negative",
+      "description": "Reports the legacy zero and the unpriced draft as $0.00 quotes.",
+      "failureMode": "invented-value",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "fail",
+        "C4": "fail",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "C8": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "price.json",
+          "sha256": "5ba96ba30302f469e234bc6c46ebeebfe566895f4e72bcdd590040bac68b61fc"
+        },
+        {
+          "path": "review.md",
+          "sha256": "c9ec33638336321bd87f9e0663ebe74fcc04ac618aa77a3047c7a2c431c6d951"
+        }
+      ]
+    },
+    {
+      "id": "superseded-as-current",
+      "kind": "negative",
+      "description": "Treats superseded revision 1 as the current offer.",
+      "failureMode": "wrong-decision",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "C8": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "price.json",
+          "sha256": "c0e035829d96c7101c64f7f95cd2a122dda01f8f4509827dd0a68acbf2f81e4a"
+        },
+        {
+          "path": "review.md",
+          "sha256": "be4cd84c7a4cd7b66273aa7defc3d6cd90490126b052dbf80ff7a27ee3d9f773"
+        }
+      ]
+    }
+  ]
+}

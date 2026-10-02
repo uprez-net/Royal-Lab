@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "worldId": "cedar-world",
+  "worldPath": "fixtures/worlds/cedar-world.json",
+  "worldHash": "c855ee2914134b034496b68506a03828d0562f697e9051b53ebf355475287a45",
+  "entityIds": [
+    "builder-0a4d851f8c7d",
+    "project-a-db84b324c017",
+    "tradie-a-1d598b7c2731",
+    "certifier-a-81c4068ff870"
+  ],
+  "expectedFacts": {
+    "facts.json#/sent": false,
+    "facts.json#/status": "not-sent"
+  }
+}

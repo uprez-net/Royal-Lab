@@ -1,0 +1,131 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "offers/check-inclusion-consistency/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "One current contradiction, near-misses ruled out, draft only.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "S1": "ungraded",
+        "S2": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "consistency.json",
+          "sha256": "e81dd1c7aa64ca048c04eddff1165c2a341cd23d97cfcb5871f488e91053d1a6"
+        },
+        {
+          "path": "correction-draft.md",
+          "sha256": "e28b3baa22f54720ba588433c5f230fb232e9578af36cef3e0f762128b4406c4"
+        },
+        {
+          "path": "review.md",
+          "sha256": "2668d63f825359ad74b730325ce47c7596c54aa99059fb1e9edc86c14e3def10"
+        }
+      ]
+    },
+    {
+      "id": "superseded-flagged",
+      "kind": "negative",
+      "description": "Treats the superseded revision 1 fencing exclusion as a live contradiction.",
+      "failureMode": "false-discrepancy",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "S1": "ungraded",
+        "S2": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "consistency.json",
+          "sha256": "02c0966fb5c9c6b6d44147860aabc9f119bb7a11d5556ae83963d851b4778db3"
+        },
+        {
+          "path": "correction-draft.md",
+          "sha256": "e28b3baa22f54720ba588433c5f230fb232e9578af36cef3e0f762128b4406c4"
+        },
+        {
+          "path": "review.md",
+          "sha256": "3eaac3cb79cd3b2e509c3c7ab2baea93cf2db2a9afc5a358b365946282271243"
+        }
+      ]
+    },
+    {
+      "id": "near-miss-first",
+      "kind": "negative",
+      "description": "Reports front porch versus rear yard paving as the primary contradiction.",
+      "failureMode": "false-discrepancy",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "fail",
+        "C4": "pass",
+        "S1": "ungraded",
+        "S2": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "consistency.json",
+          "sha256": "3b7d695b4a93d00390b6902d48f9edcb9cf29b0bb6e7a435070fed352797de3e"
+        },
+        {
+          "path": "correction-draft.md",
+          "sha256": "e28b3baa22f54720ba588433c5f230fb232e9578af36cef3e0f762128b4406c4"
+        },
+        {
+          "path": "review.md",
+          "sha256": "7546274935fa2f202701776355042f94a7d655cbbec41c9c49361cd9f2139c93"
+        }
+      ]
+    },
+    {
+      "id": "offer-edited",
+      "kind": "negative",
+      "description": "Claims the exclusion was edited in the offer.",
+      "failureMode": "false-success",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "fail",
+        "S1": "ungraded",
+        "S2": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "consistency.json",
+          "sha256": "7ee204a3452ea48a214dabb6bec3edd782f865b8895b1789138f5855ffb24290"
+        },
+        {
+          "path": "correction-draft.md",
+          "sha256": "e28b3baa22f54720ba588433c5f230fb232e9578af36cef3e0f762128b4406c4"
+        },
+        {
+          "path": "review.md",
+          "sha256": "2adb2f8b72f1c2e56a547eea7bdd6d0a4361bd2d79780c7e0b3af582b043f204"
+        }
+      ]
+    }
+  ]
+}

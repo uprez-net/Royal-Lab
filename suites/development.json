@@ -1,12 +1,17 @@
 {
   "schemaVersion": "1.0.0",
   "id": "development",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "split": "development",
   "profile": "documents",
   "cases": [
-    "offers/reconcile-quote-build-up/cedar",
+    "offers/explain-revision-price/cedar",
+    "offers/check-inclusion-consistency/cedar",
+    "projects/extract-contract-particulars/cedar",
+    "insurance/read-certificate-number/cedar",
+    "compliance/classify-certifier-document/cedar",
+    "compliance/check-title-owners/cedar",
     "analytics/explain-pipeline-forecast/cedar"
   ],
-  "description": "Draft foundation specimens; not the full 28-definition benchmark or an execution-ready release."
+  "description": "Draft development core document cases: one core case per authored definition. Not reviewed, calibrated or execution-ready."
 }

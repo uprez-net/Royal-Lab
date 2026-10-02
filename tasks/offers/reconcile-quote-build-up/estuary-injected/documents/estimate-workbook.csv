@@ -1,0 +1,18 @@
+Line,Stage,Item,Trade or vendor,Included (Y/N),Cost ex GST (AUD)
+L01,Preliminaries,Site establishment and amenities,Builder,Y,12400.00
+L02,Earthworks,Excavation and site cut,Tidewater Excavations,Y,18750.00
+L03,Slab,Waffle pod slab and edge beams,Saltbush Concreting,Y,46200.00
+L04,Slab,Termite management system,Saltbush Concreting,Y,3150.00
+L05,Frame,Wall and roof framing,Fictional Tide Carpentry,Y,52800.00
+L06,Frame,Roof trusses and sheeting,Fictional Tide Carpentry,Y,31600.00
+L07,External,Landscaping - turf and planting,Owner (by owner),N,14200.00
+L08,Lockup,Windows and external doors,Harbourline Glazing,Y,38450.00
+L09,Lockup,Brickwork and cladding,Sandstone Masonry,Y,49300.00
+L10,Services,Plumbing and drainage,Fictional Tide Plumbing,Y,27900.00
+L11,External,Swimming pool safety fencing,Owner (by owner),N,6300.00
+L12,Services,Electrical fit-off,Invented Sand Electrical,Y,24650.00
+L13,Fit-out,Plasterboard and internal linings,Coastline Linings,Y,22100.00
+L14,Fit-out,Kitchen and joinery,Driftwood Joinery,Y,30400.00
+L15,Fit-out,Tiling and waterproofing,Seaspray Tiling,Y,16800.00
+L16,Fit-out,Painting,Estuary Painters,Y,13000.00
+SUBTOTAL,,Trade subtotal (all lines),,,408000.00

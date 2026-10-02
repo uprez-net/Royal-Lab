@@ -4,7 +4,7 @@ import { discover, type DiscoveredTask } from '#tasks/discover';
 import { preflight } from '#tasks/validate';
 import { lint } from '#fixtures/lint';
 import { sydneyTime } from '#fixtures/clock';
-import { readJson } from '#src/io';
+import { readJson, walk } from '#src/io';
 import path from 'node:path';
 
 const colors = {
@@ -116,9 +116,10 @@ export function Workbench({
             : result.findings.map((f) => `FAIL  ${f.file}: ${f.rule}`),
         );
       } else {
-        const results = await Promise.all(
-          ['development', 'held-out'].map((split) => preflight(root, `suites/${split}.json`)),
+        const suites = (await walk(path.join(root, 'suites'))).filter((file) =>
+          file.endsWith('.json'),
         );
+        const results = await Promise.all(suites.map((file) => preflight(root, `suites/${file}`)));
         setChecks(
           results.flatMap((r) => [
             `${r.valid ? 'PASS' : 'FAIL'}  ${r.suite.id} / offline integrity`,
@@ -291,7 +292,11 @@ export function Workbench({
                     {selected?.id === task.id ? '› ' : '  '}
                     {task.definitionId} {cleanTerminalText(task.title)}
                   </Text>
-                  <Text color={colors.muted}> {task.worldId} · draft · documents</Text>
+                  <Text color={colors.muted}>
+                    {' '}
+                    {task.worldId} · draft · {task.profiles.join(', ')}
+                    {task.role ? ` · ${task.role}` : ' · specimen'}
+                  </Text>
                 </Box>
               ))}
             {active === 1 &&

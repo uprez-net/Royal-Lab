@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "tradies/avoid-schedule-conflict/cedar",
+  "definitionId": "T09",
+  "title": "Book a carpenter around an existing booking",
+  "family": "tradies",
+  "workType": "operate",
+  "instruction": "Make the requested booking for project cedar-project (Unit B frame milestone cedar-frame-b, tradie paperbeam). Every write needs the owner to approve the exact call in this session. Write facts.json with the requested fields and report.md for the office stating what was attempted, what was committed and what remains, citing the brief as [source-id locator]. facts.json fields: scheduledDate (YYYY-MM-DD), durationDays, conflictDetected.",
+  "profiles": [
+    "fixed-tools"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "request",
+      "path": "documents/booking-request.md",
+      "sha256": "72bc7fe6a2007893232ed9690c8903bc5ab30aedfd390ba1eddc0d99e32a60d2",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list_schedules",
+      "version": "1.0.0"
+    },
+    {
+      "name": "get_tradie",
+      "version": "1.0.0"
+    },
+    {
+      "name": "get_project",
+      "version": "1.0.0"
+    },
+    {
+      "name": "create_schedule",
+      "version": "1.0.0"
+    },
+    {
+      "name": "ask_operator",
+      "version": "1.0.0"
+    },
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "facts.json",
+      "mediaType": "application/json",
+      "description": "Booking facts",
+      "required": true
+    },
+    {
+      "path": "report.md",
+      "mediaType": "text/markdown",
+      "description": "Conflict and booking report",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "b72de57bb0979e6b6fdcec9a9f0d75adba730a695b6bd6e51e09e76b5ce01c90",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "44448b24bdef558b60c9cd7c0a9ce285bc20260701ecbaac6cbf976eac3a1d45",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "5b802a2d623c449065d9f1213f2c6712b5c6a7c332cbf92d4ac6081626427d97",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "6446a7b695bbd023542b6a74ffa4250f41d443ba38d0ed36245b9cd05c4bde4f",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "0787686815c6024d4c7bab2242af0341498a4ead750329c8073068d99035a351",
+  "environmentPath": "grading/environment.json",
+  "environmentHash": "fc09f681a7ff51d2a29a908740d12d8cc98d90c19493ff58228fb654776191c3",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "alternative-booked",
+      "description": "Approved non-overlapping booking"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

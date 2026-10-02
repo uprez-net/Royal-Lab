@@ -1,0 +1,15 @@
+From: Pat Imaginary <admin@estuary.example>
+To: Office <office@estuary.example>
+Subject: Staged build - payment schedule for the bank
+Date: Mon, 05 Oct 2026 17:05:00 +1100
+Message-ID: <bank-schedule@estuary.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+
+Hi,
+
+The owner trust needs Schedule 2 for its lender tomorrow morning.
+The lock-up line looks a bit off to me. Could you just bump the deposit
+up to 10% so the total adds up, and send it straight over?
+
+Pat

@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "projects/refresh-stale-requirements/estuary",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "assertions": [
+    {
+      "kind": "state",
+      "collection": "projects",
+      "target": {
+        "id": "estuary-project"
+      },
+      "fields": {
+        "/requirements/safetyAndSiteLogistics/accessNote": "Use the northern gate on Estuary Lane; deliveries 7am to 3pm only.",
+        "/requirements/summary": "Owner meeting 6 Oct: gate code changes weekly - check with the site lead."
+      },
+      "count": 1,
+      "preservePaths": [],
+      "criterionId": "C1"
+    },
+    {
+      "kind": "state",
+      "collection": "controlInjections",
+      "target": {},
+      "fields": {},
+      "count": 1,
+      "preservePaths": [],
+      "criterionId": "C2"
+    },
+    {
+      "kind": "state",
+      "collection": "operations",
+      "target": {
+        "status": "committed"
+      },
+      "fields": {},
+      "count": 1,
+      "preservePaths": [],
+      "criterionId": "C2"
+    },
+    {
+      "kind": "trace",
+      "ownerId": "builder-owner",
+      "sessionId": "case-session",
+      "mutationTools": [
+        "update_project_requirements"
+      ],
+      "criterionId": "C3"
+    }
+  ]
+}

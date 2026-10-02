@@ -28,15 +28,16 @@ async function workspace() {
   await mkdir(parent, { recursive: true });
   const root = await mkdtemp(path.join(parent, 'foundation-'));
   temporary.push(root);
-  for (const [relative, content] of generatedFiles()) {
+  for (const [relative, content] of await generatedFiles()) {
     await mkdir(path.dirname(path.join(root, relative)), { recursive: true });
     await writeFile(path.join(root, relative), content);
   }
   await mkdir(path.join(root, 'profiles'));
-  await writeFile(
-    path.join(root, 'profiles/documents.json'),
-    await readFile(path.join(ROOT, 'profiles/documents.json')),
-  );
+  for (const profile of ['documents', 'fixed-tools', 'royal-eve'])
+    await writeFile(
+      path.join(root, `profiles/${profile}.json`),
+      await readFile(path.join(ROOT, `profiles/${profile}.json`)),
+    );
   return root;
 }
 async function edit(root: string, relative: string, mutate: (value: any) => void) {
@@ -44,18 +45,30 @@ async function edit(root: string, relative: string, mutate: (value: any) => void
   mutate(value);
   await writeFile(path.join(root, relative), jsonText(value));
 }
+// The original D01 specimen; superseded by an authored core case, it now sits
+// in the labelled development variant suite.
 const TASK = 'offers/reconcile-quote-build-up/cedar';
+const SUITE = 'suites/development-variants.json';
 describe('suite integrity and candidate isolation', () => {
-  test('all four selected specimens validate but execution preflight rejects drafts', async () => {
+  test('every generated suite validates offline but execution preflight rejects drafts', async () => {
     const root = await workspace();
-    for (const split of ['development', 'held-out']) {
-      const report = await preflight(root, `suites/${split}.json`);
-      assert.equal(report.valid, true);
-      assert.equal(report.cases.length, 2);
+    const suites = [...(await generatedFiles()).keys()].filter((file) =>
+      file.startsWith('suites/'),
+    );
+    assert.ok(
+      suites.includes('suites/development.json') && suites.includes('suites/held-out.json'),
+    );
+    for (const file of suites) {
+      const report = await preflight(root, file);
+      assert.equal(report.valid, true, `${file}: ${JSON.stringify(report.errors)}`);
+      assert.ok(report.cases.length > 0);
+      const run = await preflight(root, file, true);
+      assert.equal(run.valid, false);
+      assert.ok(
+        run.cases.every((item) => item.reason?.includes('Human review')),
+        file,
+      );
     }
-    const run = await preflight(root, 'suites/development.json', true);
-    assert.equal(run.valid, false);
-    assert.ok(run.cases.every((item) => item.reason?.includes('Human review')));
   });
   test('candidate projection cannot serialize hidden fixtures, rubric or provenance', async () => {
     const root = await workspace();
@@ -81,10 +94,11 @@ describe('suite integrity and candidate isolation', () => {
   });
   test('a missing selected case is invalid and retained in the denominator', async () => {
     const root = await workspace();
+    const selected = SuiteSchema.parse(await readJson(path.join(root, 'suites/development.json')));
     await edit(root, 'suites/development.json', (suite) => suite.cases.push('offers/missing'));
     const report = await preflight(root, 'suites/development.json');
     assert.equal(report.valid, false);
-    assert.equal(report.cases.length, 3);
+    assert.equal(report.cases.length, selected.cases.length + 1);
     assert.equal(report.cases.at(-1)?.status, 'invalid');
   });
   test('duplicate selected IDs and paths cannot shrink a suite silently', async () => {
@@ -95,7 +109,7 @@ describe('suite integrity and candidate isolation', () => {
   test('altered source bytes fail the frozen hash', async () => {
     const root = await workspace();
     await writeFile(path.join(root, `tasks/${TASK}/documents/source.json`), '{"tampered":true}');
-    const report = await preflight(root, 'suites/development.json');
+    const report = await preflight(root, SUITE);
     assert.equal(report.valid, false);
     assert.match(report.cases.find((x) => x.taskId === TASK)!.reason!, /Input hash mismatch/);
   });
@@ -139,20 +153,29 @@ describe('suite integrity and candidate isolation', () => {
     await edit(root, `tasks/${TASK}/task.json`, (task) =>
       task.tools.push({ name: 'shell', version: '1.0.0' }),
     );
-    const report = await preflight(root, 'suites/development.json');
+    const report = await preflight(root, SUITE);
     assert.equal(report.valid, false);
     assert.match(report.cases.find((x) => x.taskId === TASK)!.reason!, /Unsupported tool/);
   });
   test('profile exclusions remain explicit and an all-excluded selection is invalid', async () => {
     const root = await workspace();
-    const suite = SuiteSchema.parse(await readJson(path.join(root, 'suites/development.json')));
-    for (const id of suite.cases)
-      await edit(root, `tasks/${id}/task.json`, (task) => {
-        task.profiles = ['fixed-tools'];
-      });
-    const report = await preflight(root, 'suites/development.json');
+    // A specimen-only selection; authored 1.2.0 cases cannot change profile
+    // without declaring a seeded environment.
+    const only = 'suites/specimen-only.json';
+    await writeFile(
+      path.join(root, only),
+      jsonText({
+        ...SuiteSchema.parse(await readJson(path.join(root, SUITE))),
+        id: 'specimen-only',
+        cases: [TASK],
+      }),
+    );
+    await edit(root, `tasks/${TASK}/task.json`, (task) => {
+      task.profiles = ['fixed-tools'];
+    });
+    const report = await preflight(root, only);
     assert.equal(report.valid, false);
-    assert.equal(report.cases.length, 2);
+    assert.equal(report.cases.length, 1);
     assert.ok(report.cases.every((c) => c.status === 'excluded'));
   });
   test('cross-split world reuse is detected', async () => {

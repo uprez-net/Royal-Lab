@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "projects/extract-contract-particulars/cedar",
+  "definitionId": "D05",
+  "title": "Extract contract particulars for project setup",
+  "family": "projects",
+  "workType": "extract",
+  "instruction": "Sales has handed over the signed Cedar duplex job. Extract the particulars we need to set up the project from the supplied tender, signed contract extract and handover email, applying our precedence and owner rules. Write particulars.json with owners (array of names in contract order), builder, siteLot, contractPriceCents, contractDate (YYYY-MM-DD) and buildPeriodWeeks. Write review.md explaining conflicts and which source governs each. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Labels: Owner 1, Owner 2, Site lot, Contract price, Contract date (YYYY-MM-DD).",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "tender",
+      "path": "documents/tender-revision-3.md",
+      "sha256": "bd1611962e6f3085f5cd3ccf0b549088018f438b7891ff9981d331a25620a3d4",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "contract",
+      "path": "documents/signed-contract-extract.md",
+      "sha256": "fdb26c2ee032ab66b62e679dee5a1185d7791402923cedef3fe6b67895555949",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "email",
+      "path": "documents/handover-email.eml",
+      "sha256": "941ae73c107b62f1bb8fe237438cefe6851c0bb7e8731774772fcace309333e0",
+      "kind": "document",
+      "mediaType": "message/rfc822"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "particulars.json",
+      "mediaType": "application/json",
+      "description": "Extracted contract particulars",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited precedence and conflict review",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "38d72a03386f79bcdd5728e2b9455b0da16543286078388242ad28fce2203539",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "9b46817731ce8d0c3ce7105de2079ea914d2b11027ab2457acad675431a9c08e",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "70cdf6e984803684672dbadc352501a0fe3b7f02b1c55ca1aba2182d24e670e5",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "32093419d0bdace10ee64564cd59fd2808eeb35a8efa2df4a076479dd5fab01b",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "0b83e586c1d6494adf4d8e92860a30e58fff7b752c9383ac995e9d697a9dd076",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "particulars-extracted",
+      "description": "Particulars extracted; no project created"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

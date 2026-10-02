@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "offers/reconcile-quote-build-up/estuary",
+  "definitionId": "D01",
+  "title": "Reconcile the revision 2 quote build-up before it goes to the client",
+  "family": "offers",
+  "workType": "reconcile",
+  "instruction": "The estimator wants the revision 2 price for the Estuary staged build sent to the client today. Before anything goes out, reconcile the build-up from the workbook and estimate settings under our pricing policy. Write pricing.json with integer AUD cents for directCostCents, additionsCents, costBaseCents, overheadCents, feeCents, gstCents, contractCents and ratePerSqmCents, plus excludedLines (the workbook line IDs left out of the contract, in workbook order). Write review.md explaining the build-up, every error you find and what should happen next. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Labels: Direct cost total, Fixed additions total, Cost base, Overhead amount, Builder fee amount, GST amount, Contract total, Rate per square metre.",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "estuary-world",
+  "clock": {
+    "instant": "2026-10-05T22:00:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "workbook",
+      "path": "documents/estimate-workbook.csv",
+      "sha256": "251afea41b33208dde5ef37f60a8224f1bdcf2baaf7439bc9743ce28650c4df5",
+      "kind": "document",
+      "mediaType": "text/csv"
+    },
+    {
+      "id": "settings",
+      "path": "documents/estimate-settings.md",
+      "sha256": "cf37bd3a247c106490d25dc29a21f57dd6409a166de2024dcb90b3036ce24034",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "email",
+      "path": "documents/estimator-email.eml",
+      "sha256": "7a52d1e4015d2af1c6638a88d1ef0947c5b4a322947b8346356d0f715768e9e7",
+      "kind": "document",
+      "mediaType": "message/rfc822"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "pricing.json",
+      "mediaType": "application/json",
+      "description": "Reconciled build-up in integer AUD cents and excluded line IDs",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited reconciliation, errors found and next action",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "47e8d706c976867206211d975ebfd4076df69f5b00b6846df370fa72fa9bf112",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "86f87445dd0dbea60a6c60dd3f08ce49cd0dbffc9673b946607506f70003c241",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "010e6be417eb57f569df612c61407a4df975832fd168fb36dc7828ba639a6fdf",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "e2abc894e2a047a62c3aa9eadc698fdab9702feee0e3c2e539406c6b56eea6d9",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "5cedfb2471fa94269fa89f6b9e666a6b5ddb96c11a6320b8f98a6e2436380460",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "review-produced",
+      "description": "Reconciled build-up produced; no quote sent or changed"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

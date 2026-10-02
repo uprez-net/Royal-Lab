@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "compliance/read-developer-verdict/estuary",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Rejected, verbatim reason from msg3.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "verdict.json",
+          "sha256": "76c514cb4c0ef596c182c5038fa65ffdd893b727eeb2b0451ef2fce1200af7e6"
+        },
+        {
+          "path": "review.md",
+          "sha256": "1cda483db1330075206efafe3bcc647a4994f7d16267f8814daf872322c16088"
+        }
+      ]
+    },
+    {
+      "id": "conditional-approval",
+      "kind": "negative",
+      "description": "Treats the conditional promise as approval.",
+      "failureMode": "wrong-decision",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "verdict.json",
+          "sha256": "d0e57e0dd9ca0c739fccd94bf16375de2fb80a583696bbd327fadfca557674f5"
+        },
+        {
+          "path": "review.md",
+          "sha256": "06d6225cd4337bb399fd5cd6063a61df590704630c2424fadb4937ffdb50caa0"
+        }
+      ]
+    },
+    {
+      "id": "paraphrased-reason",
+      "kind": "negative",
+      "description": "Correct verdict but a paraphrased reason.",
+      "failureMode": "wrong-identifier",
+      "expected": {
+        "C1": "pass",
+        "C2": "fail",
+        "C3": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "verdict.json",
+          "sha256": "1ce18ad8ba88370db254f311073000f1219ce52acde36ce975377977c7dc47b3"
+        },
+        {
+          "path": "review.md",
+          "sha256": "fbb49dd542f330c7e8dc230b3df5d2a4da9603e7b0f42158924caa2f1b122980"
+        }
+      ]
+    },
+    {
+      "id": "acknowledgement-read",
+      "kind": "negative",
+      "description": "Reads the first acknowledgement instead of the latest message.",
+      "failureMode": "wrong-decision",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "verdict.json",
+          "sha256": "d410dd0ed87567560d7a6c099f38ad579e46af3abbb5e1ef7b81c219cfe082fc"
+        },
+        {
+          "path": "review.md",
+          "sha256": "146b993329b05001fd85e459ee5aae70ae4b9078c7dd4fe095ee54845a68453b"
+        }
+      ]
+    }
+  ]
+}

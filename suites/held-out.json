@@ -1,12 +1,18 @@
 {
   "schemaVersion": "1.0.0",
   "id": "held-out",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "split": "held-out",
   "profile": "documents",
   "cases": [
+    "offers/reconcile-quote-build-up/estuary",
+    "offers/reconcile-payment-schedule/estuary",
+    "projects/handle-missing-owner-evidence/estuary",
+    "finance/reconcile-stage-claim/estuary",
+    "compliance/extract-nested-checklist/estuary",
+    "compliance/read-developer-verdict/estuary",
     "analytics/project-cost-margin/estuary",
     "analytics/summarize-cash-flow/estuary"
   ],
-  "description": "Draft foundation specimens; not the full 28-definition benchmark or an execution-ready release."
+  "description": "Draft held-out core document cases: one core case per authored definition. Never tune prompts or rubrics on these results."
 }

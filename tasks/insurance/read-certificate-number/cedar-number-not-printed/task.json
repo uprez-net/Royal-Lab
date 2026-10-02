@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "variant",
+  "variantOf": "insurance/read-certificate-number/cedar",
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "insurance/read-certificate-number/cedar-number-not-printed",
+  "definitionId": "D07",
+  "title": "Record the HBCF certificate number from a currency letter",
+  "family": "insurance",
+  "workType": "extract",
+  "instruction": "The broker sent a home warranty letter for Unit A of the Cedar duplex. Record its HBCF certificate number under our policy. Write certificate.json with certificateNumber (or null) and numberPrinted. Write review.md with your reasoning and follow-up. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Labels: Certificate number, Number printed (yes or no).",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "letter",
+      "path": "documents/currency-letter.md",
+      "sha256": "77b1ba7adbfced3a191b7f5312b66a4e8914a1703134b51f2e7900041471dd89",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "certificate.json",
+      "mediaType": "application/json",
+      "description": "Certificate number facts",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Reasoning and follow-up",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "f80043d48128b1934737f3b0ba9b2b342dab610eb76053a4f5878ba79efbe3df",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "763a99600a658e60f65aa71f54e28f5500979994e32ae5e09c259b6437dc1c7f",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "e7da146a5da9b20bb8ec8eb59b70711cfd7e937f32de7f52b0d188cbe9ad1d3f",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "65b4e49d8b8058400271c446ffd70f05c856205a021970b7df874b3c2b018183",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "de5338c2229d10b3a6f449c4d357be16b63ce60dfe7cfe2f5d17c0602ed318df",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "number-requested",
+      "description": "Number left null; certificate requested"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "leads/create-approved-follow-up/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "assertions": [
+    {
+      "kind": "state",
+      "collection": "tasks",
+      "target": {
+        "leadId": 101
+      },
+      "fields": {
+        "type": "CALL",
+        "dueDate": "2026-10-06T00:00:00.000Z",
+        "dueTime": "09:30"
+      },
+      "count": 1,
+      "preservePaths": [],
+      "criterionId": "C1"
+    },
+    {
+      "kind": "state",
+      "collection": "tasks",
+      "target": {},
+      "fields": {},
+      "count": 1,
+      "preservePaths": [],
+      "criterionId": "C2"
+    },
+    {
+      "kind": "state",
+      "collection": "operations",
+      "target": {
+        "status": "committed"
+      },
+      "fields": {},
+      "count": 1,
+      "preservePaths": [],
+      "criterionId": "C2"
+    },
+    {
+      "kind": "trace",
+      "ownerId": "builder-owner",
+      "sessionId": "case-session",
+      "mutationTools": [
+        "create_lead_task"
+      ],
+      "criterionId": "C3"
+    },
+    {
+      "kind": "state",
+      "collection": "tasks",
+      "target": {
+        "leadId": 101
+      },
+      "fields": {},
+      "count": 1,
+      "historyMinimum": 1,
+      "historyTarget": {
+        "leadId": 101
+      },
+      "preservePaths": [],
+      "criterionId": "C4"
+    }
+  ]
+}

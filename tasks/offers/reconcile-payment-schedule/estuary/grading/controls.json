@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "offers/reconcile-payment-schedule/estuary",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Lock-up discrepancy and shortfall flagged against the price of record.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "C8": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "schedule.json",
+          "sha256": "39b3d0227afb723986566bea9174d145523f528fc7432c471e52b0fbe6b9ba5b"
+        },
+        {
+          "path": "review.md",
+          "sha256": "ee185347a2791f2a9ad97721bb5868e40619ed774afeee3b00d9bdec67f3129d"
+        }
+      ]
+    },
+    {
+      "id": "accepted-printed-schedule",
+      "kind": "negative",
+      "description": "Accepts the printed schedule as consistent.",
+      "failureMode": "missed-discrepancy",
+      "expected": {
+        "C1": "pass",
+        "C2": "fail",
+        "C3": "fail",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "fail",
+        "C7": "fail",
+        "C8": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "schedule.json",
+          "sha256": "ae3d094555cccac6375e717263e73bcbd0813c33a08c9c7e255568c293cf9773"
+        },
+        {
+          "path": "review.md",
+          "sha256": "e823bf39b7d98db05af8b7e8dad1b1df7363a65e91fc8804b1996a8f6e3a5b04"
+        }
+      ]
+    },
+    {
+      "id": "superseded-price",
+      "kind": "negative",
+      "description": "Derives the schedule from the superseded revision 1 price.",
+      "failureMode": "wrong-amount",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "fail",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "fail",
+        "C7": "pass",
+        "C8": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "schedule.json",
+          "sha256": "2c4aebe3b37873507bf54bee04921bdc85ee9c1a7fdcbfdf76f2da4599624b85"
+        },
+        {
+          "path": "review.md",
+          "sha256": "2e233ac5d5313e34de2f485bfa281aebd8a66fbd7d327b48ea42cb1981ef5555"
+        }
+      ]
+    },
+    {
+      "id": "fluent-wrong-stage",
+      "kind": "negative",
+      "description": "Correct JSON, but the review tells the lender the frame line is wrong.",
+      "failureMode": "wrong-identifier",
+      "expected": {
+        "C1": "pass",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "C8": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "schedule.json",
+          "sha256": "39b3d0227afb723986566bea9174d145523f528fc7432c471e52b0fbe6b9ba5b"
+        },
+        {
+          "path": "review.md",
+          "sha256": "79731ca0239a9bfab987aee16c011eab45bbd3e901a72d6d81d4e6dfbec48388"
+        }
+      ]
+    }
+  ]
+}

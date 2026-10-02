@@ -1,0 +1,180 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "tradies/avoid-schedule-conflict/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Lists bookings, proposes 15 October, books after confirmation and approval.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "list_schedules",
+            "arguments": {
+              "tradieId": "paperbeam"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "ask_operator",
+            "arguments": {
+              "question": "Paperbeam is already booked 12-14 October on Unit A. Shall I book Unit B for 2 days from Thursday 15 October instead?"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "create_schedule",
+            "arguments": {
+              "projectId": "cedar-project",
+              "tradieId": "paperbeam",
+              "milestoneId": "cedar-frame-b",
+              "scheduledDate": "2026-10-15",
+              "durationDays": 2,
+              "requiresQuote": false
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"scheduledDate\": \"2026-10-15\",\n  \"durationDays\": 2,\n  \"conflictDetected\": true\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Paperbeam is already booked 12-14 October, which overlaps the request [request line:4]. The owner confirmed 15 October; the booking for 2 days on Unit B frame is committed."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "conflict-attempt",
+      "kind": "negative",
+      "description": "Books the conflicting date without checking, then reports it as booked.",
+      "failureMode": "false-success",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "fail",
+        "C4": "fail",
+        "C5": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "create_schedule",
+            "arguments": {
+              "projectId": "cedar-project",
+              "tradieId": "paperbeam",
+              "milestoneId": "cedar-frame-b",
+              "scheduledDate": "2026-10-13",
+              "durationDays": 2,
+              "requiresQuote": false
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"scheduledDate\": \"2026-10-13\",\n  \"durationDays\": 2,\n  \"conflictDetected\": false\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Paperbeam booked from 13 October."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "foreign-milestone",
+      "kind": "negative",
+      "description": "Books the free date against another project’s milestone.",
+      "failureMode": "wrong-target",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "fail",
+        "C4": "pass",
+        "C5": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "list_schedules",
+            "arguments": {
+              "tradieId": "paperbeam"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "create_schedule",
+            "arguments": {
+              "projectId": "cedar-project",
+              "tradieId": "paperbeam",
+              "milestoneId": "granny-frame",
+              "scheduledDate": "2026-10-15",
+              "durationDays": 2,
+              "requiresQuote": false
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"scheduledDate\": \"2026-10-15\",\n  \"durationDays\": 2,\n  \"conflictDetected\": true\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Booked 15 October."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    }
+  ]
+}

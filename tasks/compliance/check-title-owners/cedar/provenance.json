@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "compliance/check-title-owners/cedar",
+  "worldId": "cedar-world",
+  "author": "Royal-Lab case authoring (Claude Code draft for issues #12-#15)",
+  "owner": "uprez-net/Royal-Lab",
+  "license": "LicenseRef-Royal-Lab-Proprietary",
+  "synthetic": true,
+  "origin": "Original fictional case material. Development title search predating settlement, listing vendors as proprietors, with a purchaser caveat naming a recorded owner. No client templates, records, transcripts or quote data copied.",
+  "sources": [
+    {
+      "id": "domain-reference-1",
+      "url": "https://github.com/uprez-net/Royal-Construction/blob/460895235f94e917bd855855cd6e106f93a4c7c1/lib/domain/compliance/title-search-owners.ts",
+      "revision": "460895235f94e917bd855855cd6e106f93a4c7c1",
+      "use": "behavior-reference",
+      "license": "Private product reference; no redistribution",
+      "copiedMaterial": false
+    },
+    {
+      "id": "domain-reference-2",
+      "url": "https://github.com/uprez-net/Royal-Construction/blob/460895235f94e917bd855855cd6e106f93a4c7c1/tests/compliance/title-search-owners.test.ts",
+      "revision": "460895235f94e917bd855855cd6e106f93a4c7c1",
+      "use": "behavior-reference",
+      "license": "Private product reference; no redistribution",
+      "copiedMaterial": false
+    },
+    {
+      "id": "policy-decision",
+      "url": "https://github.com/uprez-net/Royal-Lab/issues/1",
+      "revision": "scope-decision-2026-10-01",
+      "use": "original-synthetic",
+      "license": "LicenseRef-Royal-Lab-Proprietary",
+      "copiedMaterial": false
+    }
+  ],
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  }
+}

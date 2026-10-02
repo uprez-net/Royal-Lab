@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "compliance/check-title-owners/cedar",
+  "definitionId": "D12",
+  "title": "Check the title search against the recorded owners",
+  "family": "compliance",
+  "workType": "analyze",
+  "instruction": "The surveyor has supplied a title search for the Cedar duplex. Compare it with the owners we hold under our title search policy and say what the office should do. Write title-check.json with verdict (match, mismatch or indeterminate), matchedOwners (recorded owners found as registered proprietors), searchDate (YYYY-MM-DD) and nextAction (fresh-title-search, obtain-readable-search or none). Write review.md with your reasoning. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Labels: Title owner check, Matched owners (names, or none), Search date (YYYY-MM-DD).",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "title",
+      "path": "documents/title-search.md",
+      "sha256": "e4a40b0c4a03cf6381d51a21943cc2c983d18fc5f32c47ff9b23be648509b8db",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "owners",
+      "path": "documents/project-owners.md",
+      "sha256": "c46e7eec15f7460632f26b2f5aa724b7f6c9ab382538adc694ebc7f73a5f302f",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "email",
+      "path": "documents/surveyor-email.eml",
+      "sha256": "0d0b76bfd5743140a2eb8ba026fb25894456fc0e1ffb975f487d850609d897a6",
+      "kind": "document",
+      "mediaType": "message/rfc822"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "title-check.json",
+      "mediaType": "application/json",
+      "description": "Title owner comparison",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited reasoning and next action",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "a06313d9340b689d2efac1a965ad43dd8024acd817b2e96b9d380be4c8c68f7b",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "084d46f80b5b57eff6b6dbc39d7ae6975f9d4bcd4a2472781a5877431fab7b2a",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "b6ecad612263c62cf06e031fa89979c7f61af8eff56cab00a353cb2c77a2e3a6",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "bdbdc44372580fc0e516df081171f5d56d9fed43c31139877c87da46ce8dd832",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "9c7602db25566ca6fe01593fbcfe008139bf37f9e3ab9f5aedc0ade93497ded1",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "title-checked",
+      "description": "Mismatch reported; owners unchanged"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

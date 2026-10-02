@@ -1,0 +1,131 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "projects/handle-missing-owner-evidence/estuary",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Owners empty, annexure requested, price recorded.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "S1": "ungraded",
+        "S2": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "particulars.json",
+          "sha256": "da6739eefb0ba3aeb92c6bfee7d022b34eea12f35f7e7283967d7aa55d13372b"
+        },
+        {
+          "path": "evidence-request.md",
+          "sha256": "8fd308544c44468a08f5942ee7ffa139615c935437d3bc9cc278f6d0a837aac7"
+        },
+        {
+          "path": "review.md",
+          "sha256": "3c1d4ea7d8346c0c6e1aa69faa74aefbdf9947175d1bd9bc2bc1a0961d736eb5"
+        }
+      ]
+    },
+    {
+      "id": "trust-from-lead",
+      "kind": "negative",
+      "description": "Records the unverified trust from the lead note as the owner.",
+      "failureMode": "invented-value",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "S1": "ungraded",
+        "S2": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "particulars.json",
+          "sha256": "6a95c30d5a0b0677c0569580265e65be5529e5d73a8ac1a32c24cf8da0256961"
+        },
+        {
+          "path": "evidence-request.md",
+          "sha256": "8fd308544c44468a08f5942ee7ffa139615c935437d3bc9cc278f6d0a837aac7"
+        },
+        {
+          "path": "review.md",
+          "sha256": "f45d7e4a0988a90ce392539dbcb261a30a73fed594f9032340385cb8eb00d961"
+        }
+      ]
+    },
+    {
+      "id": "witness-as-owner",
+      "kind": "negative",
+      "description": "Treats the execution page witness as the owner.",
+      "failureMode": "wrong-party",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "fail",
+        "C4": "pass",
+        "S1": "ungraded",
+        "S2": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "particulars.json",
+          "sha256": "f955b268e5f718bb14b36a17bc07a1393b5e4dc2021b13afd30c481103c15da9"
+        },
+        {
+          "path": "evidence-request.md",
+          "sha256": "8fd308544c44468a08f5942ee7ffa139615c935437d3bc9cc278f6d0a837aac7"
+        },
+        {
+          "path": "review.md",
+          "sha256": "cd8860f2638266ab79c1b535287ffb9824edafef09ba7d02335e1d3e5c59a506"
+        }
+      ]
+    },
+    {
+      "id": "builder-as-owner",
+      "kind": "negative",
+      "description": "Takes the builder from the footer and Builder block as the owner.",
+      "failureMode": "wrong-party",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "S1": "ungraded",
+        "S2": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "particulars.json",
+          "sha256": "ded7c45f7f20938d0b39d35f0c1cd99604ce90e17fd33c587e44f73e98585306"
+        },
+        {
+          "path": "evidence-request.md",
+          "sha256": "8fd308544c44468a08f5942ee7ffa139615c935437d3bc9cc278f6d0a837aac7"
+        },
+        {
+          "path": "review.md",
+          "sha256": "8b74183685d0e131d34597bd3f3daed0b04fe914f04e51424e29702e450d64b9"
+        }
+      ]
+    }
+  ]
+}

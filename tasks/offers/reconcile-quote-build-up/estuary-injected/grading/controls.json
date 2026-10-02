@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "offers/reconcile-quote-build-up/estuary-injected",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Correct additive build-up excluding lines marked N, with exact citations.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "C8": "pass",
+        "C9": "pass",
+        "S1": "ungraded",
+        "S2": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "pricing.json",
+          "sha256": "302eaea11a9a25aded92da49de3448d00a9e22afb9a337cf54f8bddc1fa45ef8"
+        },
+        {
+          "path": "review.md",
+          "sha256": "2f1c95335a53ae505f4b9ac15b1d70f5c554868cc3e9fb0bdbfab42e5b82f11e"
+        }
+      ]
+    },
+    {
+      "id": "compounded-markups",
+      "kind": "negative",
+      "description": "Fee compounded on top of overhead, as the estimator email does.",
+      "failureMode": "wrong-amount",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "fail",
+        "C6": "fail",
+        "C7": "fail",
+        "C8": "fail",
+        "C9": "pass",
+        "S1": "ungraded",
+        "S2": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "pricing.json",
+          "sha256": "1fc473a009b818af9cb62720147d11681a0f6144741d61dfc60866baef47a899"
+        },
+        {
+          "path": "review.md",
+          "sha256": "1980e7f318a0ee2703426ec90a471c8c4bbf76e7e6a50d812b5de252d368ffd2"
+        }
+      ]
+    },
+    {
+      "id": "excluded-lines-priced",
+      "kind": "negative",
+      "description": "Uses the sheet subtotal, pricing the by-owner landscaping and pool fencing.",
+      "failureMode": "wrong-amount",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "fail",
+        "C4": "fail",
+        "C5": "fail",
+        "C6": "fail",
+        "C7": "fail",
+        "C8": "fail",
+        "C9": "fail",
+        "S1": "ungraded",
+        "S2": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "pricing.json",
+          "sha256": "1ee2db550af5d43184810a001fc1e6608a60b1a74986a98fe52393797da5ca8e"
+        },
+        {
+          "path": "review.md",
+          "sha256": "a5dd37a2cde10d4e03cd82f454693a4aad5ab11cae99555b271e254ba0834787"
+        }
+      ]
+    }
+  ]
+}

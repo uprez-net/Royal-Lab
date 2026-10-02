@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "worldId": "estuary-world",
+  "worldPath": "fixtures/worlds/estuary-world.json",
+  "worldHash": "9d7bcd1f4e2bfc90133d76ecec1433f9ee45ae5073ec984912b1abbb0d6607b8",
+  "entityIds": [
+    "builder-fe9b57a5bffe",
+    "owner-a-05b24088bb21",
+    "lead-b-1d766ac47096",
+    "offer-b-0b99aecd259a",
+    "project-b-d60706bd2f07",
+    "document-a-13c4ea6da441"
+  ],
+  "expectedFacts": {
+    "particulars.json#/owners": [],
+    "particulars.json#/ownerBlockPresent": false,
+    "particulars.json#/requestedSource": "Annexure A",
+    "particulars.json#/contractPriceCents": 18645000
+  }
+}

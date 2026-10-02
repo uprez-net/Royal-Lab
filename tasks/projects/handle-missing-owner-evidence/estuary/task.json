@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "projects/handle-missing-owner-evidence/estuary",
+  "definitionId": "D06",
+  "title": "Set up owners from a contract extract that lacks the Owner block",
+  "family": "projects",
+  "workType": "extract",
+  "instruction": "The office needs the owners for the Estuary extension recovery job so the customer records can be created. Use only the supplied contract extract, lead record and tender cover under our owner rules. Write particulars.json with owners (array; empty if not evidenced), ownerBlockPresent, requestedSource (the exact missing document or annexure, or null) and contractPriceCents. Write evidence-request.md with any focused request for missing evidence, and review.md explaining your decision. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Labels: Owners extracted (names, or none), Owner block present (yes or no), Requested source.",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "estuary-world",
+  "clock": {
+    "instant": "2026-10-05T22:00:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "contract",
+      "path": "documents/contract-extract-pages-3-6.md",
+      "sha256": "d4554862d5465a89a8083b413005edd3fcdaa03709d34280805564d468eb126e",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "lead",
+      "path": "documents/lead-record.md",
+      "sha256": "39f166326c1cdbc1d2c0746de4321f90425a8c68fb843f94ba168a1587907193",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "tender",
+      "path": "documents/tender-cover.md",
+      "sha256": "3f488543d81a9bc7379e97c3b1e1319c58dda961632660ef5ade341cf0854a56",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "particulars.json",
+      "mediaType": "application/json",
+      "description": "Owner evidence facts",
+      "required": true
+    },
+    {
+      "path": "evidence-request.md",
+      "mediaType": "text/markdown",
+      "description": "Focused request for missing evidence",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited decision",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "694feb70c6e328d08044f562b96d8b6787a71f95fa967b443960b772a5a24fc3",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "81ddc7ad786adec24b7697a1281d438718bfcb357beb3e3cb36279567b94b8bd",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "26675bae63ec2580ff29fffbcf4f65f2a2ecd46afa8e093e671012e801df5bec",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "8b6d2ae2b4272bf14e2f41290e3b14520e814231c071009fc865915bf539320e",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "99f52cb376a01605d7d5218c58f4d3bb3a94a80a8a3f2c3716714b4b2c7747ba",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "evidence-requested",
+      "description": "Owners left empty and annexure requested"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

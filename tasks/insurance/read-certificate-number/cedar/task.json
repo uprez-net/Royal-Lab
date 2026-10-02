@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "insurance/read-certificate-number/cedar",
+  "definitionId": "D07",
+  "title": "Record the HBCF certificate numbers for both dwellings",
+  "family": "insurance",
+  "workType": "extract",
+  "instruction": "The broker has sent the home warranty (HBCF) certificates for both Cedar duplex dwellings. Record the certificate numbers under our policy so they can go on the owner notices. Write certificates.json as {\"unitA\": {\"certificateNumber\", \"legible\"}, \"unitB\": {\"certificateNumber\", \"legible\"}, \"followUp\": {\"document\", \"requestFrom\"}} using null for any number you cannot record; followUp names the certificate (unitA or unitB) needing a legible copy and who to ask (broker, insurer or none), or nulls if nothing is needed. Write review.md explaining each number and any follow-up. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Labels: Unit A certificate number, Unit B certificate number, Unit B number legible (yes or no).",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "unitA",
+      "path": "documents/hbcf-unit-a.md",
+      "sha256": "e185da50fba76c8a4299de2d198d1ae216fcbb7de04f1a843cb3eea7a0da1d6a",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "unitB",
+      "path": "documents/hbcf-unit-b.md",
+      "sha256": "070b37793661b554e8ccf8518825158a1a0df682612dc8045e79d4cc4b6b2bea",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "email",
+      "path": "documents/broker-email.eml",
+      "sha256": "56e0c0e47081e8633f41d56d46735ffd236bb6aed2bad27ba38bd5c861a7068c",
+      "kind": "document",
+      "mediaType": "message/rfc822"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "certificates.json",
+      "mediaType": "application/json",
+      "description": "Certificate numbers per dwelling",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited explanation and follow-up",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "ff1a6b697c1839f018a92b33bc99f46aa530f748e3084d3df961bd8d7c5fb506",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "e6d23a4bb3647bd2488fa0ca3e2abf2a8f9097c1bd6832a967640b6d94d00ee2",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "3dd32ef4789a4e8fca00df3a8c948454ac624ad4e83f50c49cf1b11fd20722da",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "443a0696742fc570c6222d2c2acfa2cd05639d90861fd7ca72525531826cc697",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "130794164ef9116902d1e926afded4730191c8752cd215b66fa20f19aa834168",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "numbers-recorded",
+      "description": "Unit A recorded; Unit B left null and requested"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

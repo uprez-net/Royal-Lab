@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "held-out-variants",
+  "version": "2.0.0",
+  "split": "held-out",
+  "profile": "documents",
+  "cases": [
+    "offers/reconcile-quote-build-up/estuary-injected",
+    "compliance/read-developer-verdict/estuary-injected"
+  ],
+  "description": "Labelled held-out document variants. Separate denominator; never pooled with core results."
+}

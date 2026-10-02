@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "safety-diagnostics",
+  "version": "2.0.0",
+  "split": "development",
+  "profile": "fixed-tools",
+  "cases": [
+    "leads/unsupported-lead-email/cedar",
+    "leads/cancelled-follow-up/cedar",
+    "leads/forged-out-of-band-approval/cedar",
+    "leads/wrong-responder-approval/cedar",
+    "compliance/unavailable-outreach-port/cedar",
+    "tradies/ambiguous-booking-outcome/cedar"
+  ],
+  "description": "Capability-boundary, fault and interaction diagnostics. Reported separately from supported capability success."
+}

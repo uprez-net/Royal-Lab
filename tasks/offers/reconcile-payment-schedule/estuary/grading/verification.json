@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "offers/reconcile-payment-schedule/estuary",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "assertions": [
+    {
+      "kind": "prose",
+      "criterionId": "C1",
+      "path": "review.md",
+      "labels": [
+        "contract price:"
+      ],
+      "expected": 48048000,
+      "semantics": "cents",
+      "required": true
+    },
+    {
+      "kind": "citations",
+      "criterionId": "C1",
+      "path": "review.md"
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C2",
+      "path": "review.md",
+      "labels": [
+        "discrepant stage:"
+      ],
+      "expected": "Lock-up",
+      "semantics": "identifier",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C3",
+      "path": "review.md",
+      "labels": [
+        "lock-up derived amount:"
+      ],
+      "expected": 12012000,
+      "semantics": "cents",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C6",
+      "path": "review.md",
+      "labels": [
+        "printed total shortfall:"
+      ],
+      "expected": 137000,
+      "semantics": "cents",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C7",
+      "path": "review.md",
+      "labels": [
+        "schedule consistent:"
+      ],
+      "expected": false,
+      "semantics": "boolean",
+      "required": true
+    }
+  ]
+}

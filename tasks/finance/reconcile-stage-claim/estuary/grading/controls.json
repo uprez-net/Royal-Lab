@@ -1,0 +1,150 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "finance/reconcile-stage-claim/estuary",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Lock-up due by root group; slab waived; frame already invoiced; nothing verified.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "claims.json",
+          "sha256": "1c7830e1a9080f057e82825831a941c5e3efdafaa53f9c15d504fbe4ecc54685"
+        },
+        {
+          "path": "review.md",
+          "sha256": "cab740cd3720905103186c32ad53a51e7edc46c1e277bb3c3245e1e00c96c369"
+        }
+      ]
+    },
+    {
+      "id": "label-grouping",
+      "kind": "negative",
+      "description": "Groups by each activity label, so the pending child blocks lock-up.",
+      "failureMode": "wrong-decision",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "claims.json",
+          "sha256": "0e62ac319e5b6a2472caaec1ae80ad42e87ea4ea8768bc73bde61b72cc31d547"
+        },
+        {
+          "path": "review.md",
+          "sha256": "e12fe040f5cc883e5d6529cf656950a339729e8921b2d73153324e6f5c7be703"
+        }
+      ]
+    },
+    {
+      "id": "waived-slab-claimed",
+      "kind": "negative",
+      "description": "Claims the waived slab stage because the schedule still lists it.",
+      "failureMode": "wrong-amount",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "fail",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "claims.json",
+          "sha256": "9a83687600a2bb53c463e6b4512a4a6671691dca33eab1880aae87d2eaa19bd5"
+        },
+        {
+          "path": "review.md",
+          "sha256": "b6314af8585b99dbd00d6648e51dda8d71fb6028db9582550ade3f9492737ee5"
+        }
+      ]
+    },
+    {
+      "id": "duplicate-frame",
+      "kind": "negative",
+      "description": "Raises frame again although INV-B-002 exists.",
+      "failureMode": "duplicate-write",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "fail",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "claims.json",
+          "sha256": "6a3c3df325d3bf2cdeacaf20f1a3a4a172f87a222e620b6f2806d71e891b9af8"
+        },
+        {
+          "path": "review.md",
+          "sha256": "d932c85f2fa3665ecbcf788ce2e78c79afff9ea78fb21c7004a76d1619142a8c"
+        }
+      ]
+    },
+    {
+      "id": "false-xero",
+      "kind": "negative",
+      "description": "Confirms the frame payment and says the lock-up claim was raised.",
+      "failureMode": "false-success",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "fail",
+        "C7": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "claims.json",
+          "sha256": "fd474ebfc675013aa0798b50afe3da0b958275cc2a037674bb0dfeb9d35021ed"
+        },
+        {
+          "path": "review.md",
+          "sha256": "90740d6589e8709e4d370a6d6a56254b66f5e6fbcb1e9fe4c314877c11e5cc5c"
+        }
+      ]
+    }
+  ]
+}

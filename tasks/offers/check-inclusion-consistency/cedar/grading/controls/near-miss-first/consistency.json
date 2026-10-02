@@ -1,0 +1,16 @@
+{
+  "contradictionCount": 2,
+  "contradictions": [
+    {
+      "inclusionRef": "7.4",
+      "exclusionRef": "E3",
+      "scope": "paving"
+    },
+    {
+      "inclusionRef": "7.3",
+      "exclusionRef": "E4",
+      "scope": "front yard landscaping"
+    }
+  ],
+  "offerModified": false
+}

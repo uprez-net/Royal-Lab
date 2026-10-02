@@ -1,0 +1,146 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "compliance/check-title-owners/cedar",
+  "policyVersion": "1.1.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Mismatch: no recorded owner is a proprietor",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "title",
+          "locator": "line:8",
+          "fact": "Proprietors are the vendors."
+        },
+        {
+          "sourceId": "owners",
+          "locator": "line:4",
+          "fact": "Recorded owner 1."
+        },
+        {
+          "sourceId": "owners",
+          "locator": "line:5",
+          "fact": "Recorded owner 2."
+        }
+      ],
+      "deliverables": [
+        "title-check.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "title-check.json",
+        "pointer": "/verdict",
+        "expected": "mismatch"
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Caveator not counted as a matched owner",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "party",
+      "evidence": [
+        {
+          "sourceId": "title",
+          "locator": "line:13",
+          "fact": "Amelia Fiction is only a caveator."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:118",
+          "fact": "Only proprietors are compared."
+        }
+      ],
+      "deliverables": [
+        "title-check.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "title-check.json",
+        "pointer": "/matchedOwners",
+        "expected": []
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Search date",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "date",
+      "evidence": [
+        {
+          "sourceId": "title",
+          "locator": "line:4",
+          "fact": "Searched 30 August 2026."
+        }
+      ],
+      "deliverables": [
+        "title-check.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "title-check.json",
+        "pointer": "/searchDate",
+        "expected": "2026-08-30"
+      }
+    },
+    {
+      "id": "C4",
+      "title": "Fresh title search requested",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "policy",
+          "locator": "line:124",
+          "fact": "A mismatch warrants a fresh search."
+        }
+      ],
+      "deliverables": [
+        "title-check.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "title-check.json",
+        "pointer": "/nextAction",
+        "expected": "fresh-title-search"
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Explains settlement lag without altering owners",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "owners",
+          "locator": "line:7",
+          "fact": "Settlement 4 September, after the search."
+        },
+        {
+          "sourceId": "title",
+          "locator": "line:4",
+          "fact": "Search 30 August."
+        }
+      ],
+      "deliverables": [
+        "review.md"
+      ],
+      "method": "semantic",
+      "passIf": "Explains that the search predates settlement, recommends a fresh search from the surveyor and keeps the recorded owners unchanged.",
+      "failIf": "Proposes replacing the owners with the vendors, or treats the caveat as a proprietor match."
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "tradies/request-price-change/estuary",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "session": {
+    "sessionId": "case-session",
+    "ownerId": "builder-owner"
+  },
+  "seed": {
+    "schemaVersion": "1.0.0",
+    "rows": [
+      {
+        "table": "User",
+        "values": {
+          "id": "builder-owner",
+          "name": "Morgan Inventa",
+          "email": "builder-owner@staff.example",
+          "phone": "fictional-phone-builder-owner",
+          "role": "ADMIN",
+          "clerkId": "synthetic-clerk-builder-owner",
+          "updatedAt": "2026-10-05T21:00:00Z"
+        }
+      },
+      {
+        "table": "Tradie",
+        "values": {
+          "id": "tide-plumbing",
+          "name": "Fictional Tide Plumbing",
+          "trade": "Plumber",
+          "abn": "SYNTHETIC-ABN-tide-plumbing",
+          "phone": "synthetic-tradie-phone-tide-plumbing",
+          "email": "tide-plumbing@tradie.example",
+          "lastQuotedPrice": 95,
+          "updatedAt": "2026-10-05T21:00:00Z",
+          "lastQuotedPriceUnit": "HOURLY"
+        }
+      }
+    ]
+  },
+  "operator": {
+    "schemaVersion": "1.0.0",
+    "version": "1.0.0",
+    "review": {
+      "status": "draft",
+      "reviewer": null,
+      "reviewedAt": null,
+      "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+    },
+    "maxUnexpectedQuestions": 1,
+    "branches": [
+      {
+        "id": "approve-request",
+        "type": "approval",
+        "allWords": [
+          "approve",
+          "request",
+          "price",
+          "change"
+        ],
+        "anyWords": [],
+        "response": "Approved for the exact displayed call and arguments.",
+        "decision": "approved",
+        "responderId": "builder-owner",
+        "maxUses": 1
+      }
+    ]
+  },
+  "bridge": {
+    "schemaVersion": "1.0.0",
+    "mode": "benchmark",
+    "ports": {
+      "schemaVersion": "1.0.0",
+      "email": "unavailable",
+      "envelope": "unavailable"
+    },
+    "timeoutMs": 20000
+  },
+  "controller": {}
+}

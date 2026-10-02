@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "offers/reconcile-payment-schedule/estuary",
+  "definitionId": "D03",
+  "title": "Reconcile the progress payment schedule before it goes to the lender",
+  "family": "offers",
+  "workType": "reconcile",
+  "instruction": "Admin wants Schedule 2 for the Estuary staged build sent to the owner's lender. Check the schedule against the contract price of record under our policy before anything is sent. Write schedule.json with contractPriceCents, percentTotalBasisPoints, scheduleConsistent, discrepantStage (stage name as printed, or null), lockupDerivedCents, lockupPrintedCents, printedTotalCents and totalShortfallCents (contract price minus printed total). Write review.md with your findings and recommendation. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Labels: Contract price, Discrepant stage, Lock-up derived amount, Printed total shortfall, Schedule consistent (yes or no).",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "estuary-world",
+  "clock": {
+    "instant": "2026-10-05T22:00:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "schedule",
+      "path": "documents/schedule-2-revision-2.md",
+      "sha256": "97035de28cb9b1c8a3049468c6aa5401d34037870d2c0ee017339ac06b8d3922",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "superseded",
+      "path": "documents/schedule-2-revision-1.md",
+      "sha256": "923d03ab6d13e4fac0a79414b57e88ef069629b12795c0498087d2204466fb9a",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "offer",
+      "path": "documents/offer-summary.md",
+      "sha256": "0e9ed4a7b436e94b2fbc79e7260225699dc61520063cda440ab950ba25a5f830",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "email",
+      "path": "documents/admin-email.eml",
+      "sha256": "b123c73e3a5d6e2efc68d4e0f16111ea9818316759db5fc2593f1e112c83ef9d",
+      "kind": "document",
+      "mediaType": "message/rfc822"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "schedule.json",
+      "mediaType": "application/json",
+      "description": "Schedule reconciliation facts",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited findings and recommendation",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "4d4d4a06170867d5a6ee6b1732bcded537ed9e022bd7ecaa79d13f8aaf23d558",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "652c70e0a90d65fbd97a4b9460bbf11b8a1da21eed24ee7b139c9148c28e1936",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "5295ce4708dcc459b6e1943013c2b6851b084f6ea728a41fabaaa621065adf77",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "78ea25101d0e83ded6b647e9438639f7fa088ee1682329cb405b8640f62f28ec",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "92a1ddfc8da1e609e018170fc3ad2cefb78f90006c0077a3b2e653fe63f350b9",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "review-produced",
+      "description": "Discrepancy flagged; nothing sent or changed"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

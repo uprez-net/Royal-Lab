@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "projects/complete-milestone-with-evidence/cedar",
+  "definitionId": "T05",
+  "title": "Complete the frame milestone with evidence",
+  "family": "projects",
+  "workType": "operate",
+  "instruction": "Action the site supervisor's message for the Cedar duplex project (cedar-project). Every write needs the owner to approve the exact call in this session. Write facts.json with the requested fields and report.md for the office stating what was attempted, what was committed and what remains, citing the brief as [source-id locator]. facts.json fields: milestoneId, status, claimDueStage (stage now due for a claim, or null), invoiceRaised.",
+  "profiles": [
+    "fixed-tools"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "message",
+      "path": "documents/site-message.md",
+      "sha256": "d756fc818651b639a079d34244b503a881e2af00ca728c2cc5df480f5f2d8306",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "get_project",
+      "version": "1.0.0"
+    },
+    {
+      "name": "update_milestone",
+      "version": "1.0.0"
+    },
+    {
+      "name": "ask_operator",
+      "version": "1.0.0"
+    },
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "facts.json",
+      "mediaType": "application/json",
+      "description": "Milestone and claim facts",
+      "required": true
+    },
+    {
+      "path": "report.md",
+      "mediaType": "text/markdown",
+      "description": "Completion and claim report",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "ba64c4f8b7dcc1a936314b46dbf462e57dc81ee006afc8e92d21985af1e94b92",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "72c0a7f67e28cadafedabf300fbf3be0d245b7ae96835eab6f1884adfc0fe62d",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "d43059b32a236fd8d814ba07992b420cc794844fd756c90c7237436df37c308e",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "7c484bb130d10c84e78a2c4885e62cd1ffebdc56e5e45fddd42b4aabacb7750c",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "cc8fc635c8477fe99a2003e20eb1d83bac67372dd03baa3fcaa9287433ed8915",
+  "environmentPath": "grading/environment.json",
+  "environmentHash": "7e0416dc6bac1950199700433abe2c4b7f99035806cf5e9e2713dec4295e7d5a",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "milestone-completed",
+      "description": "Approved completion; claim due, not raised"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

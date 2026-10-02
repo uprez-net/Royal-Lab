@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "tradies/request-price-change/estuary",
+  "definitionId": "T10",
+  "title": "Record a trade's requested rate change",
+  "family": "tradies",
+  "workType": "operate",
+  "instruction": "Action the plumber's email for tradie tide-plumbing. Every write needs the owner to approve the exact call in this session. Write facts.json with the requested fields and report.md for the office stating what was attempted, what was committed and what remains, citing the brief as [source-id locator]. facts.json fields: requestedRate, unit, directoryRateChanged, requestStatus.",
+  "profiles": [
+    "fixed-tools"
+  ],
+  "worldId": "estuary-world",
+  "clock": {
+    "instant": "2026-10-05T22:00:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "email",
+      "path": "documents/plumber-email.md",
+      "sha256": "17e44c80c82a6aac882895d9398ae1196e074a248e329d75ae58370c683e5b39",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "get_tradie",
+      "version": "1.0.0"
+    },
+    {
+      "name": "request_price_change",
+      "version": "1.0.0"
+    },
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "facts.json",
+      "mediaType": "application/json",
+      "description": "Request facts",
+      "required": true
+    },
+    {
+      "path": "report.md",
+      "mediaType": "text/markdown",
+      "description": "Request and pending status",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "cd9c33ec076bac4745d37c7a5a3dd55fee65e16d06e32e7a3a7c1776342f7cea",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "33d2aa54960bc9ad4155dee2373650b3000d5fdec9d50ab4083bc83815060b35",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "c4c4ad9400dacf78282ca70e06e4a1f49a6df8b6cff825c586f45586f8fbcf53",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "cf9412830da2716f36de29be1e2b3d6cd4b0964fbd401fa95de6f783fa723117",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "a2d6655e605beca1398379472a7457488a2fc3a728b579bcd792cd3582308474",
+  "environmentPath": "grading/environment.json",
+  "environmentHash": "c53349b20a522fbf57b45932581bd0b898bc3eb2e8a2ebebdf7bdd41ca5bb9ef",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "request-pending",
+      "description": "Pending request; directory unchanged"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

@@ -1,6 +1,7 @@
 import { Pool, types } from 'pg';
 import { randomUUID } from 'node:crypto';
 import { CanonicalSnapshotSchema } from '#contracts/operational';
+import { CaseSeedSchema, type CaseSeed } from '#contracts/authoring';
 import {
   OPERATIONAL_CASE_IDS,
   syntheticOfferWorkspace,
@@ -8,6 +9,12 @@ import {
   type OperationalCaseId,
 } from '#src/environments/guri/synthetic-seed';
 
+const isJsonColumn = (value: unknown): value is { $json: unknown } =>
+  value !== null &&
+  typeof value === 'object' &&
+  !Array.isArray(value) &&
+  Object.keys(value).length === 1 &&
+  Object.hasOwn(value, '$json');
 export function fixtureControlUrl(value: string) {
   const url = new URL(value);
   if (
@@ -241,6 +248,27 @@ export class DisposableDatabase {
             timestamp,
           ],
         );
+    }
+  }
+  // Authored case seed (task schema 1.2.0). Explicit parameterized fixture rows on
+  // allowlisted tables; like seedOperational it creates no business history,
+  // operation journal, approval, port receipt or controller-injection evidence.
+  async seedCase(seed: CaseSeed, caseId: string) {
+    const parsed = CaseSeedSchema.parse(seed);
+    await this.writer.query('INSERT INTO "RoyalLabSeed" VALUES ($1,$2)', ['case-1.0.0', caseId]);
+    for (const row of parsed.rows) {
+      const columns = Object.keys(row.values);
+      const values = columns.map((column) => {
+        const value = row.values[column];
+        return isJsonColumn(value) ? JSON.stringify(value.$json) : value;
+      });
+      const placeholders = columns.map(
+        (column, index) => `$${index + 1}${isJsonColumn(row.values[column]) ? '::jsonb' : ''}`,
+      );
+      await this.writer.query(
+        `INSERT INTO "${row.table}" (${columns.map((column) => `"${column}"`).join(',')}) VALUES (${placeholders.join(',')})`,
+        values,
+      );
     }
   }
   async snapshot() {

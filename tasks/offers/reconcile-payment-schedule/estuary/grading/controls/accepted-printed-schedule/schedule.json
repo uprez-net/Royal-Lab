@@ -1,0 +1,10 @@
+{
+  "contractPriceCents": 48048000,
+  "percentTotalBasisPoints": 10000,
+  "scheduleConsistent": true,
+  "discrepantStage": null,
+  "lockupDerivedCents": 11875000,
+  "lockupPrintedCents": 11875000,
+  "printedTotalCents": 47911000,
+  "totalShortfallCents": 0
+}

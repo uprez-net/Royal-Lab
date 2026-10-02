@@ -21,7 +21,21 @@ const OfferStatus = z.enum([
   'REJECTED',
 ]);
 // Deliberately a minimum transport surface. Canonical commands own all domain rules.
-const Patch = z.record(z.string().min(1).max(100), z.json());
+// Key length is a refinement, not a key schema: JSON Schema propertyNames is
+// stripped by OpenAI-compatible transports, which the loop rightly treats as a
+// provider downgrade (tool version 1.1.0; accepted arguments are unchanged).
+// Every zod record (including z.json) advertises propertyNames, so the patch is
+// an open object whose key and JSON-value rules are enforced as refinements.
+const Patch = z
+  .object({})
+  .catchall(z.unknown())
+  .refine(
+    (patch) =>
+      Object.entries(patch).every(
+        ([key, value]) => key.length >= 1 && key.length <= 100 && z.json().safeParse(value).success,
+      ),
+    'Patch keys must be 1-100 characters with JSON values',
+  );
 export const GURI_TOOL_SCHEMAS = {
   find_leads: z.strictObject({ query: z.string().min(1).max(100) }),
   search_leads: z.strictObject({ query: z.string().min(1).max(100) }),
@@ -123,8 +137,12 @@ export const GURI_TOOL_SCHEMAS = {
   }),
 };
 export type GuriTool = keyof typeof GURI_TOOL_SCHEMAS;
+const VERSIONED: Partial<Record<string, string>> = {
+  find_leads: '2.0.0',
+  update_project_requirements: '1.1.0',
+};
 export const GURI_TOOL_VERSIONS = Object.fromEntries(
-  Object.keys(GURI_TOOL_SCHEMAS).map((name) => [name, name === 'find_leads' ? '2.0.0' : '1.0.0']),
+  Object.keys(GURI_TOOL_SCHEMAS).map((name) => [name, VERSIONED[name] ?? '1.0.0']),
 ) as Record<GuriTool, string>;
 export const GURI_EFFECTS: Record<GuriTool, 'read' | 'mutation'> = {
   find_leads: 'read',

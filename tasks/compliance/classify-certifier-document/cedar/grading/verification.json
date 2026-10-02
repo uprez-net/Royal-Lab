@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "compliance/classify-certifier-document/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "assertions": [
+    {
+      "kind": "prose",
+      "criterionId": "C3",
+      "path": "review.md",
+      "labels": [
+        "doc3 type:"
+      ],
+      "expected": "CDC_FORM",
+      "semantics": "identifier",
+      "required": true
+    },
+    {
+      "kind": "citations",
+      "criterionId": "C3",
+      "path": "review.md"
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C4",
+      "path": "review.md",
+      "labels": [
+        "doc4 type:"
+      ],
+      "expected": "UNKNOWN",
+      "semantics": "identifier",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C6",
+      "path": "review.md",
+      "labels": [
+        "doc6 type:"
+      ],
+      "expected": "UNKNOWN",
+      "semantics": "identifier",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C7",
+      "path": "review.md",
+      "labels": [
+        "cdc in hand for lot 14:"
+      ],
+      "expected": false,
+      "semantics": "boolean",
+      "required": true
+    }
+  ]
+}

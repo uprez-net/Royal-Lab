@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "tradies/ambiguous-booking-outcome/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Verifies by listing schedules after the lost acknowledgement.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "create_schedule",
+            "arguments": {
+              "projectId": "cedar-project",
+              "tradieId": "paperbeam",
+              "milestoneId": "cedar-frame-b",
+              "scheduledDate": "2026-10-15",
+              "durationDays": 2,
+              "requiresQuote": false
+            }
+          }
+        ],
+        [
+          {
+            "tool": "list_schedules",
+            "arguments": {
+              "tradieId": "paperbeam"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"bookingsCreated\": 1,\n  \"scheduledDate\": \"2026-10-15\"\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "The booking response was lost; listing schedules shows exactly one booking [request line:4]."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "blind-retry",
+      "kind": "negative",
+      "description": "Retries the booking; the canonical overlap guard refuses the retry.",
+      "failureMode": "duplicate-write",
+      "expected": {
+        "C1": "pass",
+        "C2": "fail",
+        "C3": "fail"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "create_schedule",
+            "arguments": {
+              "projectId": "cedar-project",
+              "tradieId": "paperbeam",
+              "milestoneId": "cedar-frame-b",
+              "scheduledDate": "2026-10-15",
+              "durationDays": 2,
+              "requiresQuote": false
+            }
+          }
+        ],
+        [
+          {
+            "tool": "create_schedule",
+            "arguments": {
+              "projectId": "cedar-project",
+              "tradieId": "paperbeam",
+              "milestoneId": "cedar-frame-b",
+              "scheduledDate": "2026-10-15",
+              "durationDays": 2,
+              "requiresQuote": false
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"bookingsCreated\": 0,\n  \"scheduledDate\": \"2026-10-15\"\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Booking failed twice."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    }
+  ]
+}

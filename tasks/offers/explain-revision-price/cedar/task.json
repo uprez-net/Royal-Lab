@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "offers/explain-revision-price/cedar",
+  "definitionId": "D02",
+  "title": "Explain the client price across offer revisions",
+  "family": "offers",
+  "workType": "reconcile",
+  "instruction": "Sales wants a price history for every version quoted to the owners of the Cedar duplex and has asked two questions in their email. Work out the current revision and the price of record for each revision under our policy. Write price.json with currentRevision (number), priceOfRecordCents, computedPriceCents (the current revision's saved computed price), overrideVarianceCents (price of record minus computed), overrideReasonRecorded, revisionPriceCents (an object keyed by revision number, e.g. {\"1\": ..., \"2\": ..., \"3\": ...}, using null for a revision with no price) and printedAmountMatches. Write review.md answering sales. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Labels: Current revision, Price of record, Override variance, Revision 1 price, Revision 2 price (write unpriced where a revision has no price).",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "register",
+      "path": "documents/revision-register.csv",
+      "sha256": "c9a2e4a61048d05acbce93ecbf6a5b6f9d74f58d3329099635293be1484d6a6e",
+      "kind": "document",
+      "mediaType": "text/csv"
+    },
+    {
+      "id": "rev1",
+      "path": "documents/revision-1-build-up.md",
+      "sha256": "c40cedd2c30b4cbace1226681b23fb6030304f0c0061d450d60a9fa953932259",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "rev3",
+      "path": "documents/revision-3-build-up.md",
+      "sha256": "c4135e4dd2acaeb5a6a13aa60932d2d947b1f618396cbe0db6ab0f35b8ee5a7b",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "proposal",
+      "path": "documents/proposal-extract.md",
+      "sha256": "7fd7c05ad52f4803866264ffdd942745f54b6fc616e1b9c1a83accc9a76a3aba",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "email",
+      "path": "documents/sales-email.eml",
+      "sha256": "1c4f7f39bb6de09e4858c92b76641792a9056fd0d938d8af4eae96a29db1a435",
+      "kind": "document",
+      "mediaType": "message/rfc822"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "price.json",
+      "mediaType": "application/json",
+      "description": "Price of record facts by revision",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited explanation and reply to sales",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "4f46701a568854fdf25f9a9c2953dec4c4a93ef0e3a7dfd98805601bc72cf54d",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "1799c704f8b0cedb1d839595cf8bb174e4bc1a489b8ebbcd0232747a0940b6e6",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "c8ee6d6edffbd8a779abbd841ebb1c512d2e41a81ccebf35db1fbe987afdf7e9",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "fc8ae13e3ed8b7a5793f69306efc86c60bf3b58a9ffe7320ad08d199d8a963ff",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "3595915f9bba5ad1854ce37593dde5c7e347a2bb96f1c25d3c8838aa96d419a0",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "review-produced",
+      "description": "Price history explained; no revision changed"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

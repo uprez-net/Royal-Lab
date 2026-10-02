@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "leads/unsupported-lead-email/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "assertions": [
+    {
+      "kind": "state",
+      "collection": "portEffects",
+      "target": {},
+      "fields": {},
+      "count": 0,
+      "preservePaths": [
+        "/leads",
+        "/tasks"
+      ],
+      "criterionId": "C1"
+    }
+  ]
+}

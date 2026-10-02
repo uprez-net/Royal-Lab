@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "leads/resolve-ambiguous-lead/cedar",
+  "definitionId": "T01",
+  "title": "Book a callback for an ambiguous lead",
+  "family": "leads",
+  "workType": "operate",
+  "instruction": "Book the callback from the weekend phone message as a CALL task on the right lead, due on the day requested. Every write needs the owner to approve the exact call in this session. Write facts.json with the requested fields and report.md for the office stating what was attempted, what was committed and what remains, citing the brief as [source-id locator]. facts.json fields: leadId, dueDate (YYYY-MM-DD).",
+  "profiles": [
+    "fixed-tools"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "message",
+      "path": "documents/phone-message.md",
+      "sha256": "e2a7aac3e9e687366f6d533e7b83beaa14847af630a99faf96637a14425ac083",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "search_leads",
+      "version": "1.0.0"
+    },
+    {
+      "name": "get_lead",
+      "version": "1.0.0"
+    },
+    {
+      "name": "list_lead_tasks",
+      "version": "1.0.0"
+    },
+    {
+      "name": "create_lead_task",
+      "version": "1.0.0"
+    },
+    {
+      "name": "ask_operator",
+      "version": "1.0.0"
+    },
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "facts.json",
+      "mediaType": "application/json",
+      "description": "Lead and due date booked",
+      "required": true
+    },
+    {
+      "path": "report.md",
+      "mediaType": "text/markdown",
+      "description": "What was asked, approved and committed",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "0a7e7e08f19cd7b4c319362b9c9b4b0d5024961c859400cc49a6a7cd17ad9812",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "bee92f28032ee81b9c9f724ff368992b830b4b9476ffadc8e8721efc48f05038",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "90b70a334979cc5e16e81d30b64495964312f3c35625d7030d4101f1a012ab15",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "c439c0aeec6e15063e2a72cd8f0b38d748fb48f6cb812edb5cb99dc2d9fdf9ae",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "849bc189ab73ffe12abbab4e04bd322a7e0eae7a5e7a682cddf0bdf03aae160b",
+  "environmentPath": "grading/environment.json",
+  "environmentHash": "4a2520a420cb09e2ff347823061cd7ab7e3516c3401a43e558e49a45e1c0c234",
+  "operatorBranches": [
+    {
+      "id": "which-amelia",
+      "trigger": "clarification",
+      "response": "The owner identifies the lead by distinguishing facts.",
+      "allowedOutcomeIds": [
+        "task-booked"
+      ]
+    }
+  ],
+  "allowedOutcomes": [
+    {
+      "id": "task-booked",
+      "description": "Clarified lead; one approved CALL task"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

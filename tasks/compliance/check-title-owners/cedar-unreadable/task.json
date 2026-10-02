@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "variant",
+  "variantOf": "compliance/check-title-owners/cedar",
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "compliance/check-title-owners/cedar-unreadable",
+  "definitionId": "D12",
+  "title": "Check an illegible title search against the recorded owners",
+  "family": "compliance",
+  "workType": "analyze",
+  "instruction": "Compare the supplied title search with the owners we hold under our title search policy and say what the office should do. Write title-check.json with verdict (match, mismatch or indeterminate), matchedOwners and nextAction (fresh-title-search, obtain-readable-search or none). Write review.md with your reasoning. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Labels: Title owner check, Matched owners (names, or none).",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "title",
+      "path": "documents/title-search.md",
+      "sha256": "7e3b43232dfee0e65599f12fb8564b3bc6efe596c58046997b1446d8a96d73ee",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "owners",
+      "path": "documents/project-owners.md",
+      "sha256": "98d81f69dca87650abefe7761383cb926c1460d21eea9a40b98ec6d2d67506d3",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "title-check.json",
+      "mediaType": "application/json",
+      "description": "Title owner comparison",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Reasoning and next action",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "00533eca4cc81d000546f53729a9c39a55f9adf8d88e2150be7db5178e5aa441",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "915cfe87cafcf5d41280db9d03b908f64d94917df4159f9b421a003a019f07a7",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "d81c762364a51a8f40837145e1ce2fc8c744d965e7a66cc35a6093591193635a",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "a905e9199c507048b838849f714aaa3c9c1d50d136bf01830877424e62507049",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "82fe13df831005c2527883b90e6404f95bd78555d81c28b72ccb202fd14b7d73",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "readable-search-requested",
+      "description": "Indeterminate; readable search requested"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

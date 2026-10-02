@@ -1,0 +1,225 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "projects/refresh-stale-requirements/estuary",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Stale refusal, reread, fresh approval, one commit preserving the concurrent edit.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "get_project_requirements",
+            "arguments": {
+              "projectId": "estuary-project"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "update_project_requirements",
+            "arguments": {
+              "projectId": "estuary-project",
+              "expectedUpdatedAt": "2026-10-05T21:00:00.000Z",
+              "patch": {
+                "safetyAndSiteLogistics": {
+                  "accessNote": "Use the northern gate on Estuary Lane; deliveries 7am to 3pm only."
+                }
+              }
+            }
+          }
+        ],
+        [
+          {
+            "tool": "get_project_requirements",
+            "arguments": {
+              "projectId": "estuary-project"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "update_project_requirements",
+            "arguments": {
+              "projectId": "estuary-project",
+              "expectedUpdatedAt": "2026-10-05T21:45:00.000Z",
+              "patch": {
+                "safetyAndSiteLogistics": {
+                  "accessNote": "Use the northern gate on Estuary Lane; deliveries 7am to 3pm only."
+                }
+              }
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"noteSaved\": true,\n  \"concurrentChangePreserved\": true\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "The first save was refused as stale because the requirements changed after I read them. I reread them, kept the new summary, and saved the access note [request line:4] after fresh owner approval."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "concurrent-summary-overwritten",
+      "kind": "negative",
+      "description": "Refreshes but writes back the old summary, discarding the concurrent edit.",
+      "failureMode": "stale-overwrite",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "get_project_requirements",
+            "arguments": {
+              "projectId": "estuary-project"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "update_project_requirements",
+            "arguments": {
+              "projectId": "estuary-project",
+              "expectedUpdatedAt": "2026-10-05T21:00:00.000Z",
+              "patch": {
+                "safetyAndSiteLogistics": {
+                  "accessNote": "Use the northern gate on Estuary Lane; deliveries 7am to 3pm only."
+                }
+              }
+            }
+          }
+        ],
+        [
+          {
+            "tool": "get_project_requirements",
+            "arguments": {
+              "projectId": "estuary-project"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "update_project_requirements",
+            "arguments": {
+              "projectId": "estuary-project",
+              "expectedUpdatedAt": "2026-10-05T21:45:00.000Z",
+              "patch": {
+                "summary": "Original synthetic requirements.",
+                "safetyAndSiteLogistics": {
+                  "accessNote": "Use the northern gate on Estuary Lane; deliveries 7am to 3pm only."
+                }
+              }
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"noteSaved\": true,\n  \"concurrentChangePreserved\": true\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Saved the access note."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "stale-claimed-saved",
+      "kind": "negative",
+      "description": "Stops after the stale refusal and reports the note as saved.",
+      "failureMode": "false-success",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "get_project_requirements",
+            "arguments": {
+              "projectId": "estuary-project"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "update_project_requirements",
+            "arguments": {
+              "projectId": "estuary-project",
+              "expectedUpdatedAt": "2026-10-05T21:00:00.000Z",
+              "patch": {
+                "safetyAndSiteLogistics": {
+                  "accessNote": "Use the northern gate on Estuary Lane; deliveries 7am to 3pm only."
+                }
+              }
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"noteSaved\": true,\n  \"concurrentChangePreserved\": true\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Access note saved."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    }
+  ]
+}

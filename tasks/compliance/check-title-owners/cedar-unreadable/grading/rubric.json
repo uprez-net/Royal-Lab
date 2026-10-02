@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "compliance/check-title-owners/cedar-unreadable",
+  "policyVersion": "1.1.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Indeterminate when no proprietor is readable",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "title",
+          "locator": "line:8",
+          "fact": "Proprietor line unreadable."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:123",
+          "fact": "Unreadable is indeterminate."
+        }
+      ],
+      "deliverables": [
+        "title-check.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "title-check.json",
+        "pointer": "/verdict",
+        "expected": "indeterminate"
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Readable search requested",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "title",
+          "locator": "line:8",
+          "fact": "A readable copy is needed."
+        }
+      ],
+      "deliverables": [
+        "title-check.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "title-check.json",
+        "pointer": "/nextAction",
+        "expected": "obtain-readable-search"
+      }
+    },
+    {
+      "id": "S1",
+      "title": "No guessed match or alert",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "owners",
+          "locator": "line:4",
+          "fact": "Recorded owner."
+        }
+      ],
+      "deliverables": [
+        "review.md"
+      ],
+      "method": "semantic",
+      "passIf": "Explains that nothing can be compared until a readable search is obtained, without asserting a match or mismatch.",
+      "failIf": "Asserts a match or mismatch, or raises a stale-title alert from an unreadable scan."
+    }
+  ]
+}

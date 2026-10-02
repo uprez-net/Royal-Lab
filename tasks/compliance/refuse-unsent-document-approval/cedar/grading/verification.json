@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "compliance/refuse-unsent-document-approval/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "assertions": [
+    {
+      "kind": "state",
+      "collection": "complianceDocuments",
+      "target": {
+        "id": "cedar-survey-doc"
+      },
+      "fields": {
+        "status": "UPLOADED"
+      },
+      "count": 1,
+      "preservePaths": [
+        "/complianceDocuments",
+        "/engagements"
+      ],
+      "criterionId": "C1"
+    },
+    {
+      "kind": "state",
+      "collection": "operations",
+      "target": {
+        "status": "committed"
+      },
+      "fields": {},
+      "count": 0,
+      "preservePaths": [],
+      "criterionId": "C2"
+    },
+    {
+      "kind": "trace",
+      "ownerId": "builder-owner",
+      "sessionId": "case-session",
+      "mutationTools": [
+        "resolve_compliance_document"
+      ],
+      "allowedDiscoveryRefusals": [
+        "resolve_compliance_document"
+      ],
+      "criterionId": "C3"
+    }
+  ]
+}

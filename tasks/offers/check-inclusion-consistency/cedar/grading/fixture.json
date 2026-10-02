@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "worldId": "cedar-world",
+  "worldPath": "fixtures/worlds/cedar-world.json",
+  "worldHash": "c855ee2914134b034496b68506a03828d0562f697e9051b53ebf355475287a45",
+  "entityIds": [
+    "builder-0a4d851f8c7d",
+    "owner-a-a6aa41764e57",
+    "owner-b-7c2b8cd7cdb5",
+    "lead-a-daf57e15f8fa",
+    "offer-a-ae79134d7faf"
+  ],
+  "expectedFacts": {
+    "consistency.json#/contradictionCount": 1,
+    "consistency.json#/contradictions/0/inclusionRef": "7.3",
+    "consistency.json#/contradictions/0/exclusionRef": "E4",
+    "consistency.json#/offerModified": false
+  }
+}

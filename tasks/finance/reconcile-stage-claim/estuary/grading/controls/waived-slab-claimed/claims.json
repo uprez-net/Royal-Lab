@@ -1,0 +1,12 @@
+{
+  "dueStages": [
+    "Slab",
+    "Lockup"
+  ],
+  "dueClaimCents": 7458000,
+  "slabClaimable": true,
+  "frameClaimable": false,
+  "frameOutstandingCents": 3729000,
+  "framePaymentVerified": false,
+  "claimIssuedByReview": false
+}

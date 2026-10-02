@@ -1,0 +1,16 @@
+{
+  "contradictionCount": 2,
+  "contradictions": [
+    {
+      "inclusionRef": "7.3",
+      "exclusionRef": "E4",
+      "scope": "front yard landscaping"
+    },
+    {
+      "inclusionRef": "7.2",
+      "exclusionRef": "E6",
+      "scope": "boundary fencing"
+    }
+  ],
+  "offerModified": false
+}

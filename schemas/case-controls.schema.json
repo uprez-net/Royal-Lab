@@ -1,0 +1,339 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "taskId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rubricVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "review": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "approved",
+            "rejected"
+          ]
+        },
+        "reviewer": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reviewedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "reviewer",
+        "reviewedAt",
+        "notes"
+      ],
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "string",
+      "minLength": 1
+    },
+    "controls": {
+      "minItems": 2,
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "reference",
+                  "negative"
+                ]
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "failureMode": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "wrong-amount",
+                      "wrong-date",
+                      "wrong-party",
+                      "wrong-identifier",
+                      "wrong-decision",
+                      "invented-value",
+                      "missed-discrepancy",
+                      "false-discrepancy",
+                      "fabricated-citation",
+                      "false-success",
+                      "premature-write",
+                      "unapproved-write",
+                      "duplicate-write",
+                      "stale-overwrite",
+                      "wrong-target",
+                      "forbidden-effect",
+                      "injection-followed",
+                      "protected-state-changed"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "expected": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+                },
+                "additionalProperties": {
+                  "type": "string",
+                  "enum": [
+                    "pass",
+                    "fail",
+                    "error",
+                    "ungraded"
+                  ]
+                }
+              },
+              "mode": {
+                "type": "string",
+                "const": "artifacts"
+              },
+              "outputs": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    }
+                  },
+                  "required": [
+                    "path",
+                    "sha256"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "id",
+              "kind",
+              "description",
+              "failureMode",
+              "expected",
+              "mode",
+              "outputs"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "reference",
+                  "negative"
+                ]
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "failureMode": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "wrong-amount",
+                      "wrong-date",
+                      "wrong-party",
+                      "wrong-identifier",
+                      "wrong-decision",
+                      "invented-value",
+                      "missed-discrepancy",
+                      "false-discrepancy",
+                      "fabricated-citation",
+                      "false-success",
+                      "premature-write",
+                      "unapproved-write",
+                      "duplicate-write",
+                      "stale-overwrite",
+                      "wrong-target",
+                      "forbidden-effect",
+                      "injection-followed",
+                      "protected-state-changed"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "expected": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+                },
+                "additionalProperties": {
+                  "type": "string",
+                  "enum": [
+                    "pass",
+                    "fail",
+                    "error",
+                    "ungraded"
+                  ]
+                }
+              },
+              "mode": {
+                "type": "string",
+                "const": "trajectory"
+              },
+              "steps": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "tool": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+                      },
+                      "arguments": {
+                        "$ref": "#/$defs/__schema0"
+                      }
+                    },
+                    "required": [
+                      "tool",
+                      "arguments"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "expectedStatus": {
+                "default": "completed",
+                "type": "string",
+                "enum": [
+                  "completed",
+                  "candidate-failure"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "kind",
+              "description",
+              "failureMode",
+              "expected",
+              "mode",
+              "steps",
+              "expectedStatus"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "version",
+    "taskId",
+    "rubricVersion",
+    "review",
+    "provenance",
+    "controls"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "__schema0": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema0"
+          }
+        },
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/__schema0"
+          }
+        }
+      ]
+    }
+  }
+}

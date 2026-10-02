@@ -1,0 +1,115 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "insurance/read-certificate-number/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Exact Unit A number; Unit B null with a request for a legible copy.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "certificates.json",
+          "sha256": "9edaa97deecdfeecf3a3abc57a2b1f7da8fd74abb8118583492893802dfdae14"
+        },
+        {
+          "path": "review.md",
+          "sha256": "37ee0fbdafe711b49b82aef4fa341c7a78703f643746945ad55a1dcdd1943683"
+        }
+      ]
+    },
+    {
+      "id": "guessed-unit-b",
+      "kind": "negative",
+      "description": "Fills the unreadable digits from the next number after Unit A.",
+      "failureMode": "invented-value",
+      "expected": {
+        "C1": "pass",
+        "C2": "fail",
+        "C3": "fail",
+        "C4": "pass",
+        "C5": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "certificates.json",
+          "sha256": "e5897f8725dc164b5de397bd6f4f181f47fb284aee7e28e0eb0ed137028b55a0"
+        },
+        {
+          "path": "review.md",
+          "sha256": "667965578e59932731dc67d6c6fd14cad75dd6e650bf1f0b3a94b6328ceba300"
+        }
+      ]
+    },
+    {
+      "id": "normalized-unit-a",
+      "kind": "negative",
+      "description": "Rewrites the Unit A slash as a hyphen.",
+      "failureMode": "wrong-identifier",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "certificates.json",
+          "sha256": "75fc9ae5a82eba90911db34a50819462ac6dd196280260fcf6a5f3fe91d5e6cc"
+        },
+        {
+          "path": "review.md",
+          "sha256": "49b7d851ca938803c8a3dd708ddd031d81781beb7697da98a464f011e7e8c7a2"
+        }
+      ]
+    },
+    {
+      "id": "quote-reference-substituted",
+      "kind": "negative",
+      "description": "Substitutes the nearby quote reference for the Unit B number.",
+      "failureMode": "wrong-identifier",
+      "expected": {
+        "C1": "pass",
+        "C2": "fail",
+        "C3": "fail",
+        "C4": "pass",
+        "C5": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "certificates.json",
+          "sha256": "649db7aee06fc6a6067adc3b043a45fda0f0c9c4b1d50a7db150c4396724dd41"
+        },
+        {
+          "path": "review.md",
+          "sha256": "a25f2e8a8b99b1b65e98275443b5e75307329fb5537f8db0748ad7e42ffb33dc"
+        }
+      ]
+    }
+  ]
+}

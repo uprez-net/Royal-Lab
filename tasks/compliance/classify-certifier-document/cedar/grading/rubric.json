@@ -1,0 +1,215 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "compliance/classify-certifier-document/cedar",
+  "policyVersion": "1.1.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Fee proposal recognized",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "doc1",
+          "locator": "line:6",
+          "fact": "Offers future work for acceptance."
+        }
+      ],
+      "deliverables": [
+        "classification.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "classification.json",
+        "pointer": "/documents/doc1",
+        "expected": "FEE_PROPOSAL"
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Invoice recognized",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "doc2",
+          "locator": "line:6",
+          "fact": "Amount payable now with a due date."
+        }
+      ],
+      "deliverables": [
+        "classification.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "classification.json",
+        "pointer": "/documents/doc2",
+        "expected": "INVOICE"
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Application form is not a certificate",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "doc3",
+          "locator": "line:7",
+          "fact": "Applicant declaration and owner consent."
+        }
+      ],
+      "deliverables": [
+        "classification.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "classification.json",
+        "pointer": "/documents/doc3",
+        "expected": "CDC_FORM"
+      }
+    },
+    {
+      "id": "C4",
+      "title": "Portal notification is not a certificate",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "doc4",
+          "locator": "body:line:3",
+          "fact": "Automated notification only."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:102",
+          "fact": "A portal notification is not an issued certificate."
+        }
+      ],
+      "deliverables": [
+        "classification.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "classification.json",
+        "pointer": "/documents/doc4",
+        "expected": "UNKNOWN"
+      }
+    },
+    {
+      "id": "C5",
+      "title": "Issued CDC recognized by type",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "doc5",
+          "locator": "line:5",
+          "fact": "Determined certificate with certifier."
+        }
+      ],
+      "deliverables": [
+        "classification.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "classification.json",
+        "pointer": "/documents/doc5",
+        "expected": "COMPLYING_DEVELOPMENT_CERTIFICATE"
+      }
+    },
+    {
+      "id": "C6",
+      "title": "Headless page left UNKNOWN",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "doc6",
+          "locator": "line:1",
+          "fact": "Title block missing."
+        }
+      ],
+      "deliverables": [
+        "classification.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "classification.json",
+        "pointer": "/documents/doc6",
+        "expected": "UNKNOWN"
+      }
+    },
+    {
+      "id": "C7",
+      "title": "No issued CDC held for this site",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "doc5",
+          "locator": "line:3",
+          "fact": "The issued CDC is for Lot 41."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:105",
+          "fact": "A certificate for another lot is not evidence for this site."
+        }
+      ],
+      "deliverables": [
+        "classification.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "classification.json",
+        "pointer": "/cdcIssuedForSite",
+        "expected": false
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Grounded next action without clearing the gate",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "doc4",
+          "locator": "body:line:2",
+          "fact": "The certificate may be on the portal."
+        },
+        {
+          "sourceId": "doc5",
+          "locator": "line:3",
+          "fact": "Lot mismatch."
+        }
+      ],
+      "deliverables": [
+        "review.md"
+      ],
+      "method": "semantic",
+      "passIf": "Recommends obtaining the referenced certificate and checking it against Lot 14 and querying the Lot 41 determination, without treating the CDC requirement as satisfied.",
+      "failIf": "Treats the CDC requirement as satisfied, or ignores the lot mismatch."
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "projects/extract-contract-particulars/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Contract precedence applied; owners from the Owner block only.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "particulars.json",
+          "sha256": "4a7cd83bbec8ba1f3f78094d12bfc7568364ce11012379f4f75a3e47a0cc0175"
+        },
+        {
+          "path": "review.md",
+          "sha256": "b4e3b738c7c52299d862c7206ca07aebd9a2984831c737e0366bc5ead7abb9f2"
+        }
+      ]
+    },
+    {
+      "id": "builder-as-owner",
+      "kind": "negative",
+      "description": "Adds the builder from the Builder block and footer as an owner.",
+      "failureMode": "wrong-party",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "particulars.json",
+          "sha256": "c98620c21f07a861d1fa05c93bb3aeb5eca23c8831c0dc313a2073f78320b5bd"
+        },
+        {
+          "path": "review.md",
+          "sha256": "b4e3b738c7c52299d862c7206ca07aebd9a2984831c737e0366bc5ead7abb9f2"
+        }
+      ]
+    },
+    {
+      "id": "tender-precedence",
+      "kind": "negative",
+      "description": "Takes the lot and build period from the tender and handover email.",
+      "failureMode": "wrong-identifier",
+      "expected": {
+        "C1": "pass",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "fail",
+        "C6": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "particulars.json",
+          "sha256": "7ba559b8c57ad5295c43fc37b780ab2ed6232a77e43557465c1bde752f6a8768"
+        },
+        {
+          "path": "review.md",
+          "sha256": "23d6cee29c4e6a061222c8ab91adf4e257428aa56202ab2f54084d010a505c42"
+        }
+      ]
+    },
+    {
+      "id": "second-owner-dropped",
+      "kind": "negative",
+      "description": "Uses the enquiry contact from the tender and drops Owner 2.",
+      "failureMode": "wrong-party",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "particulars.json",
+          "sha256": "cbf4e8accf085d259dd00b9ca1ac41914d55c6cd2a5ae1fe3db353a3034e35ed"
+        },
+        {
+          "path": "review.md",
+          "sha256": "d785d6a49978fdcfc673bf741fed7543190825280f0435ede9cff397a877d77f"
+        }
+      ]
+    },
+    {
+      "id": "wrong-contract-date",
+      "kind": "negative",
+      "description": "Uses the handover email date as the contract date.",
+      "failureMode": "wrong-date",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "fail",
+        "C5": "pass",
+        "C6": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "particulars.json",
+          "sha256": "0f6ffed1996057230a73c9fb11450c99e808a9947461a7bbb82cc66739df90c7"
+        },
+        {
+          "path": "review.md",
+          "sha256": "ae8dd2303ae964517d469f79a2ff008787d3e90e805914e60bef1787a4c00940"
+        }
+      ]
+    }
+  ]
+}

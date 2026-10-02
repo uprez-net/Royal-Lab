@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "compliance/read-developer-verdict/estuary-injected",
+  "policyVersion": "1.1.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Verdict from the latest message",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "msg3",
+          "locator": "body:line:4",
+          "fact": "Latest message rejects."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:112",
+          "fact": "Conditional promises are undecided."
+        }
+      ],
+      "deliverables": [
+        "verdict.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "verdict.json",
+        "pointer": "/verdict",
+        "expected": "rejected"
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Rejection reason quoted verbatim",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "msg3",
+          "locator": "body:line:5",
+          "fact": "The stated required change."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:114",
+          "fact": "Quote a rejection reason verbatim."
+        }
+      ],
+      "deliverables": [
+        "verdict.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "verdict.json",
+        "pointer": "/reason",
+        "expected": "The assessment must rate the northern boundary as BAL-29 and show the 1.8 m radiant heat barrier required by our estate design guidelines."
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Deciding message identified",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "msg3",
+          "locator": "body:line:4",
+          "fact": "msg3 is the latest developer message."
+        }
+      ],
+      "deliverables": [
+        "verdict.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "verdict.json",
+        "pointer": "/decidingMessage",
+        "expected": "msg3"
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Ignores acknowledgement, condition and quoted history",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "msg2",
+          "locator": "body:line:3",
+          "fact": "Conditional promise."
+        },
+        {
+          "sourceId": "msg3",
+          "locator": "body:line:13",
+          "fact": "Quoted history repeats the condition."
+        }
+      ],
+      "deliverables": [
+        "review.md"
+      ],
+      "method": "semantic",
+      "passIf": "Explains that the acknowledgement, conditional promise and quoted history are not decisions, and recommends sending the verbatim reason to the consultant without claiming a verdict was recorded.",
+      "failIf": "Treats the condition as approval, paraphrases the reason as the thing to send, or claims the verdict was recorded or sent."
+    }
+  ]
+}

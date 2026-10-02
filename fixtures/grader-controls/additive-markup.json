@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Synthetic $500,000 / 10% overhead + 10% fee / 10% GST control requested by issue #12. Additive markups on one base, never compounded.",
+  "input": {
+    "directTotal": 500000,
+    "totalAreaSqm": 250,
+    "settings": {
+      "royalConstructionOverheadPct": 0.1,
+      "royalConstructionFeePct": 0.1,
+      "gstRate": 0.1,
+      "hbcfTotalContractValue": 0,
+      "hbcfRate": 0,
+      "homeWarrantyHbcfFixed": 0,
+      "impactFeeFixed": 0,
+      "loadingChargePercentage": 0
+    }
+  },
+  "expectedCents": {
+    "costBaseCents": 50000000,
+    "overheadCents": 5000000,
+    "feeCents": 5000000,
+    "gstCents": 6000000,
+    "contractCents": 66000000
+  },
+  "wrongCompoundedContractCents": 66550000
+}

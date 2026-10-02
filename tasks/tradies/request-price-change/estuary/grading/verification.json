@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "tradies/request-price-change/estuary",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "assertions": [
+    {
+      "kind": "state",
+      "collection": "approvals",
+      "target": {
+        "tradieId": "tide-plumbing"
+      },
+      "fields": {
+        "status": "PENDING",
+        "requestedBy": "builder-owner",
+        "/updationData/newHourlyRate": 110
+      },
+      "count": 1,
+      "operationMinimum": 1,
+      "operationTarget": {
+        "status": "committed"
+      },
+      "preservePaths": [],
+      "criterionId": "C1"
+    },
+    {
+      "kind": "state",
+      "collection": "approvals",
+      "target": {
+        "/updationData/newPriceUnit": "FIXED"
+      },
+      "fields": {},
+      "count": 0,
+      "preservePaths": [],
+      "criterionId": "C1"
+    },
+    {
+      "kind": "state",
+      "collection": "tradies",
+      "target": {},
+      "fields": {},
+      "count": 1,
+      "preservePaths": [
+        "/tradies"
+      ],
+      "criterionId": "C2"
+    },
+    {
+      "kind": "trace",
+      "ownerId": "builder-owner",
+      "sessionId": "case-session",
+      "mutationTools": [
+        "request_price_change"
+      ],
+      "criterionId": "C3"
+    }
+  ]
+}

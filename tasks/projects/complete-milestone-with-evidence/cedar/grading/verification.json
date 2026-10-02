@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "projects/complete-milestone-with-evidence/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "assertions": [
+    {
+      "kind": "state",
+      "collection": "milestones",
+      "target": {
+        "id": "cedar-frame"
+      },
+      "fields": {
+        "status": "DONE",
+        "startDate": "2026-09-14T00:00:00.000Z",
+        "actualDate": "2026-10-02T00:00:00.000Z",
+        "spend": "128400.00"
+      },
+      "count": 1,
+      "operationMinimum": 1,
+      "operationTarget": {
+        "status": "committed"
+      },
+      "preservePaths": [],
+      "criterionId": "C1"
+    },
+    {
+      "kind": "state",
+      "collection": "projects",
+      "target": {
+        "id": "cedar-project"
+      },
+      "fields": {
+        "spent": "226400.00"
+      },
+      "count": 1,
+      "preservePaths": [],
+      "criterionId": "C2"
+    },
+    {
+      "kind": "state",
+      "collection": "invoices",
+      "target": {
+        "projectStage": "Frame"
+      },
+      "fields": {},
+      "count": 0,
+      "preservePaths": [],
+      "criterionId": "C3"
+    },
+    {
+      "kind": "state",
+      "collection": "invoices",
+      "target": {},
+      "fields": {},
+      "count": 1,
+      "preservePaths": [],
+      "criterionId": "C3"
+    },
+    {
+      "kind": "trace",
+      "ownerId": "builder-owner",
+      "sessionId": "case-session",
+      "mutationTools": [
+        "update_milestone"
+      ],
+      "requiredQuestion": true,
+      "questionBeforeMutation": true,
+      "criterionId": "C4"
+    }
+  ]
+}

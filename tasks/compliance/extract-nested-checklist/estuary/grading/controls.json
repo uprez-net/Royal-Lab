@@ -1,0 +1,123 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "compliance/extract-nested-checklist/estuary",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Eight items with requirements, references and groups attached correctly.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "checklist.json",
+          "sha256": "311aacf3afebf29e9d0f88c3d78ff02853f701d894c98b22a54052ade3393174"
+        },
+        {
+          "path": "review.md",
+          "sha256": "e482aeac077632799616b59acefb1a1e685d44ed1b5a023829e207f440219282"
+        }
+      ]
+    },
+    {
+      "id": "phantom-requirements",
+      "kind": "negative",
+      "description": "Turns the restarted 1-3 amendments under 4a into new checklist items.",
+      "failureMode": "invented-value",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "fail",
+        "C4": "fail",
+        "C5": "fail",
+        "C6": "pass",
+        "C7": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "checklist.json",
+          "sha256": "21ff71f7d93786ffcda14ba7754110ae57c507df0890bd0a2ee3962a06627283"
+        },
+        {
+          "path": "review.md",
+          "sha256": "92544219379909bfffc8f952901406fa6f833d64dc2073d32e3284b7e019cacb"
+        }
+      ]
+    },
+    {
+      "id": "heading-as-item",
+      "kind": "negative",
+      "description": "Keeps the Design documentation heading as an item of its own.",
+      "failureMode": "invented-value",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "fail",
+        "C4": "fail",
+        "C5": "fail",
+        "C6": "fail",
+        "C7": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "checklist.json",
+          "sha256": "3152d94f910b3b6397d484cf01f4d99d9ab30ce2a10c92fa47bc51337bba4a3a"
+        },
+        {
+          "path": "review.md",
+          "sha256": "d72d945d4f070305c8d503f969ab7fdaa315c61726936888819ead29163cdeea"
+        }
+      ]
+    },
+    {
+      "id": "status-in-label",
+      "kind": "negative",
+      "description": "Copies the Received status cell into the item 5 label.",
+      "failureMode": "wrong-identifier",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "fail",
+        "C6": "pass",
+        "C7": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "checklist.json",
+          "sha256": "249975aea461dfbfd2bb74e67a165a939dfdf338a535f8dad6eae8bbd89ba399"
+        },
+        {
+          "path": "review.md",
+          "sha256": "e482aeac077632799616b59acefb1a1e685d44ed1b5a023829e207f440219282"
+        }
+      ]
+    }
+  ]
+}

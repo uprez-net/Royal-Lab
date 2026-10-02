@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "projects/refresh-stale-requirements/estuary",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "session": {
+    "sessionId": "case-session",
+    "ownerId": "builder-owner"
+  },
+  "seed": {
+    "schemaVersion": "1.0.0",
+    "rows": [
+      {
+        "table": "User",
+        "values": {
+          "id": "builder-owner",
+          "name": "Morgan Inventa",
+          "email": "builder-owner@staff.example",
+          "phone": "fictional-phone-builder-owner",
+          "role": "ADMIN",
+          "clerkId": "synthetic-clerk-builder-owner",
+          "updatedAt": "2026-10-05T21:00:00Z"
+        }
+      },
+      {
+        "table": "Lead",
+        "values": {
+          "id": 201,
+          "name": "Coastal staged build",
+          "type": [],
+          "stage": "QUALIFIED",
+          "assignedId": "builder-owner",
+          "updatedAt": "2026-10-05T21:00:00Z",
+          "email": "director@coastal-trust.example",
+          "notes": "Invented Coastal Trust staged build at 72 Fictional Estuary Lane."
+        }
+      },
+      {
+        "table": "Customer",
+        "values": {
+          "id": "coastal-customer",
+          "name": "Invented Coastal Trust",
+          "email": "coastal-customer@client.example",
+          "updatedAt": "2026-10-05T21:00:00Z"
+        }
+      },
+      {
+        "table": "Project",
+        "values": {
+          "id": "estuary-project",
+          "leadId": 201,
+          "name": "Estuary staged build",
+          "description": "Estuary staged build (fictional)",
+          "customerId": "coastal-customer",
+          "location": "Estuary staged build site (fictional)",
+          "totalBudget": 480480,
+          "startDate": "2026-08-03T00:00:00Z",
+          "estimatedEndDate": "2027-07-30T00:00:00Z",
+          "requirements": {
+            "$json": {
+              "version": 1,
+              "projectName": "Estuary staged build",
+              "projectType": "synthetic-case",
+              "summary": "Original synthetic requirements.",
+              "sourceDocuments": {},
+              "validations": [],
+              "conflicts": [],
+              "automationTriggers": {
+                "orderReminders": false,
+                "rainDelayCalculations": false,
+                "noticeCountdowns": false
+              },
+              "legalAdministration": {},
+              "commercialsAndClaims": {},
+              "subStructureAndGround": {},
+              "inclusionsAndExclusions": {},
+              "utilityInfrastructure": {},
+              "wetAreaCompliance": {},
+              "safetyAndSiteLogistics": {}
+            }
+          },
+          "status": "ACTIVE",
+          "updatedAt": "2026-10-05T21:00:00Z"
+        }
+      }
+    ]
+  },
+  "operator": {
+    "schemaVersion": "1.0.0",
+    "version": "1.0.0",
+    "review": {
+      "status": "draft",
+      "reviewer": null,
+      "reviewedAt": null,
+      "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+    },
+    "maxUnexpectedQuestions": 1,
+    "branches": [
+      {
+        "id": "approve-requirements",
+        "type": "approval",
+        "allWords": [
+          "approve",
+          "update",
+          "project",
+          "requirements"
+        ],
+        "anyWords": [],
+        "response": "Approved for the exact displayed call and arguments.",
+        "decision": "approved",
+        "responderId": "builder-owner",
+        "maxUses": 2
+      },
+      {
+        "id": "refresh-stale",
+        "type": "stale-version",
+        "allWords": [
+          "stale",
+          "version",
+          "requirements"
+        ],
+        "anyWords": [],
+        "response": "Reread the requirements, keep the other change, and request fresh approval for the new arguments.",
+        "decision": null,
+        "responderId": "builder-owner",
+        "maxUses": 1
+      }
+    ]
+  },
+  "bridge": {
+    "schemaVersion": "1.0.0",
+    "mode": "benchmark",
+    "ports": {
+      "schemaVersion": "1.0.0",
+      "email": "unavailable",
+      "envelope": "unavailable"
+    },
+    "timeoutMs": 20000
+  },
+  "controller": {
+    "staleVersion": {
+      "injectionId": "office-summary-edit",
+      "projectId": "estuary-project",
+      "clock": "2026-10-05T21:45:00Z",
+      "patch": {
+        "summary": "Owner meeting 6 Oct: gate code changes weekly - check with the site lead."
+      }
+    }
+  }
+}

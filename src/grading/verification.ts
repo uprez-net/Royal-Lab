@@ -46,6 +46,10 @@ export const VerificationPlanSchema = z.strictObject({
         forbiddenTools: z.array(Id).default([]),
         mutationTools: z.array(Id).default([]),
         requiredQuestion: z.boolean().default(false),
+        // Additive options (default off): a focused question must precede every
+        // mutation attempt, and/or an exact approval decision must be recorded.
+        questionBeforeMutation: z.boolean().default(false),
+        requiredDecision: z.enum(['approved', 'cancelled']).optional(),
         allowedDiscoveryRefusals: z.array(Id).default([]),
         ownerId: Id.optional(),
         sessionId: Id.optional(),

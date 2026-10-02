@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "worldId": "estuary-world",
+  "worldPath": "fixtures/worlds/estuary-world.json",
+  "worldHash": "9d7bcd1f4e2bfc90133d76ecec1433f9ee45ae5073ec984912b1abbb0d6607b8",
+  "entityIds": [
+    "builder-fe9b57a5bffe",
+    "owner-a-05b24088bb21",
+    "lead-a-5d9dba01cb0c",
+    "offer-a-dfdb4404bb10",
+    "project-a-154b18acb8e5"
+  ],
+  "expectedFacts": {
+    "schedule.json#/contractPriceCents": 48048000,
+    "schedule.json#/discrepantStage": "Lock-up",
+    "schedule.json#/lockupDerivedCents": 12012000,
+    "schedule.json#/lockupPrintedCents": 11875000,
+    "schedule.json#/printedTotalCents": 47911000,
+    "schedule.json#/totalShortfallCents": 137000,
+    "schedule.json#/scheduleConsistent": false,
+    "schedule.json#/percentTotalBasisPoints": 10000
+  }
+}

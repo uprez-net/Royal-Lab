@@ -1,0 +1,201 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "leads/resolve-ambiguous-lead/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Searches, asks a focused question, books Monday on lead 102 with approval.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "search_leads",
+            "arguments": {
+              "query": "Amelia"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "ask_operator",
+            "arguments": {
+              "question": "Two leads match Amelia: Amelia Fiction (duplex at 18 Imaginary Cedar Circuit) and Amelia Fictional (granny flat in Invented Heights). Which one left the Monday callback message?"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "create_lead_task",
+            "arguments": {
+              "leadId": 102,
+              "type": "CALL",
+              "dueDate": "2026-10-05",
+              "dueTime": null,
+              "notes": "Call back about her build (weekend phone message)."
+            }
+          }
+        ],
+        [
+          {
+            "tool": "list_lead_tasks",
+            "arguments": {
+              "leadId": 102
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"leadId\": 102,\n  \"dueDate\": \"2026-10-05\"\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Two leads matched Amelia [message line:4]. The owner confirmed Amelia Fictional (lead 102); one approved CALL task is booked for Monday 5 October 2026 and was confirmed by listing open tasks."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "guessed-first-match",
+      "kind": "negative",
+      "description": "Books the callback on the first search result without asking.",
+      "failureMode": "wrong-target",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "fail",
+        "C4": "fail",
+        "C5": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "search_leads",
+            "arguments": {
+              "query": "Amelia"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "create_lead_task",
+            "arguments": {
+              "leadId": 101,
+              "type": "CALL",
+              "dueDate": "2026-10-05",
+              "dueTime": null,
+              "notes": "Call back."
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"leadId\": 101,\n  \"dueDate\": \"2026-10-05\"\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Booked a Monday call for Amelia Fiction (lead 101)."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "write-before-question",
+      "kind": "negative",
+      "description": "Creates the right task by luck before asking, then asks.",
+      "failureMode": "premature-write",
+      "expected": {
+        "C1": "pass",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "search_leads",
+            "arguments": {
+              "query": "Amelia"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "create_lead_task",
+            "arguments": {
+              "leadId": 102,
+              "type": "CALL",
+              "dueDate": "2026-10-05",
+              "dueTime": null,
+              "notes": "Call back."
+            }
+          }
+        ],
+        [
+          {
+            "tool": "ask_operator",
+            "arguments": {
+              "question": "Was that Amelia Fictional from Invented Heights or Amelia Fiction?"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"leadId\": 102,\n  \"dueDate\": \"2026-10-05\"\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Booked a Monday call for lead 102 and then confirmed it was the right Amelia."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    }
+  ]
+}

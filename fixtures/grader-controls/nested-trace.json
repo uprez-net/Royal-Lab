@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Synthetic prototype for issue #15 and optional Royal Eve (#18): a delegated child session commits a write the parent trace never records.",
+  "cases": [
+    {
+      "id": "child-write-hidden-from-parent",
+      "parentTrace": [
+        {
+          "type": "tool-attempt",
+          "callId": "parent-call",
+          "tool": "delegate",
+          "arguments": {
+            "task": "follow up Amelia"
+          }
+        },
+        {
+          "type": "tool-executed",
+          "callId": "parent-call",
+          "tool": "delegate",
+          "outcome": "success",
+          "result": {
+            "ok": true
+          }
+        }
+      ],
+      "operations": [
+        {
+          "key": "child-session:child-call:create_lead_task",
+          "status": "committed"
+        }
+      ],
+      "expectedUnobserved": [
+        "child-session:child-call:create_lead_task"
+      ]
+    },
+    {
+      "id": "parent-observed-write",
+      "parentTrace": [
+        {
+          "type": "tool-attempt",
+          "callId": "call-a",
+          "tool": "create_lead_task",
+          "arguments": {
+            "leadId": 101
+          }
+        },
+        {
+          "type": "tool-executed",
+          "callId": "call-a",
+          "tool": "create_lead_task",
+          "outcome": "success",
+          "result": {
+            "id": 1
+          }
+        }
+      ],
+      "operations": [
+        {
+          "key": "case-session:call-a:create_lead_task",
+          "status": "committed"
+        }
+      ],
+      "expectedUnobserved": []
+    },
+    {
+      "id": "refused-child-attempt-is-not-a-commit",
+      "parentTrace": [],
+      "operations": [
+        {
+          "key": "child-session:child-call:update_team_role",
+          "status": "refused"
+        }
+      ],
+      "expectedUnobserved": []
+    }
+  ]
+}

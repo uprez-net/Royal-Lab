@@ -31,6 +31,7 @@ import {
   HumanAdjudicationSchema,
   JudgeCalibrationSchema,
 } from '#contracts/judge';
+import { CaseSeedSchema, CaseEnvironmentSchema, CaseControlsSchema } from '#contracts/authoring';
 
 export async function exportSchemas(root: string) {
   const directory = path.join(root, 'schemas');
@@ -64,6 +65,9 @@ export async function exportSchemas(root: string) {
     'semantic-receipt': SemanticReceiptSchema,
     'human-adjudication': HumanAdjudicationSchema,
     'judge-calibration': JudgeCalibrationSchema,
+    'case-seed': CaseSeedSchema,
+    'case-environment': CaseEnvironmentSchema,
+    'case-controls': CaseControlsSchema,
   };
   for (const [name, schema] of Object.entries(schemas)) {
     await writeFile(

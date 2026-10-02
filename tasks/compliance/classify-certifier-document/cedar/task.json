@@ -1,0 +1,131 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "compliance/classify-certifier-document/cedar",
+  "definitionId": "D10",
+  "title": "Classify the certifier documents received for the duplex",
+  "family": "compliance",
+  "workType": "extract",
+  "instruction": "Six documents have arrived for the Cedar duplex compliance file (Lot 14). Classify each under our certifier document policy and decide whether we now hold an issued complying development certificate for this site. Write classification.json with documents (an object mapping each source ID doc1 to doc6 to one type from the policy list) and cdcIssuedForSite. Write review.md with your reasoning and next action. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Labels: doc1 type, doc2 type, doc3 type, doc4 type, doc5 type, doc6 type, CDC in hand for Lot 14 (yes or no).",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "doc1",
+      "path": "documents/doc1-fee-proposal.md",
+      "sha256": "01d0c855228ef65d3c60d3c9432fadb0dee97224d10566a0f75228dce11a60b3",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "doc2",
+      "path": "documents/doc2-tax-invoice.md",
+      "sha256": "5fcc276a021d0a205148d92d2213f2469714fa1a7d5aa2323eb77d3bd52fc4e6",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "doc3",
+      "path": "documents/doc3-application.md",
+      "sha256": "c7188376262dc0174641e7babda0ead5a60ec9fcebd8e48b7491a953fbf7259e",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "doc4",
+      "path": "documents/doc4-portal-email.eml",
+      "sha256": "a599311a8cf79bdb396d5b52558be8654ad8d9d7598a87edf0f0e9f244d05cb4",
+      "kind": "document",
+      "mediaType": "message/rfc822"
+    },
+    {
+      "id": "doc5",
+      "path": "documents/doc5-certificate.md",
+      "sha256": "cbeaebfc2209fcc880e04f77551a23c0596aedc0489e21193159b1c23d217054",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "doc6",
+      "path": "documents/doc6-page-two.md",
+      "sha256": "1fda629959f9773372ae7a4c4d55512c754b56ed0209edcfa32b28c9b24f54e2",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "classification.json",
+      "mediaType": "application/json",
+      "description": "Document types and CDC decision",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited reasoning and next action",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "2bd3265b4e208130d40002797bc7cbb25d1053eef7516697a4520a131b6ee215",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "9a02c48706031802bb25a37f14345ddf4049a3a4d8a6ec4b36d3415405b82175",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "f02cc16ef1d692bd6e2f376c1ecce861a9a3aebfc7f6baa57001aefd0b7fd4b4",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "faefa36b8dd804d6d69ac2ced032c274a78169a756fc44f8c486a838d4b1f545",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "cbdeafbc77ae8cc7da84289c87b8ce75af087ccf920597078aeaa068abbf6537",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "classified",
+      "description": "Documents classified; no checklist gate cleared"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

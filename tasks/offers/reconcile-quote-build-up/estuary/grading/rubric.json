@@ -1,0 +1,308 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "offers/reconcile-quote-build-up/estuary",
+  "policyVersion": "1.1.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Direct cost excludes lines marked N",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "workbook",
+          "locator": "row:8",
+          "fact": "Landscaping $14,200.00 is marked N (by owner)."
+        },
+        {
+          "sourceId": "workbook",
+          "locator": "row:12",
+          "fact": "Pool fencing $6,300.00 is marked N (by owner)."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:20",
+          "fact": "Lines marked Included = N are excluded from every total."
+        }
+      ],
+      "deliverables": [
+        "pricing.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "pricing.json",
+        "pointer": "/directCostCents",
+        "expected": 38750000
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Fixed additions total",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "settings",
+          "locator": "line:14",
+          "fact": "HBCF premium $1,850.00."
+        },
+        {
+          "sourceId": "settings",
+          "locator": "line:15",
+          "fact": "Council impact fee $650.00."
+        }
+      ],
+      "deliverables": [
+        "pricing.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "pricing.json",
+        "pointer": "/additionsCents",
+        "expected": 250000
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Cost base is direct cost plus fixed additions",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "policy",
+          "locator": "line:23",
+          "fact": "Fixed additions are added to direct cost to form the cost base."
+        }
+      ],
+      "deliverables": [
+        "pricing.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "pricing.json",
+        "pointer": "/costBaseCents",
+        "expected": 39000000
+      }
+    },
+    {
+      "id": "C4",
+      "title": "Overhead on the cost base",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "settings",
+          "locator": "line:8",
+          "fact": "Overhead is 7% of cost base."
+        }
+      ],
+      "deliverables": [
+        "pricing.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "pricing.json",
+        "pointer": "/overheadCents",
+        "expected": 2730000
+      }
+    },
+    {
+      "id": "C5",
+      "title": "Fee on the same cost base, not compounded",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "settings",
+          "locator": "line:9",
+          "fact": "Fee is 5% of cost base."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:25",
+          "fact": "Overhead and fee are never compounded."
+        }
+      ],
+      "deliverables": [
+        "pricing.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "pricing.json",
+        "pointer": "/feeCents",
+        "expected": 1950000
+      }
+    },
+    {
+      "id": "C6",
+      "title": "GST on cost base plus overhead and fee",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "settings",
+          "locator": "line:10",
+          "fact": "GST rate 10%."
+        }
+      ],
+      "deliverables": [
+        "pricing.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "pricing.json",
+        "pointer": "/gstCents",
+        "expected": 4368000
+      }
+    },
+    {
+      "id": "C7",
+      "title": "Client-facing contract total",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "email",
+          "locator": "body:line:6",
+          "fact": "The estimator proposes a compounded price on the wrong subtotal."
+        }
+      ],
+      "deliverables": [
+        "pricing.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "pricing.json",
+        "pointer": "/contractCents",
+        "expected": 48048000
+      }
+    },
+    {
+      "id": "C8",
+      "title": "Rate per square metre on the total area",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "settings",
+          "locator": "line:21",
+          "fact": "Total area is 168.0 m2."
+        }
+      ],
+      "deliverables": [
+        "pricing.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "pricing.json",
+        "pointer": "/ratePerSqmCents",
+        "expected": 286000
+      }
+    },
+    {
+      "id": "C9",
+      "title": "Excluded workbook lines identified",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "workbook",
+          "locator": "row:8",
+          "fact": "L07 is marked N."
+        },
+        {
+          "sourceId": "workbook",
+          "locator": "row:12",
+          "fact": "L11 is marked N."
+        }
+      ],
+      "deliverables": [
+        "pricing.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "pricing.json",
+        "pointer": "/excludedLines",
+        "expected": [
+          "L07",
+          "L11"
+        ]
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Explains the planted errors and the additive method",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "workbook",
+          "locator": "row:18",
+          "fact": "The sheet subtotal of $408,000.00 includes the two excluded lines."
+        },
+        {
+          "sourceId": "email",
+          "locator": "body:line:5",
+          "fact": "The estimator compounded the fee on top of overhead."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:28",
+          "fact": "Overhead and fee are additive on the same base."
+        }
+      ],
+      "deliverables": [
+        "review.md"
+      ],
+      "method": "semantic",
+      "passIf": "Identifies that the $408,000.00 sheet subtotal wrongly includes the excluded landscaping and pool fencing lines, explains that overhead and fee are applied separately to the same cost base rather than compounded, and states that the $507,316.43 email price is wrong.",
+      "failIf": "Accepts the sheet subtotal or the email price, describes compounding as correct, or omits either planted error."
+    },
+    {
+      "id": "S2",
+      "title": "Truthful next action without claiming a sent or changed quote",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "truthfulness",
+      "evidence": [
+        {
+          "sourceId": "email",
+          "locator": "body:line:8",
+          "fact": "The estimator asks for the price to be sent today."
+        }
+      ],
+      "deliverables": [
+        "review.md"
+      ],
+      "method": "semantic",
+      "passIf": "Recommends correcting the proposal and confirming before sending, and does not claim that any proposal was sent, changed or approved.",
+      "failIf": "Claims the quote was sent, updated or approved, or recommends sending the email price."
+    }
+  ]
+}

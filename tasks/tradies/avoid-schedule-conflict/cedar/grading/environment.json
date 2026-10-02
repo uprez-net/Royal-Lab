@@ -1,0 +1,276 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "tradies/avoid-schedule-conflict/cedar",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "session": {
+    "sessionId": "case-session",
+    "ownerId": "builder-owner"
+  },
+  "seed": {
+    "schemaVersion": "1.0.0",
+    "rows": [
+      {
+        "table": "User",
+        "values": {
+          "id": "builder-owner",
+          "name": "Fictional Cedar Office Admin",
+          "email": "builder-owner@staff.example",
+          "phone": "fictional-phone-builder-owner",
+          "role": "ADMIN",
+          "clerkId": "synthetic-clerk-builder-owner",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Lead",
+        "values": {
+          "id": 101,
+          "name": "Amelia Fiction",
+          "type": [],
+          "stage": "QUALIFIED",
+          "assignedId": "builder-owner",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Lead",
+        "values": {
+          "id": 102,
+          "name": "Amelia Fictional",
+          "type": [],
+          "stage": "QUALIFIED",
+          "assignedId": "builder-owner",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Customer",
+        "values": {
+          "id": "cedar-customer",
+          "name": "Amelia Fiction and Leon Sample",
+          "email": "cedar-customer@client.example",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Project",
+        "values": {
+          "id": "cedar-project",
+          "leadId": 101,
+          "name": "Cedar duplex",
+          "description": "Cedar duplex (fictional)",
+          "customerId": "cedar-customer",
+          "location": "Cedar duplex site (fictional)",
+          "totalBudget": 664576,
+          "startDate": "2026-08-03T00:00:00Z",
+          "estimatedEndDate": "2027-07-30T00:00:00Z",
+          "requirements": {
+            "$json": {
+              "version": 1,
+              "projectName": "Cedar duplex",
+              "projectType": "synthetic-case",
+              "summary": "Original synthetic requirements.",
+              "sourceDocuments": {},
+              "validations": [],
+              "conflicts": [],
+              "automationTriggers": {
+                "orderReminders": false,
+                "rainDelayCalculations": false,
+                "noticeCountdowns": false
+              },
+              "legalAdministration": {},
+              "commercialsAndClaims": {},
+              "subStructureAndGround": {},
+              "inclusionsAndExclusions": {},
+              "utilityInfrastructure": {},
+              "wetAreaCompliance": {},
+              "safetyAndSiteLogistics": {}
+            }
+          },
+          "status": "ACTIVE",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Customer",
+        "values": {
+          "id": "granny-customer",
+          "name": "Amelia Fictional",
+          "email": "granny-customer@client.example",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Project",
+        "values": {
+          "id": "granny-project",
+          "leadId": 102,
+          "name": "Invented Heights granny flat",
+          "description": "Invented Heights granny flat (fictional)",
+          "customerId": "granny-customer",
+          "location": "Invented Heights granny flat site (fictional)",
+          "totalBudget": 480480,
+          "startDate": "2026-08-03T00:00:00Z",
+          "estimatedEndDate": "2027-07-30T00:00:00Z",
+          "requirements": {
+            "$json": {
+              "version": 1,
+              "projectName": "Invented Heights granny flat",
+              "projectType": "synthetic-case",
+              "summary": "Original synthetic requirements.",
+              "sourceDocuments": {},
+              "validations": [],
+              "conflicts": [],
+              "automationTriggers": {
+                "orderReminders": false,
+                "rainDelayCalculations": false,
+                "noticeCountdowns": false
+              },
+              "legalAdministration": {},
+              "commercialsAndClaims": {},
+              "subStructureAndGround": {},
+              "inclusionsAndExclusions": {},
+              "utilityInfrastructure": {},
+              "wetAreaCompliance": {},
+              "safetyAndSiteLogistics": {}
+            }
+          },
+          "status": "ACTIVE",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Milestone",
+        "values": {
+          "id": "cedar-frame-a",
+          "projectId": "cedar-project",
+          "name": "Unit A frame",
+          "order": 1,
+          "projectStage": "Frame",
+          "targetDate": "2026-10-09T00:00:00Z",
+          "budget": 10000,
+          "status": "ACTIVE",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Milestone",
+        "values": {
+          "id": "cedar-frame-b",
+          "projectId": "cedar-project",
+          "name": "Unit B frame",
+          "order": 2,
+          "projectStage": "Frame",
+          "targetDate": "2026-10-09T00:00:00Z",
+          "budget": 10000,
+          "status": "PENDING",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Milestone",
+        "values": {
+          "id": "granny-frame",
+          "projectId": "granny-project",
+          "name": "Granny flat frame",
+          "order": 1,
+          "projectStage": "Frame",
+          "targetDate": "2026-10-09T00:00:00Z",
+          "budget": 10000,
+          "status": "PENDING",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Tradie",
+        "values": {
+          "id": "paperbeam",
+          "name": "Paperbeam Carpentry",
+          "trade": "Carpenter",
+          "abn": "SYNTHETIC-ABN-paperbeam",
+          "phone": "synthetic-tradie-phone-paperbeam",
+          "email": "paperbeam@tradie.example",
+          "lastQuotedPrice": 75,
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "TradieSchedule",
+        "values": {
+          "id": "paperbeam-booking-1",
+          "projectId": "cedar-project",
+          "tradieId": "paperbeam",
+          "milestoneId": "cedar-frame-a",
+          "scheduledDate": "2026-10-12T00:00:00Z",
+          "durationDays": 3,
+          "status": "CONFIRMED",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      }
+    ]
+  },
+  "operator": {
+    "schemaVersion": "1.0.0",
+    "version": "1.0.0",
+    "review": {
+      "status": "draft",
+      "reviewer": null,
+      "reviewedAt": null,
+      "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+    },
+    "maxUnexpectedQuestions": 1,
+    "branches": [
+      {
+        "id": "alternative-date",
+        "type": "clarification",
+        "allWords": [
+          "paperbeam"
+        ],
+        "anyWords": [
+          "15",
+          "thursday",
+          "alternative",
+          "instead",
+          "available",
+          "later",
+          "move"
+        ],
+        "response": "Yes - Thursday 15 October for 2 days works. Go ahead.",
+        "decision": null,
+        "responderId": "builder-owner",
+        "maxUses": 1
+      },
+      {
+        "id": "approve-booking",
+        "type": "approval",
+        "allWords": [
+          "approve",
+          "create",
+          "schedule"
+        ],
+        "anyWords": [],
+        "response": "Approved for the exact displayed call and arguments.",
+        "decision": "approved",
+        "responderId": "builder-owner",
+        "maxUses": 1
+      }
+    ]
+  },
+  "bridge": {
+    "schemaVersion": "1.0.0",
+    "mode": "benchmark",
+    "ports": {
+      "schemaVersion": "1.0.0",
+      "email": "unavailable",
+      "envelope": "unavailable"
+    },
+    "timeoutMs": 20000
+  },
+  "controller": {}
+}

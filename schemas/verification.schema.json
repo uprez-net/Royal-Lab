@@ -291,6 +291,17 @@
                 "default": false,
                 "type": "boolean"
               },
+              "questionBeforeMutation": {
+                "default": false,
+                "type": "boolean"
+              },
+              "requiredDecision": {
+                "type": "string",
+                "enum": [
+                  "approved",
+                  "cancelled"
+                ]
+              },
               "allowedDiscoveryRefusals": {
                 "default": [],
                 "type": "array",
@@ -314,6 +325,7 @@
               "forbiddenTools",
               "mutationTools",
               "requiredQuestion",
+              "questionBeforeMutation",
               "allowedDiscoveryRefusals"
             ],
             "additionalProperties": false

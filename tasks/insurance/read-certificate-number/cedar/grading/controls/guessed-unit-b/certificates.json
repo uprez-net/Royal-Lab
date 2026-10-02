@@ -1,0 +1,14 @@
+{
+  "unitA": {
+    "certificateNumber": "HBCF-26-0416-17/A",
+    "legible": true
+  },
+  "unitB": {
+    "certificateNumber": "HBCF-26-0417-17/B",
+    "legible": true
+  },
+  "followUp": {
+    "document": "unitB",
+    "requestFrom": "broker"
+  }
+}

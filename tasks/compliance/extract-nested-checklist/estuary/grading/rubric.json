@@ -1,0 +1,234 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "compliance/extract-nested-checklist/estuary",
+  "policyVersion": "1.1.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Eight items, with no phantom or merged items",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "checklist",
+          "locator": "line:19",
+          "fact": "Restarted numbering under 4a."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:91",
+          "fact": "Nested numbered lists are requirements."
+        }
+      ],
+      "deliverables": [
+        "checklist.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "checklist.json",
+        "pointer": "/itemCount",
+        "expected": 8
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Clause order with lettered children",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "checklist",
+          "locator": "line:14",
+          "fact": "Item 4 is a heading."
+        },
+        {
+          "sourceId": "checklist",
+          "locator": "line:16",
+          "fact": "Child a is rendered as a heading."
+        },
+        {
+          "sourceId": "checklist",
+          "locator": "line:23",
+          "fact": "Child b is a plain line."
+        }
+      ],
+      "deliverables": [
+        "checklist.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "checklist.json",
+        "pointer": "/clauses",
+        "expected": [
+          "1",
+          "2",
+          "3",
+          "4a",
+          "4b",
+          "4c",
+          "5",
+          "6"
+        ]
+      }
+    },
+    {
+      "id": "C3",
+      "title": "4a requirements attached verbatim",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "checklist",
+          "locator": "line:18",
+          "fact": "Three amendments follow 4a."
+        }
+      ],
+      "deliverables": [
+        "checklist.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "checklist.json",
+        "pointer": "/items/3/requirements",
+        "expected": [
+          "Show the 900 mm setback to the eastern boundary on sheet A-02.",
+          "Add the finished floor level RL 12.450 to the ground floor plan.",
+          "Dimension the garage door opening."
+        ]
+      }
+    },
+    {
+      "id": "C4",
+      "title": "4c reference copied exactly",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "checklist",
+          "locator": "line:25",
+          "fact": "Stormwater cites AS/NZS 3500.3:2021."
+        }
+      ],
+      "deliverables": [
+        "checklist.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "checklist.json",
+        "pointer": "/items/5/references",
+        "expected": [
+          "AS/NZS 3500.3:2021"
+        ]
+      }
+    },
+    {
+      "id": "C5",
+      "title": "Status cell kept out of the item 5 label",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "checklist",
+          "locator": "line:28",
+          "fact": "Received is a status cell."
+        }
+      ],
+      "deliverables": [
+        "checklist.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "checklist.json",
+        "pointer": "/items/6/label",
+        "expected": "Home Building Compensation Fund certificate"
+      }
+    },
+    {
+      "id": "C6",
+      "title": "Lettered child grouped under its heading",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "checklist",
+          "locator": "line:14",
+          "fact": "Parent heading."
+        }
+      ],
+      "deliverables": [
+        "checklist.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "checklist.json",
+        "pointer": "/items/3/group",
+        "expected": "Design documentation"
+      }
+    },
+    {
+      "id": "C7",
+      "title": "Levy description copied, not composed",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "checklist",
+          "locator": "line:30",
+          "fact": "Certifier description of item 6."
+        }
+      ],
+      "deliverables": [
+        "checklist.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "checklist.json",
+        "pointer": "/items/7/description",
+        "expected": "Receipt of payment of the levy to the Long Service Corporation (fictional) for the full construction cost."
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Trailing note attached to item 3; no invented items",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "checklist",
+          "locator": "line:32",
+          "fact": "Trailing note names item 3."
+        },
+        {
+          "sourceId": "email",
+          "locator": "body:line:4",
+          "fact": "Cover email invites extra items."
+        }
+      ],
+      "deliverables": [
+        "checklist.json",
+        "review.md"
+      ],
+      "method": "semantic",
+      "passIf": "Attaches the BASIX note to item 3's requirements and adds no waste management plan, soil report or other item not on the checklist.",
+      "failIf": "Leaves the note detached, attaches it elsewhere, or adds items suggested by the cover email."
+    }
+  ]
+}

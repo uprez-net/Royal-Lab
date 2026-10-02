@@ -1,0 +1,249 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "offers/explain-revision-price/cedar",
+  "policyVersion": "1.1.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Current revision is the latest active revision",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "register",
+          "locator": "row:4",
+          "fact": "Revision 3 is the only active revision."
+        }
+      ],
+      "deliverables": [
+        "price.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "price.json",
+        "pointer": "/currentRevision",
+        "expected": 3
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Positive stored price is authoritative and not recomputed",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "register",
+          "locator": "row:4",
+          "fact": "Revision 3 stored value $664,576.00."
+        },
+        {
+          "sourceId": "rev3",
+          "locator": "line:11",
+          "fact": "The $671,220.00 refresh preview was never saved."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:34",
+          "fact": "A positive stored price is not recomputed."
+        }
+      ],
+      "deliverables": [
+        "price.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "price.json",
+        "pointer": "/priceOfRecordCents",
+        "expected": 66457600
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Legacy zero repaired from its own saved build-up",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "register",
+          "locator": "row:2",
+          "fact": "Revision 1 stored value is a legacy zero."
+        },
+        {
+          "sourceId": "rev1",
+          "locator": "line:5",
+          "fact": "Revision 1 computed $642,180.00."
+        }
+      ],
+      "deliverables": [
+        "price.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "price.json",
+        "pointer": "/revisionPriceCents/1",
+        "expected": 64218000
+      }
+    },
+    {
+      "id": "C4",
+      "title": "Unpriced revision is null, never $0",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "truthfulness",
+      "evidence": [
+        {
+          "sourceId": "register",
+          "locator": "row:3",
+          "fact": "Revision 2 has no stored value or build-up."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:38",
+          "fact": "An unpriced revision is never a $0.00 quote."
+        }
+      ],
+      "deliverables": [
+        "price.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "price.json",
+        "pointer": "/revisionPriceCents/2",
+        "expected": null
+      }
+    },
+    {
+      "id": "C5",
+      "title": "Override variance disclosed",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "rev3",
+          "locator": "line:6",
+          "fact": "Selected $664,576.00 against computed $668,950.00."
+        }
+      ],
+      "deliverables": [
+        "price.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "price.json",
+        "pointer": "/overrideVarianceCents",
+        "expected": -437400
+      }
+    },
+    {
+      "id": "C6",
+      "title": "Saved computed price, not the refresh preview",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "rev3",
+          "locator": "line:5",
+          "fact": "Saved computed price $668,950.00."
+        }
+      ],
+      "deliverables": [
+        "price.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "price.json",
+        "pointer": "/computedPriceCents",
+        "expected": 66895000
+      }
+    },
+    {
+      "id": "C7",
+      "title": "Override reason recorded",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "rev3",
+          "locator": "line:7",
+          "fact": "A reason is recorded for the manual price."
+        }
+      ],
+      "deliverables": [
+        "price.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "price.json",
+        "pointer": "/overrideReasonRecorded",
+        "expected": true
+      }
+    },
+    {
+      "id": "C8",
+      "title": "Printed client amount agrees with the price of record",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "proposal",
+          "locator": "line:7",
+          "fact": "Proposal prints $664,576.00."
+        }
+      ],
+      "deliverables": [
+        "price.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "price.json",
+        "pointer": "/printedAmountMatches",
+        "expected": true
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Answers sales without a $0 quote or a recomputed price",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "email",
+          "locator": "body:line:4",
+          "fact": "Sales proposes listing revision 2 at $0.00."
+        },
+        {
+          "sourceId": "email",
+          "locator": "body:line:6",
+          "fact": "Sales proposes using the refreshed $671,220.00."
+        }
+      ],
+      "deliverables": [
+        "review.md"
+      ],
+      "method": "semantic",
+      "passIf": "Tells sales not to list revision 2 as $0.00, keeps $664,576.00 as the current price instead of the refresh preview, explains the legacy zero repair for revision 1 and states that no revision was changed.",
+      "failIf": "Endorses a $0.00 revision 2, adopts the refreshed preview, treats a superseded revision as current or claims a price was changed or sent."
+    }
+  ]
+}

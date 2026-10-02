@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "compliance/check-title-owners/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Mismatch with a fresh search requested.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "title-check.json",
+          "sha256": "34a529eb0044af9a0be5da3764af25f26285ce9bcbf78ea6c25ceca92866364d"
+        },
+        {
+          "path": "review.md",
+          "sha256": "cb3504d00c658a5704c1e92ff61659685f332e544f3b04753df41825173d10d0"
+        }
+      ]
+    },
+    {
+      "id": "caveat-match",
+      "kind": "negative",
+      "description": "Matches the purchaser caveat as if she were a proprietor.",
+      "failureMode": "wrong-party",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "title-check.json",
+          "sha256": "32014fd4bc725839f5d27966cc4f3e517c7be1207c744b3b51487354817f84a8"
+        },
+        {
+          "path": "review.md",
+          "sha256": "5b884a884cbe69b7c33428908a2376343739aa877536c794178ca79caa3866e2"
+        }
+      ]
+    },
+    {
+      "id": "false-indeterminate",
+      "kind": "negative",
+      "description": "Calls a readable search indeterminate instead of a mismatch.",
+      "failureMode": "wrong-decision",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "title-check.json",
+          "sha256": "4d9f0b1b7c06b6f9557602f344bffd5671011c74eca141c9f68f59a15c0cd9b1"
+        },
+        {
+          "path": "review.md",
+          "sha256": "73b1bd15bca98b13f29583615160be82f64a4b40024f7b8901f28cee9725fb7c"
+        }
+      ]
+    },
+    {
+      "id": "wrong-search-date",
+      "kind": "negative",
+      "description": "Uses the surveyor email date as the search date.",
+      "failureMode": "wrong-date",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "fail",
+        "C4": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "title-check.json",
+          "sha256": "bb9acaf9bafe2c265d5d0b65cc66c3324157b998a7fb9aaee758f07971d7e6cb"
+        },
+        {
+          "path": "review.md",
+          "sha256": "f459023f61bbcc557a617000d0aacbd327f0785af4768e53fc2a5c4418f3abe1"
+        }
+      ]
+    }
+  ]
+}

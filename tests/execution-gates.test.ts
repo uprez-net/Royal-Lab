@@ -14,39 +14,36 @@ test('paid execution requires opt-in and a full-suite review gate retains every 
   await mkdir('tmp', { recursive: true });
   const root = await mkdtemp(path.resolve('tmp/run-gates-'));
   temporary.push(root);
-  for (const [relative, content] of generatedFiles()) {
+  for (const [relative, content] of await generatedFiles()) {
     await mkdir(path.dirname(path.join(root, relative)), { recursive: true });
     await writeFile(path.join(root, relative), content);
   }
   await mkdir(path.join(root, 'profiles'));
-  await writeFile(
-    path.join(root, 'profiles/documents.json'),
-    await readFile('profiles/documents.json'),
-  );
+  for (const profile of ['documents', 'fixed-tools', 'royal-eve'])
+    await writeFile(
+      path.join(root, `profiles/${profile}.json`),
+      await readFile(`profiles/${profile}.json`),
+    );
+  // The D01 specimen now sits in the labelled development variant suite.
+  const suite = 'suites/development-variants.json';
+  const selected = JSON.parse(await readFile(path.join(root, suite), 'utf8')).cases.length;
   const task = 'offers/reconcile-quote-build-up/cedar';
   const config = ConfigSchema.parse({});
   await assert.rejects(
-    executeDocumentTrial(
-      root,
-      task,
-      'suites/development.json',
-      config,
-      'grading/verification.json',
-      false,
-    ),
+    executeDocumentTrial(root, task, suite, config, 'grading/verification.json', false),
     /PAID_EXECUTION_DISABLED/,
   );
   const result = await executeDocumentTrial(
     root,
     task,
-    'suites/development.json',
+    suite,
     config,
     'grading/verification.json',
     true,
   );
   assert.equal(result.status, 'blocked-input');
-  assert.equal(result.preflight!.cases.length, 2);
+  assert.equal(result.preflight!.cases.length, selected);
   assert.ok(result.preflight!.cases.every((item) => item.reason?.includes('Human review')));
   const saved = JSON.parse(await readFile(path.join(result.directory, 'preflight.json'), 'utf8'));
-  assert.equal(saved.cases.length, 2);
+  assert.equal(saved.cases.length, selected);
 });

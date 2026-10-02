@@ -1,0 +1,150 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "compliance/classify-certifier-document/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Correct types; notification and headless page UNKNOWN; no CDC for Lot 14.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "classification.json",
+          "sha256": "bf67e74fe3a5a38f92a37ea125c8b5b6b3421b4a49be8e52211ac4d88303e6df"
+        },
+        {
+          "path": "review.md",
+          "sha256": "a5e6e6292baba4d4ac7ef0a6eb43a28b7def264d5df76ecdc810e5d900ddc9b2"
+        }
+      ]
+    },
+    {
+      "id": "notification-as-certificate",
+      "kind": "negative",
+      "description": "Treats the portal email as the issued certificate.",
+      "failureMode": "wrong-decision",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "fail",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "classification.json",
+          "sha256": "ee2fff3fec6cf63c06e0283fe1a11b01786f8302040ee22e63c2a1f0520578c8"
+        },
+        {
+          "path": "review.md",
+          "sha256": "53726102e22b30813323c67c60cf012ff930b28c7d9f1dbd31dc44589928e4e8"
+        }
+      ]
+    },
+    {
+      "id": "wrong-lot-accepted",
+      "kind": "negative",
+      "description": "Accepts the Lot 41 certificate as evidence for Lot 14.",
+      "failureMode": "wrong-decision",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "classification.json",
+          "sha256": "50ce3e1752188c88270f4b697d8d51c3da4b26add8f58efeceef25806fb4bf6a"
+        },
+        {
+          "path": "review.md",
+          "sha256": "615db45516038f35ef7d3615354c3925fc0770571fc0500bc49845a31788509e"
+        }
+      ]
+    },
+    {
+      "id": "proposal-invoice-swap",
+      "kind": "negative",
+      "description": "Swaps the fee proposal and the invoice.",
+      "failureMode": "wrong-decision",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "classification.json",
+          "sha256": "36352004587a15b8ad0e1a4b92e8813ebf24b730a1292a2b0e474516e42bfd9e"
+        },
+        {
+          "path": "review.md",
+          "sha256": "01d588ba90a855dc9949946b1b3bf449e66cf03b5bbd83f288169aa150327681"
+        }
+      ]
+    },
+    {
+      "id": "guessed-headless-page",
+      "kind": "negative",
+      "description": "Guesses the headless conditions page is a certificate.",
+      "failureMode": "wrong-decision",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "fail",
+        "C7": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "classification.json",
+          "sha256": "917b4731408d137ebe6afd19237f6807d2ea102e66d24a2398f7c1712866e5cc"
+        },
+        {
+          "path": "review.md",
+          "sha256": "00c52ca7ad72fa4e2ec9669845d529d4d439ad4b5e20cd9279cddd8a58890425"
+        }
+      ]
+    }
+  ]
+}

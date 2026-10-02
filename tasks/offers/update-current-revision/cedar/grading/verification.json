@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "offers/update-current-revision/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "assertions": [
+    {
+      "kind": "state",
+      "collection": "offers",
+      "target": {
+        "id": "cedar-offer-r3"
+      },
+      "fields": {
+        "/workspaceState/draft/headline": "Cedar duplex - revised for the owners budget",
+        "stateVersion": 5
+      },
+      "count": 1,
+      "operationMinimum": 1,
+      "operationTarget": {
+        "status": "committed"
+      },
+      "preservePaths": [],
+      "criterionId": "C1"
+    },
+    {
+      "kind": "state",
+      "collection": "offers",
+      "target": {
+        "id": "cedar-offer-r2"
+      },
+      "fields": {
+        "stateVersion": 1,
+        "offerStatus": "SUPERSEDED"
+      },
+      "count": 1,
+      "preservePaths": [
+        "/offers/0",
+        "/offers/1/workspaceState/draft/introText",
+        "/offers/1/workspaceState/draft/termsSummary",
+        "/offers/1/workspaceState/costLines",
+        "/offers/1/workspaceState/selectedPriceCents",
+        "/offers/1/totalAmount"
+      ],
+      "criterionId": "C2"
+    },
+    {
+      "kind": "trace",
+      "ownerId": "builder-owner",
+      "sessionId": "case-session",
+      "mutationTools": [
+        "update_offer_details"
+      ],
+      "criterionId": "C3"
+    }
+  ]
+}

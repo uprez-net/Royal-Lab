@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "insurance/read-certificate-number/cedar-number-not-printed",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Null number and a request for the certificate.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "certificate.json",
+          "sha256": "e0651e1ef8c2025812cecc24d23be5dc1c4983cc2fc9ac75cdc770d9ddbaf51d"
+        },
+        {
+          "path": "review.md",
+          "sha256": "f55110d540e124d06c84f55833f2eda1c1dbc0c09ca415b9f4457a3600c5f79d"
+        }
+      ]
+    },
+    {
+      "id": "policy-reference-substituted",
+      "kind": "negative",
+      "description": "Substitutes the broker policy reference for the certificate number.",
+      "failureMode": "wrong-identifier",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "certificate.json",
+          "sha256": "cdb310739e95e7aae2543f22032676d70a016a68083d0087636b85593dd847d8"
+        },
+        {
+          "path": "review.md",
+          "sha256": "d24cdcbe0439f6189c6604cc0167bf9b0f863e1c742cf28ed65793cec6fdc5ca"
+        }
+      ]
+    }
+  ]
+}

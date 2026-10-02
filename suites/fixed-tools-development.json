@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "fixed-tools-development",
+  "version": "2.0.0",
+  "split": "development",
+  "profile": "fixed-tools",
+  "cases": [
+    "leads/resolve-ambiguous-lead/cedar",
+    "leads/create-approved-follow-up/cedar",
+    "offers/update-current-revision/cedar",
+    "projects/complete-milestone-with-evidence/cedar",
+    "compliance/refuse-unsent-document-approval/cedar",
+    "tradies/avoid-schedule-conflict/cedar"
+  ],
+  "description": "Draft development core fixed-tools cases backed by seeded canonical state. Not reviewed or execution-ready."
+}

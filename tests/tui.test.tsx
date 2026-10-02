@@ -6,6 +6,7 @@ import { stripVTControlCharacters } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import { PassThrough, Writable } from 'node:stream';
 import { Workbench, cleanTerminalText } from '#tui';
+import { discover } from '#tasks/discover';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 
@@ -63,18 +64,20 @@ test('keyboard navigation keeps loaded cases, details and every check result acc
     }
     assert.ok(frame.trimEnd().split('\n').length <= 24, frame);
   };
+  // Expectations follow the discovered library so authored cases can grow.
+  const library = (await discover(root)).map(({ task }) => task);
+  const row = (index: number) =>
+    `› ${library[index]!.definitionId} ${library[index]!.title.slice(0, 12)}`;
   try {
-    await waitFor(() => /\b4\s*│/.test(frame));
+    await waitFor(() => new RegExp(`\\b${library.length}\\s*│`).test(frame));
     stdin.write('\t');
     await waitFor(() => frame.includes('Case library'));
-    stdin.write('j');
-    await waitFor(() => frame.includes('› D14'));
-    stdin.write('j');
-    await waitFor(() => frame.includes('› D15'));
-    stdin.write('j');
-    await waitFor(() => frame.includes('› D01'));
+    for (const index of [1, 2, 3]) {
+      stdin.write('j');
+      await waitFor(() => frame.includes(row(index)));
+    }
     stdin.write('\r');
-    await waitFor(() => frame.includes('offers/reconcile-quote-build-up/cedar'));
+    await waitFor(() => frame.includes(library[3]!.id));
     stdin.write('\u001b');
     await waitFor(() => frame.includes('Case library'));
     stdin.write('\t');
@@ -85,7 +88,7 @@ test('keyboard navigation keeps loaded cases, details and every check result acc
       stdin.write('j');
       await new Promise((resolve) => setTimeout(resolve, 35));
     }
-    await waitFor(() => frame.includes('analytics/summarize-cash-flow/estuary'));
+    await waitFor(() => frame.includes('READY') && !frame.includes('PASS  development-variants'));
     stdin.write('\t');
     await waitFor(() => frame.includes('Check fixtures') && !frame.includes('PASS  development'));
     stdin.write('\r');

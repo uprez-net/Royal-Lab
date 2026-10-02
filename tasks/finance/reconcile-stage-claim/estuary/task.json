@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "finance/reconcile-stage-claim/estuary",
+  "definitionId": "D08",
+  "title": "Work out which progress claims are due on the extension",
+  "family": "finance",
+  "workType": "reconcile",
+  "instruction": "The site manager has asked for claims to be raised on the Estuary extension and for confirmation of a payment. Using the milestone export, payment schedule and invoice register, decide under our policy which stage claims are due and for how much. Write claims.json with dueStages (array of stage names), dueClaimCents, slabClaimable, frameClaimable, frameOutstandingCents, framePaymentVerified and claimIssuedByReview. Write review.md answering the site manager. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Labels: Stages due, Claim amount due, Slab claimable (yes or no), Frame claimable (yes or no), Frame payment confirmation (yes or no), New claim issued by this review (yes or no).",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "estuary-world",
+  "clock": {
+    "instant": "2026-10-05T22:00:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "milestones",
+      "path": "documents/milestone-export.json",
+      "sha256": "a4cafd1d11e342b4cb3ad8c2bdc10a471a73fabf9df8d05b43d94c7b1065604a",
+      "kind": "document",
+      "mediaType": "application/json"
+    },
+    {
+      "id": "schedule",
+      "path": "documents/payment-schedule.md",
+      "sha256": "e72c55a11d9f49a9986d0b64d650b031a11ff194d3f36ad18c04ae107e5a139d",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "invoices",
+      "path": "documents/invoice-register.csv",
+      "sha256": "44df368e6a4b33360e269efc3eca879254067f0bbd8e5ecaa30752afeed7b526",
+      "kind": "document",
+      "mediaType": "text/csv"
+    },
+    {
+      "id": "email",
+      "path": "documents/site-email.eml",
+      "sha256": "ec9641a02864983498191c2a2339accbc64fcb11ab9e03ecd6811e75d163ce26",
+      "kind": "document",
+      "mediaType": "message/rfc822"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "claims.json",
+      "mediaType": "application/json",
+      "description": "Claimability facts",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited claim decision and reply",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "345ae33fd9af138dc93124d848b91c0dd308fd310e7184a28bf6f12c8bb2cf60",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "41435eee0fe57ee15584bc4621533c58dd8679593b9b6ddda17e0a4450b91e0a",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "19f28a6dff56b4a115610a4cad090d2682dc04df1ca66ad35907bac438784367",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "bd5bdf8c44616a33c42efb0befbc5bb0f4b97c0818a8c1747010a5220b204e55",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "842478fe710bd0830333d0d63bdc953678f8a0ac66a3783c31dcb8dd06ea94dd",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "review-produced",
+      "description": "Due claim identified; nothing raised, sent or verified"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

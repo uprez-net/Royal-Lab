@@ -1,0 +1,120 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "leads/resolve-ambiguous-lead/cedar",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "session": {
+    "sessionId": "case-session",
+    "ownerId": "builder-owner"
+  },
+  "seed": {
+    "schemaVersion": "1.0.0",
+    "rows": [
+      {
+        "table": "User",
+        "values": {
+          "id": "builder-owner",
+          "name": "Fictional Cedar Office Admin",
+          "email": "builder-owner@staff.example",
+          "phone": "fictional-phone-builder-owner",
+          "role": "ADMIN",
+          "clerkId": "synthetic-clerk-builder-owner",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Lead",
+        "values": {
+          "id": 101,
+          "name": "Amelia Fiction",
+          "type": [],
+          "stage": "QUALIFIED",
+          "assignedId": "builder-owner",
+          "updatedAt": "2026-10-03T20:00:00Z",
+          "email": "amelia@owners-cedar.example",
+          "location": "Synthetic Township",
+          "notes": "Duplex knockdown-rebuild at 18 Imaginary Cedar Circuit. Contract signed 21 Sep."
+        }
+      },
+      {
+        "table": "Lead",
+        "values": {
+          "id": 102,
+          "name": "Amelia Fictional",
+          "type": [],
+          "stage": "NEW",
+          "assignedId": "builder-owner",
+          "updatedAt": "2026-10-03T20:00:00Z",
+          "email": "a.fictional@mail-cedar.example",
+          "location": "Invented Heights",
+          "notes": "Granny flat enquiry for a rear yard in Invented Heights."
+        }
+      }
+    ]
+  },
+  "operator": {
+    "schemaVersion": "1.0.0",
+    "version": "1.0.0",
+    "review": {
+      "status": "draft",
+      "reviewer": null,
+      "reviewedAt": null,
+      "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+    },
+    "maxUnexpectedQuestions": 1,
+    "branches": [
+      {
+        "id": "which-amelia",
+        "type": "clarification",
+        "allWords": [
+          "amelia"
+        ],
+        "anyWords": [
+          "fiction",
+          "fictional",
+          "duplex",
+          "granny",
+          "flat",
+          "heights",
+          "township",
+          "circuit"
+        ],
+        "response": "It is Amelia Fictional, lead 102 - the granny flat enquiry in Invented Heights.",
+        "decision": null,
+        "responderId": "builder-owner",
+        "maxUses": 1
+      },
+      {
+        "id": "approve-task",
+        "type": "approval",
+        "allWords": [
+          "approve",
+          "create",
+          "lead",
+          "task"
+        ],
+        "anyWords": [],
+        "response": "Approved for the exact displayed call and arguments.",
+        "decision": "approved",
+        "responderId": "builder-owner",
+        "maxUses": 2
+      }
+    ]
+  },
+  "bridge": {
+    "schemaVersion": "1.0.0",
+    "mode": "benchmark",
+    "ports": {
+      "schemaVersion": "1.0.0",
+      "email": "unavailable",
+      "envelope": "unavailable"
+    },
+    "timeoutMs": 20000
+  },
+  "controller": {}
+}

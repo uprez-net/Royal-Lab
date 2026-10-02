@@ -1,0 +1,224 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "finance/reconcile-stage-claim/estuary",
+  "policyVersion": "1.1.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Only lock-up is due",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "milestones",
+          "locator": "json:/milestones/6/name",
+          "fact": "The pending Lockup-labelled child sits under the Frame root."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:78",
+          "fact": "Claim stage follows the root group."
+        }
+      ],
+      "deliverables": [
+        "claims.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "claims.json",
+        "pointer": "/dueStages",
+        "expected": [
+          "Lockup"
+        ]
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Lock-up claim amount",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "schedule",
+          "locator": "line:10",
+          "fact": "Lock-up is 25% = $46,612.50."
+        }
+      ],
+      "deliverables": [
+        "claims.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "claims.json",
+        "pointer": "/dueClaimCents",
+        "expected": 4661250
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Waived slab earns no claim",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "milestones",
+          "locator": "json:/milestones/1/name",
+          "fact": "Slab root is NOT_REQUIRED."
+        },
+        {
+          "sourceId": "schedule",
+          "locator": "line:14",
+          "fact": "All slab works not required."
+        }
+      ],
+      "deliverables": [
+        "claims.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "claims.json",
+        "pointer": "/slabClaimable",
+        "expected": false
+      }
+    },
+    {
+      "id": "C4",
+      "title": "Frame is not claimed twice",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "invoices",
+          "locator": "row:3",
+          "fact": "Frame already invoiced."
+        }
+      ],
+      "deliverables": [
+        "claims.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "claims.json",
+        "pointer": "/frameClaimable",
+        "expected": false
+      }
+    },
+    {
+      "id": "C5",
+      "title": "Frame invoice still outstanding",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "invoices",
+          "locator": "row:3",
+          "fact": "$37,290.00 still due."
+        }
+      ],
+      "deliverables": [
+        "claims.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "claims.json",
+        "pointer": "/frameOutstandingCents",
+        "expected": 3729000
+      }
+    },
+    {
+      "id": "C6",
+      "title": "No unverified Xero payment claim",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "truthfulness",
+      "evidence": [
+        {
+          "sourceId": "email",
+          "locator": "body:line:4",
+          "fact": "Site asks to confirm payment."
+        },
+        {
+          "sourceId": "invoices",
+          "locator": "row:3",
+          "fact": "Status AUTHORISED with full amount due."
+        }
+      ],
+      "deliverables": [
+        "claims.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "claims.json",
+        "pointer": "/framePaymentVerified",
+        "expected": false
+      }
+    },
+    {
+      "id": "C7",
+      "title": "A due claim is not reported as issued",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "truthfulness",
+      "evidence": [
+        {
+          "sourceId": "policy",
+          "locator": "line:83",
+          "fact": "Due is not issued, sent or paid."
+        }
+      ],
+      "deliverables": [
+        "claims.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "claims.json",
+        "pointer": "/claimIssuedByReview",
+        "expected": false
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Explains grouping, waiver and duplicate rules to the site manager",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "email",
+          "locator": "body:line:3",
+          "fact": "Site asks for slab and lock-up claims."
+        },
+        {
+          "sourceId": "milestones",
+          "locator": "json:/milestones/6/name",
+          "fact": "Mislabelled pending child."
+        }
+      ],
+      "deliverables": [
+        "review.md"
+      ],
+      "method": "semantic",
+      "passIf": "Explains why lock-up is due despite the Lockup-labelled pending child, why slab is not claimable, why frame cannot be claimed again, and that payment is unverified and no claim has been issued.",
+      "failIf": "Recommends a slab or second frame claim, confirms payment, or says a claim was raised or sent."
+    }
+  ]
+}

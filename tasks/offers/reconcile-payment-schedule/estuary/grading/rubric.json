@@ -1,0 +1,230 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "offers/reconcile-payment-schedule/estuary",
+  "policyVersion": "1.1.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Contract price of record",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "offer",
+          "locator": "line:3",
+          "fact": "Revision 2 stored price $480,480.00 is of record."
+        }
+      ],
+      "deliverables": [
+        "schedule.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "schedule.json",
+        "pointer": "/contractPriceCents",
+        "expected": 48048000
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Discrepant stage identified",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "schedule",
+          "locator": "line:11",
+          "fact": "Lock-up prints $118,750.00."
+        }
+      ],
+      "deliverables": [
+        "schedule.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "schedule.json",
+        "pointer": "/discrepantStage",
+        "expected": "Lock-up"
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Lock-up amount derived from the price of record",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "policy",
+          "locator": "line:44",
+          "fact": "Stage amount = price x percentage."
+        }
+      ],
+      "deliverables": [
+        "schedule.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "schedule.json",
+        "pointer": "/lockupDerivedCents",
+        "expected": 12012000
+      }
+    },
+    {
+      "id": "C4",
+      "title": "Printed lock-up amount transcribed",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "superseded",
+          "locator": "line:10",
+          "fact": "$118,750.00 is 25% of the superseded $475,000.00."
+        }
+      ],
+      "deliverables": [
+        "schedule.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "schedule.json",
+        "pointer": "/lockupPrintedCents",
+        "expected": 11875000
+      }
+    },
+    {
+      "id": "C5",
+      "title": "Printed total",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "schedule",
+          "locator": "line:14",
+          "fact": "Printed total $479,110.00."
+        }
+      ],
+      "deliverables": [
+        "schedule.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "schedule.json",
+        "pointer": "/printedTotalCents",
+        "expected": 47911000
+      }
+    },
+    {
+      "id": "C6",
+      "title": "Shortfall against the contract price",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "schedule",
+          "locator": "line:14",
+          "fact": "Printed total is $1,370.00 short."
+        }
+      ],
+      "deliverables": [
+        "schedule.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "schedule.json",
+        "pointer": "/totalShortfallCents",
+        "expected": 137000
+      }
+    },
+    {
+      "id": "C7",
+      "title": "Schedule flagged as inconsistent",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "truthfulness",
+      "evidence": [
+        {
+          "sourceId": "policy",
+          "locator": "line:47",
+          "fact": "Every discrepancy must be flagged."
+        }
+      ],
+      "deliverables": [
+        "schedule.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "schedule.json",
+        "pointer": "/scheduleConsistent",
+        "expected": false
+      }
+    },
+    {
+      "id": "C8",
+      "title": "Percentages total 100%",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "schedule",
+          "locator": "line:14",
+          "fact": "Percentages total 100%."
+        }
+      ],
+      "deliverables": [
+        "schedule.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "schedule.json",
+        "pointer": "/percentTotalBasisPoints",
+        "expected": 10000
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Flags without rebalancing or inventing a schedule",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "email",
+          "locator": "body:line:4",
+          "fact": "Admin asks to raise the deposit to 10%."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:48",
+          "fact": "Never rebalance or invent a replacement schedule."
+        }
+      ],
+      "deliverables": [
+        "review.md"
+      ],
+      "method": "semantic",
+      "passIf": "Traces the lock-up error to the superseded revision 1 price, declines to raise the deposit or rebalance percentages, recommends correcting the document before it is sent and does not claim it was sent.",
+      "failIf": "Recommends or performs a rebalanced schedule, accepts the printed schedule, invents new stages or claims the schedule was sent."
+    }
+  ]
+}

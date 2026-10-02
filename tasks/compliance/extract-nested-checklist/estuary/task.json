@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "compliance/extract-nested-checklist/estuary",
+  "definitionId": "D09",
+  "title": "Transcribe the certifier's nested document checklist",
+  "family": "compliance",
+  "workType": "extract",
+  "instruction": "The certifier has sent their document checklist for the Estuary staged build (Lot 7). Transcribe it into tracked items under our checklist policy so the office knows exactly what to supply. Write checklist.json with itemCount, clauses (array in document order), items (each {clause, label, group, description, requirements, references}; requirements are each attached condition as written without its list number or bullet; use null and [] where the certifier wrote nothing) and notes (closing notes that apply to the whole checklist). Write review.md explaining any structure you resolved. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Labels: Checklist items, Clause order (comma-separated).",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "estuary-world",
+  "clock": {
+    "instant": "2026-10-05T22:00:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "checklist",
+      "path": "documents/certifier-checklist.md",
+      "sha256": "a476a7cbaa437163ab7261f40c146b6cd1ca728305ea5d0d9d0b2d8071323e8a",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "email",
+      "path": "documents/checklist-cover-email.eml",
+      "sha256": "e3716683e6ca7fdd93d78fbdf244e99a630e0fe3d9ac2aa07d41febc514273eb",
+      "kind": "document",
+      "mediaType": "message/rfc822"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "checklist.json",
+      "mediaType": "application/json",
+      "description": "Transcribed checklist items",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited structure review",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "b9990c63279f7366a5ba77c3be50f097f73154b16338a11d8bd3d6adaf9c7e5d",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "7dff8a1f575619ae8bd83ae9e1b2344290727eec91557e6bd50db33053e2ffcf",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "9451eaf2611d8c96afae3d4298228c80f709bdbe51ea071d8fbf6d0a9f8cc5c1",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "c925655557a7ce871b901f7ff8f7b3b8d32692247867c8fafae33083d2d309cc",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "45ffab8eacd614cb6ff73368ef4cd51ca701c0f40eaa0572f976b43f4bdfb2f2",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "checklist-transcribed",
+      "description": "Checklist transcribed; nothing supplied or sent"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

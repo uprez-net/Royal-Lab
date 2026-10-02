@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "offers/update-current-revision/cedar",
+  "definitionId": "T03",
+  "title": "Update the headline on the current offer revision",
+  "family": "offers",
+  "workType": "operate",
+  "instruction": "Make the requested proposal change on the current offer revision for Amelia Fiction (lead 101). Every write needs the owner to approve the exact call in this session. Write facts.json with the requested fields and report.md for the office stating what was attempted, what was committed and what remains, citing the brief as [source-id locator]. facts.json fields: offerId, newStateVersion.",
+  "profiles": [
+    "fixed-tools"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "request",
+      "path": "documents/owner-request.md",
+      "sha256": "efe7ef35cf1c8aab0227a98dec4c7b1c00d2231b8bed0744e67596bf4d6a901a",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list_offer_revisions",
+      "version": "1.0.0"
+    },
+    {
+      "name": "get_offer_details",
+      "version": "1.0.0"
+    },
+    {
+      "name": "update_offer_details",
+      "version": "1.0.0"
+    },
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "facts.json",
+      "mediaType": "application/json",
+      "description": "Edited offer and new version",
+      "required": true
+    },
+    {
+      "path": "report.md",
+      "mediaType": "text/markdown",
+      "description": "What changed and what did not",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "b9e3c5d21407380601957f03291e933bcc7d5395fa60a8459ba9b1a07c434ee2",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "300a4343dc5a6bd69c4a41ec169f76c9bb2b42c70e7559fb27c7339fc15400e5",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "51a8033c2add3c0acdad2073f854b41bf755e6c720e3b189e1a90f6cdda95227",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "3aea3bdf9ad2d5778c5eb301707e110f402585d88c86ee3452715f756b8e7377",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "d202b03333ada6ecc2024cbf19dd7f47cd0b2d2f6bbabffaa05d2bcccca9b8cd",
+  "environmentPath": "grading/environment.json",
+  "environmentHash": "3fda2ceda663a8c8f81094cc77041fc20eae529581e16691fc43b2300aaf1ba2",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "headline-updated",
+      "description": "One approved narrow save on the active revision"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

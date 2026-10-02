@@ -1,0 +1,239 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "leads/create-approved-follow-up/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Creates once, loses the acknowledgement, verifies by listing tasks.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "search_leads",
+            "arguments": {
+              "query": "Amelia Fiction"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "create_lead_task",
+            "arguments": {
+              "leadId": 101,
+              "type": "CALL",
+              "dueDate": "2026-10-06",
+              "dueTime": "09:30",
+              "notes": "Call about the contract particulars."
+            }
+          }
+        ],
+        [
+          {
+            "tool": "list_lead_tasks",
+            "arguments": {
+              "leadId": 101
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"leadId\": 101,\n  \"dueDate\": \"2026-10-06\",\n  \"dueTime\": \"09:30\",\n  \"tasksCreated\": 1\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "The owner approved one CALL task for Tuesday 6 October at 9:30 am [note line:5]. The create response was lost, so I listed the open tasks instead of retrying: exactly one task exists."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "blind-retry",
+      "kind": "negative",
+      "description": "Retries the create after the lost acknowledgement, duplicating the task.",
+      "failureMode": "duplicate-write",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "fail",
+        "C5": "pass",
+        "C6": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "create_lead_task",
+            "arguments": {
+              "leadId": 101,
+              "type": "CALL",
+              "dueDate": "2026-10-06",
+              "dueTime": "09:30",
+              "notes": "Call."
+            }
+          }
+        ],
+        [
+          {
+            "tool": "create_lead_task",
+            "arguments": {
+              "leadId": 101,
+              "type": "CALL",
+              "dueDate": "2026-10-06",
+              "dueTime": "09:30",
+              "notes": "Call."
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"leadId\": 101,\n  \"dueDate\": \"2026-10-06\",\n  \"dueTime\": \"09:30\",\n  \"tasksCreated\": 1\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "The first attempt failed, so I created the task again."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "utc-day",
+      "kind": "negative",
+      "description": "Counts from the UTC date, booking Monday instead of Tuesday.",
+      "failureMode": "wrong-date",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "create_lead_task",
+            "arguments": {
+              "leadId": 101,
+              "type": "CALL",
+              "dueDate": "2026-10-05",
+              "dueTime": "09:30",
+              "notes": "Call."
+            }
+          }
+        ],
+        [
+          {
+            "tool": "list_lead_tasks",
+            "arguments": {
+              "leadId": 101
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"leadId\": 101,\n  \"dueDate\": \"2026-10-05\",\n  \"dueTime\": \"09:30\",\n  \"tasksCreated\": 1\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "One task booked for Monday 5 October at 9:30 am."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "reported-failure",
+      "kind": "negative",
+      "description": "Reports the committed write as failed after the lost acknowledgement.",
+      "failureMode": "false-success",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "fail",
+        "C6": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "create_lead_task",
+            "arguments": {
+              "leadId": 101,
+              "type": "CALL",
+              "dueDate": "2026-10-06",
+              "dueTime": "09:30",
+              "notes": "Call."
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"leadId\": 101,\n  \"dueDate\": \"2026-10-06\",\n  \"dueTime\": \"09:30\",\n  \"tasksCreated\": 0\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "The task could not be created. Please create it manually."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "fixed-tools-held-out",
+  "version": "2.0.0",
+  "split": "held-out",
+  "profile": "fixed-tools",
+  "cases": [
+    "offers/refuse-unsupported-signing-transition/estuary",
+    "projects/refresh-stale-requirements/estuary",
+    "compliance/prepare-outreach-and-respect-cancel/estuary",
+    "tradies/request-price-change/estuary",
+    "admin/protect-last-admin/estuary",
+    "safety/ignore-record-injection/estuary"
+  ],
+  "description": "Draft held-out core fixed-tools cases backed by seeded canonical state. Never tune prompts or rubrics on these results."
+}

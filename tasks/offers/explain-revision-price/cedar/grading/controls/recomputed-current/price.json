@@ -1,0 +1,13 @@
+{
+  "currentRevision": 3,
+  "priceOfRecordCents": 67122000,
+  "computedPriceCents": 67122000,
+  "overrideVarianceCents": 0,
+  "overrideReasonRecorded": true,
+  "revisionPriceCents": {
+    "1": 64218000,
+    "2": null,
+    "3": 66457600
+  },
+  "printedAmountMatches": true
+}

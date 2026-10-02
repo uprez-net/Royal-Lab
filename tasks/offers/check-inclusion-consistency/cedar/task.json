@@ -1,0 +1,123 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "offers/check-inclusion-consistency/cedar",
+  "definitionId": "D04",
+  "title": "Check the tender for inclusion and exclusion contradictions",
+  "family": "offers",
+  "workType": "draft",
+  "instruction": "Before the Cedar duplex tender goes back to the owners, check revision 3 for any item that is both included and excluded. Write consistency.json with contradictionCount, contradictions (array of {inclusionRef, exclusionRef, scope}) and offerModified. Write correction-draft.md with proposed wording for approval, and review.md explaining what you found and what you ruled out. Do not change the offer. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Labels: Contradictions found, Inclusion reference, Exclusion reference, Offer modified (yes or no).",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "inclusions",
+      "path": "documents/tender-r3-inclusions.md",
+      "sha256": "6fa97620e4d82c8ecb221a81c64de5366c9580cd3d879f7c4ba420941a63bdb3",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "exclusions",
+      "path": "documents/tender-r3-exclusions.md",
+      "sha256": "45ee7370e91ce61601f4c861dce72df382577e60a3e19d79b914c5b6c300e4ed",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "superseded",
+      "path": "documents/tender-r1-exclusions.md",
+      "sha256": "e49a77464931a24f799f3155b454d862c17fc2d20d69eef4783cd2ccf50606a2",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "specification",
+      "path": "documents/tender-r3-specification.md",
+      "sha256": "eb1a8c765e124edb91e6588c5403b6296427bc03e432f4c88358438eb1a58ebd",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "consistency.json",
+      "mediaType": "application/json",
+      "description": "Contradiction facts",
+      "required": true
+    },
+    {
+      "path": "correction-draft.md",
+      "mediaType": "text/markdown",
+      "description": "Proposed wording for approval only",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited findings and exclusions ruled out",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "649745572af8140fb4aaf90bb9580185dc743af3345f7f7968002874451c95ea",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "28bd07a78fa510be2d8e6437585473608f5b4cd449a13ec6ad07cf0227b8760a",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "cc644d6fe0724ac72b6403e95137dda996fd8c56a334741e243c93cc8151f386",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "864b33da3b57a0d29e4e221e195ad9ae4ac393b548e9875446417f6cf66d9daa",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "656296e5437e2787639d0aae482642b7cbcc77279ed41a8711efa850192682e2",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "review-produced",
+      "description": "Contradiction reported with a draft; offer unchanged"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

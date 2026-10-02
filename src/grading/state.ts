@@ -4,6 +4,16 @@ export interface IndependentState {
   before: unknown;
   after: unknown;
 }
+// A key beginning with '/' is a JSON pointer into the row (for canonical JSON
+// columns); any other key names a top-level column. Missing values never match.
+function field(row: unknown, key: string): unknown {
+  if (!key.startsWith('/')) return (row as Record<string, unknown> | undefined)?.[key];
+  try {
+    return jsonPointer(row, key);
+  } catch {
+    return undefined;
+  }
+}
 export function verifyState(
   evidence: IndependentState | undefined,
   assertion: {
@@ -24,12 +34,12 @@ export function verifyState(
   if (!Array.isArray(rows))
     return { verdict: 'error' as const, reason: 'Expected verifier collection is missing' };
   const matching = rows.filter((row) =>
-    Object.entries(assertion.target).every(([key, value]) => exactFact(row?.[key], value)),
+    Object.entries(assertion.target).every(([key, value]) => exactFact(field(row, key), value)),
   );
   if (
     matching.length !== assertion.count ||
     matching.some((row) =>
-      Object.entries(assertion.fields).some(([key, value]) => !exactFact(row?.[key], value)),
+      Object.entries(assertion.fields).some(([key, value]) => !exactFact(field(row, key), value)),
     )
   )
     return { verdict: 'fail' as const, reason: 'Durable target/count/fields do not match' };
@@ -45,7 +55,7 @@ export function verifyState(
       if (
         !Array.isArray(entries) ||
         entries.filter((row) =>
-          Object.entries(target).every(([key, value]) => exactFact(row?.[key], value)),
+          Object.entries(target).every(([key, value]) => exactFact(field(row, key), value)),
         ).length < minimum
       )
         return { verdict: 'fail' as const, reason: `Missing durable ${collection} evidence` };

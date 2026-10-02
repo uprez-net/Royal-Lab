@@ -8,9 +8,14 @@ export const InputFile = z.strictObject({
   kind: z.enum(['document', 'policy']),
   mediaType: z.string().min(1),
 });
+// 1.2.0 adds explicit denominator role and hidden case controls/environment.
+// Earlier versions are unchanged and must not carry the new fields.
+export const CaseRole = z.enum(['core', 'variant', 'diagnostic']);
 export const TaskSchema = z
   .strictObject({
-    schemaVersion: z.enum(['1.0.0', '1.1.0']),
+    schemaVersion: z.enum(['1.0.0', '1.1.0', '1.2.0']),
+    role: CaseRole.optional(),
+    variantOf: RelativePath.nullable().optional(),
     version: Version,
     scenarioVersion: Version,
     id: RelativePath.refine((s) => s.split('/').length >= 2, 'Task ID must include family/case'),
@@ -44,6 +49,10 @@ export const TaskSchema = z
     provenanceHash: Hash,
     verificationPath: RelativePath.optional(),
     verificationHash: Hash.optional(),
+    controlsPath: RelativePath.optional(),
+    controlsHash: Hash.optional(),
+    environmentPath: RelativePath.optional(),
+    environmentHash: Hash.optional(),
     operatorBranches: z.array(
       z.strictObject({
         id: Id,
@@ -56,13 +65,37 @@ export const TaskSchema = z
     limits: Limits,
   })
   .superRefine((task, ctx) => {
-    if (task.schemaVersion === '1.1.0' && (!task.verificationPath || !task.verificationHash))
-      ctx.addIssue({
-        code: 'custom',
-        message: 'Task 1.1.0 requires a frozen verifier path and hash',
-      });
+    const issue = (message: string) => ctx.addIssue({ code: 'custom', message });
+    if (task.schemaVersion !== '1.0.0' && (!task.verificationPath || !task.verificationHash))
+      issue(`Task ${task.schemaVersion} requires a frozen verifier path and hash`);
     if (task.schemaVersion === '1.0.0' && (task.verificationPath || task.verificationHash))
-      ctx.addIssue({ code: 'custom', message: 'Verifier references require task schema 1.1.0' });
+      issue('Verifier references require task schema 1.1.0');
+    const authored = [
+      task.role,
+      task.variantOf,
+      task.controlsPath,
+      task.controlsHash,
+      task.environmentPath,
+      task.environmentHash,
+    ];
+    if (task.schemaVersion !== '1.2.0') {
+      if (authored.some((value) => value !== undefined))
+        issue('Role, controls and environment references require task schema 1.2.0');
+      return;
+    }
+    if (!task.role || task.variantOf === undefined)
+      issue('Task 1.2.0 requires an explicit role and variantOf');
+    if (task.role === 'core' && task.variantOf !== null)
+      issue('A core case cannot be a variant of another case');
+    if (task.role === 'variant' && !task.variantOf)
+      issue('A variant must name the core case it varies');
+    if (!task.controlsPath || !task.controlsHash)
+      issue('Task 1.2.0 requires hidden reference/negative controls');
+    const tools = task.profiles.includes('fixed-tools');
+    if (tools !== Boolean(task.environmentPath && task.environmentHash))
+      issue('A fixed-tools case requires exactly one hidden seeded environment');
+    if (!tools && (task.environmentPath || task.environmentHash))
+      issue('Document-only cases cannot declare a seeded environment');
   });
 export const SuiteSchema = z.strictObject({
   schemaVersion: z.literal('1.0.0'),

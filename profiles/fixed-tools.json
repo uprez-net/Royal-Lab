@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "id": "fixed-tools",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Controlled candidate and canonical-domain bridge",
   "tools": [
     {
@@ -46,7 +46,7 @@
     { "name": "recall_offer_envelope", "version": "1.0.0" },
     { "name": "get_project", "version": "1.0.0" },
     { "name": "get_project_requirements", "version": "1.0.0" },
-    { "name": "update_project_requirements", "version": "1.0.0" },
+    { "name": "update_project_requirements", "version": "1.1.0" },
     { "name": "update_milestone", "version": "1.0.0" },
     { "name": "get_compliance", "version": "1.0.0" },
     { "name": "resolve_compliance_document", "version": "1.0.0" },

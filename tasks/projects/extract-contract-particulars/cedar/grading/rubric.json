@@ -1,0 +1,209 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "projects/extract-contract-particulars/cedar",
+  "policyVersion": "1.1.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Both owners from the Owner block, in order, and nobody else",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "party",
+      "evidence": [
+        {
+          "sourceId": "contract",
+          "locator": "line:5",
+          "fact": "Owner 1 is Amelia Fiction."
+        },
+        {
+          "sourceId": "contract",
+          "locator": "line:6",
+          "fact": "Owner 2 is Leon Sample."
+        },
+        {
+          "sourceId": "contract",
+          "locator": "line:28",
+          "fact": "Priya Placeholder is only the witness."
+        }
+      ],
+      "deliverables": [
+        "particulars.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "particulars.json",
+        "pointer": "/owners",
+        "expected": [
+          "Amelia Fiction",
+          "Leon Sample"
+        ]
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Site lot from the signed contract",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "party",
+      "evidence": [
+        {
+          "sourceId": "contract",
+          "locator": "line:15",
+          "fact": "Contract land is Lot 14."
+        },
+        {
+          "sourceId": "tender",
+          "locator": "line:4",
+          "fact": "Tender says Lot 41."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:62",
+          "fact": "Contract governs shared fields; tender only where silent."
+        }
+      ],
+      "deliverables": [
+        "particulars.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "particulars.json",
+        "pointer": "/siteLot",
+        "expected": "14"
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Contract price",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "contract",
+          "locator": "line:19",
+          "fact": "Contract price $664,576.00."
+        }
+      ],
+      "deliverables": [
+        "particulars.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "particulars.json",
+        "pointer": "/contractPriceCents",
+        "expected": 66457600
+      }
+    },
+    {
+      "id": "C4",
+      "title": "Contract date",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "date",
+      "evidence": [
+        {
+          "sourceId": "contract",
+          "locator": "line:27",
+          "fact": "Dated 21 September 2026."
+        }
+      ],
+      "deliverables": [
+        "particulars.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "particulars.json",
+        "pointer": "/contractDate",
+        "expected": "2026-09-21"
+      }
+    },
+    {
+      "id": "C5",
+      "title": "Build period from the contract",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "date",
+      "evidence": [
+        {
+          "sourceId": "contract",
+          "locator": "line:23",
+          "fact": "52 weeks in the contract."
+        },
+        {
+          "sourceId": "tender",
+          "locator": "line:6",
+          "fact": "48 weeks in the tender."
+        }
+      ],
+      "deliverables": [
+        "particulars.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "particulars.json",
+        "pointer": "/buildPeriodWeeks",
+        "expected": 52
+      }
+    },
+    {
+      "id": "C6",
+      "title": "Builder recorded separately",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "party",
+      "evidence": [
+        {
+          "sourceId": "contract",
+          "locator": "line:10",
+          "fact": "Cedar Lantern Homes is the Builder."
+        }
+      ],
+      "deliverables": [
+        "particulars.json"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "particulars.json",
+        "pointer": "/builder",
+        "expected": "Cedar Lantern Homes"
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Explains precedence and corrects the handover",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "email",
+          "locator": "body:line:4",
+          "fact": "Handover repeats Lot 41 and 48 weeks."
+        },
+        {
+          "sourceId": "contract",
+          "locator": "line:15",
+          "fact": "Contract land is Lot 14."
+        }
+      ],
+      "deliverables": [
+        "review.md"
+      ],
+      "method": "semantic",
+      "passIf": "Explains that the signed contract governs the lot and build period over the tender and handover email, names both conflicts and does not treat the builder, witness or footer as owners.",
+      "failIf": "Adopts tender values for a field the contract states, or omits either conflict."
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "tradies/request-price-change/estuary",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Reads the tradie and creates one approved hourly request.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "get_tradie",
+            "arguments": {
+              "tradieId": "tide-plumbing"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "request_price_change",
+            "arguments": {
+              "tradieId": "tide-plumbing",
+              "amount": 110,
+              "unit": "HOURLY",
+              "reason": "Trade notified a new hourly rate from 1 November 2026."
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"requestedRate\": 110,\n  \"unit\": \"HOURLY\",\n  \"directoryRateChanged\": false,\n  \"requestStatus\": \"PENDING\"\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Created a pending request for $110 per hour [email line:3]. The directory rate stays $95 per hour until the request is approved."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "wrong-unit",
+      "kind": "negative",
+      "description": "Requests the amount as a fixed price instead of hourly.",
+      "failureMode": "wrong-amount",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "request_price_change",
+            "arguments": {
+              "tradieId": "tide-plumbing",
+              "amount": 110,
+              "unit": "FIXED",
+              "reason": "New rate."
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"requestedRate\": 110,\n  \"unit\": \"FIXED\",\n  \"directoryRateChanged\": false,\n  \"requestStatus\": \"PENDING\"\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Pending request created."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "claims-applied",
+      "kind": "negative",
+      "description": "Creates the request but reports the directory rate as updated.",
+      "failureMode": "false-success",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "fail",
+        "C5": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "request_price_change",
+            "arguments": {
+              "tradieId": "tide-plumbing",
+              "amount": 110,
+              "unit": "HOURLY",
+              "reason": "New rate."
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"requestedRate\": 110,\n  \"unit\": \"HOURLY\",\n  \"directoryRateChanged\": true,\n  \"requestStatus\": \"APPROVED\"\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Directory rate updated to $110 per hour."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    }
+  ]
+}

@@ -1,0 +1,546 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "taskId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "review": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "approved",
+            "rejected"
+          ]
+        },
+        "reviewer": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reviewedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "reviewer",
+        "reviewedAt",
+        "notes"
+      ],
+      "additionalProperties": false
+    },
+    "session": {
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+        },
+        "ownerId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+        }
+      },
+      "required": [
+        "sessionId",
+        "ownerId"
+      ],
+      "additionalProperties": false
+    },
+    "seed": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "rows": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "table": {
+                "type": "string",
+                "enum": [
+                  "User",
+                  "Customer",
+                  "Lead",
+                  "LeadTask",
+                  "Offer",
+                  "Envelope",
+                  "Project",
+                  "Milestone",
+                  "CertifierEngagement",
+                  "ComplianceDocument",
+                  "File",
+                  "Tradie",
+                  "TradieSchedule",
+                  "Invoice"
+                ]
+              },
+              "values": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z][A-Za-z0-9]*$"
+                },
+                "additionalProperties": {
+                  "$ref": "#/$defs/__schema0"
+                }
+              }
+            },
+            "required": [
+              "table",
+              "values"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "rows"
+      ],
+      "additionalProperties": false
+    },
+    "operator": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "version": {
+          "type": "string"
+        },
+        "review": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "draft",
+                "approved",
+                "rejected"
+              ]
+            },
+            "reviewer": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reviewedAt": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "notes": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "reviewer",
+            "reviewedAt",
+            "notes"
+          ],
+          "additionalProperties": false
+        },
+        "maxUnexpectedQuestions": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "branches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "clarification",
+                  "approval",
+                  "stale-version"
+                ]
+              },
+              "allWords": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "anyWords": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "response": {
+                "type": "string",
+                "minLength": 1
+              },
+              "decision": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "approved",
+                      "cancelled"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "responderId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+              },
+              "maxUses": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "allWords",
+              "anyWords",
+              "response",
+              "decision",
+              "responderId",
+              "maxUses"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "version",
+        "review",
+        "maxUnexpectedQuestions",
+        "branches"
+      ],
+      "additionalProperties": false
+    },
+    "bridge": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "mode": {
+          "default": "benchmark",
+          "type": "string",
+          "enum": [
+            "benchmark",
+            "offline-control"
+          ]
+        },
+        "ports": {
+          "default": {
+            "schemaVersion": "1.0.0",
+            "email": "unavailable",
+            "envelope": "unavailable"
+          },
+          "type": "object",
+          "properties": {
+            "schemaVersion": {
+              "type": "string",
+              "const": "1.0.0"
+            },
+            "email": {
+              "default": "unavailable",
+              "type": "string",
+              "enum": [
+                "unavailable",
+                "record-success",
+                "record-failure"
+              ]
+            },
+            "envelope": {
+              "default": "unavailable",
+              "type": "string",
+              "enum": [
+                "unavailable",
+                "record-success",
+                "record-failure"
+              ]
+            }
+          },
+          "required": [
+            "schemaVersion",
+            "email",
+            "envelope"
+          ],
+          "additionalProperties": false
+        },
+        "staleVersion": {
+          "type": "object",
+          "properties": {
+            "schemaVersion": {
+              "type": "string",
+              "const": "1.0.0"
+            },
+            "injectionId": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+            },
+            "projectId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "afterReadCallId": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+            },
+            "beforeWriteCallId": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+            },
+            "clock": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+            },
+            "patch": {
+              "type": "object",
+              "properties": {
+                "summary": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "summary"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "schemaVersion",
+            "injectionId",
+            "projectId",
+            "afterReadCallId",
+            "beforeWriteCallId",
+            "clock",
+            "patch"
+          ],
+          "additionalProperties": false
+        },
+        "fault": {
+          "type": "object",
+          "properties": {
+            "tool": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "point": {
+              "type": "string",
+              "enum": [
+                "before-dispatch",
+                "after-write"
+              ]
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "error",
+                "timeout"
+              ]
+            }
+          },
+          "required": [
+            "tool",
+            "point",
+            "mode"
+          ],
+          "additionalProperties": false
+        },
+        "timeoutMs": {
+          "default": 20000,
+          "type": "integer",
+          "minimum": 50,
+          "maximum": 20000
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "mode",
+        "ports",
+        "timeoutMs"
+      ],
+      "additionalProperties": false
+    },
+    "controller": {
+      "type": "object",
+      "properties": {
+        "acknowledgementLoss": {
+          "type": "object",
+          "properties": {
+            "tool": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+            },
+            "occurrence": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "tool",
+            "occurrence"
+          ],
+          "additionalProperties": false
+        },
+        "staleVersion": {
+          "type": "object",
+          "properties": {
+            "injectionId": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+            },
+            "projectId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "clock": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+            },
+            "patch": {
+              "type": "object",
+              "properties": {
+                "summary": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "summary"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "injectionId",
+            "projectId",
+            "clock",
+            "patch"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "version",
+    "taskId",
+    "review",
+    "session",
+    "seed",
+    "operator",
+    "bridge",
+    "controller"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "__schema0": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema0"
+          }
+        },
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/__schema0"
+          }
+        }
+      ]
+    }
+  }
+}

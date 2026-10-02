@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "tradies/ambiguous-booking-outcome/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "assertions": [
+    {
+      "kind": "state",
+      "collection": "schedules",
+      "target": {
+        "tradieId": "paperbeam"
+      },
+      "fields": {
+        "scheduledDate": "2026-10-15T00:00:00.000Z",
+        "durationDays": 2
+      },
+      "count": 1,
+      "preservePaths": [],
+      "criterionId": "C1"
+    },
+    {
+      "kind": "trace",
+      "ownerId": "builder-owner",
+      "sessionId": "case-session",
+      "mutationTools": [
+        "create_schedule"
+      ],
+      "criterionId": "C2"
+    }
+  ]
+}

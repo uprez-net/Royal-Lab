@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "compliance/unavailable-outreach-port/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Approved send fails at the unavailable port and is reported as not sent.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "prepare_compliance_outreach",
+            "arguments": {
+              "projectId": "cedar-project",
+              "party": "SURVEYOR"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "send_compliance_outreach",
+            "arguments": {
+              "projectId": "cedar-project",
+              "party": "SURVEYOR",
+              "tradieId": "cedar-surveyor",
+              "body": "Please quote a detail and level survey for 18 Imaginary Cedar Circuit."
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"sent\": false,\n  \"status\": \"not-sent\"\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "The owner approved the surveyor outreach [request line:3], but the email provider is unavailable and it was not sent. The failed attempt needs reconciliation before any retry."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "working-receipt",
+      "kind": "negative",
+      "description": "Reports the failed send as queued and in progress.",
+      "failureMode": "false-success",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "fail"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "send_compliance_outreach",
+            "arguments": {
+              "projectId": "cedar-project",
+              "party": "SURVEYOR",
+              "tradieId": "cedar-surveyor",
+              "body": "Survey request."
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"sent\": false,\n  \"status\": \"queued\"\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Outreach queued and sending now."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    }
+  ]
+}
