@@ -49,6 +49,14 @@ export const CaseEnvironmentSchema = z.strictObject({
   // Trusted harness controls. They change what the candidate observes, never
   // what canonical commands decide or what approval binds.
   controller: z.strictObject({
+    // Read-only transport/specialist faults; never simulates a committed write.
+    readFailure: z
+      .strictObject({
+        tool: Id,
+        occurrence: z.number().int().positive(),
+        kind: z.enum(['timeout', 'specialist-error']),
+      })
+      .optional(),
     acknowledgementLoss: z
       .strictObject({ tool: Id, occurrence: z.number().int().positive() })
       .optional(),

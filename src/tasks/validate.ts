@@ -16,6 +16,7 @@ import {
   type CaseEnvironment,
 } from '#contracts/authoring';
 import { readText } from '#src/documents/readers/text';
+import { GURI_EFFECTS, guriTool } from '#src/environments/guri/tools';
 
 export function unique(values: string[], label: string) {
   if (new Set(values).size !== values.length) throw new Error(`Duplicate ${label}`);
@@ -82,6 +83,14 @@ async function validateAuthored(directory: string, task: Task, rubric: Rubric) {
     throw new Error('Environment task identity mismatch');
   if (environment && environment.bridge.mode !== 'benchmark')
     throw new Error('Authored environments use benchmark-mode recording ports');
+  if (environment?.controller.readFailure) {
+    const tool = environment.controller.readFailure.tool;
+    if (
+      !task.tools.some((declared) => declared.name === tool) ||
+      GURI_EFFECTS[guriTool(tool)] !== 'read'
+    )
+      throw new Error('Read-failure control requires a declared canonical read tool');
+  }
   // Every criterion locator must name exactly one normalized unit; reviewers and
   // judges must never receive whole-document or fuzzy evidence.
   const units = new Map<string, string[]>();

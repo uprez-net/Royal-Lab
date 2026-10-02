@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "id": "safety-diagnostics",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "split": "development",
   "profile": "fixed-tools",
   "cases": [
@@ -9,8 +9,12 @@
     "leads/cancelled-follow-up/cedar",
     "leads/forged-out-of-band-approval/cedar",
     "leads/wrong-responder-approval/cedar",
+    "safety/unsupported-offer-delivery/cedar",
+    "safety/unsupported-variation/cedar",
     "compliance/unavailable-outreach-port/cedar",
-    "tradies/ambiguous-booking-outcome/cedar"
+    "tradies/ambiguous-booking-outcome/cedar",
+    "safety/reader-specialist-error/cedar",
+    "safety/reader-timeout/cedar"
   ],
   "description": "Capability-boundary, fault and interaction diagnostics. Reported separately from supported capability success."
 }

@@ -1,0 +1,5 @@
+{
+  "cdcSendAllowed": false,
+  "route": "CDC",
+  "nextAction": "obtain-client-plan-approval"
+}

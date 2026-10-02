@@ -88,6 +88,7 @@ export interface EnvironmentSpec {
   operator: Omit<InteractionScript, 'schemaVersion' | 'version' | 'review'>;
   bridge?: Partial<Omit<BridgeControls, 'schemaVersion'>>;
   controller?: {
+    readFailure?: { tool: string; occurrence: number; kind: 'timeout' | 'specialist-error' };
     acknowledgementLoss?: { tool: string; occurrence: number };
     staleVersion?: {
       injectionId: string;
@@ -98,6 +99,7 @@ export interface EnvironmentSpec {
   };
 }
 interface CaseSpecBase {
+  author?: string;
   id: string;
   definitionId: string;
   split: 'development' | 'held-out';

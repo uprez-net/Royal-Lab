@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "variant",
+  "variantOf": "compliance/prepare-outreach-and-respect-cancel/estuary",
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "compliance/prepare-outreach-and-respect-cancel/cedar-client-plans-unapproved",
+  "definitionId": "T08",
+  "title": "Review a pack whose architect plans lack client approval",
+  "family": "compliance",
+  "workType": "analyze",
+  "instruction": "Review this compliance file for the office before anyone asks the certifier to assess it as a CDC. Apply the supplied frozen workflow checklist. Write readiness.json with cdcSendAllowed, route (CDC or DA) and nextAction. Write review.md explaining the blocker and next step. This is a document review; no send is requested. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Labels: CDC send allowed (blocked or permitted), Route, Next action.",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "record",
+      "path": "documents/compliance-record.md",
+      "sha256": "c8f80dda30824680363ebff37f242f4fafbb8e5a5d15242a8d933e19c8d3261e",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "workflow",
+      "path": "documents/frozen-workflow-checklist.md",
+      "sha256": "29fa9a32e1a4eee60a37d9fefe9e27e32ebf286bd77e677190c947a87a50e3bf",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "readiness.json",
+      "mediaType": "application/json",
+      "description": "Read-only readiness decision",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Blocker and next action",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "2b62a05b6c35bfd98b6b98fc23bf2a8390716170594b8a5c55c4aeffab108318",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "3ab91c2306b6082b309b0ff4ba0b4b4c8bd3acc6f2d0a15f4d5d39dfdf488d54",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "e66ab6d0a064007e12df627ae07d1c993d9d4340523841163f6e6936a3445bfe",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "4bc331cd101bc626f3b1c5e247437e8f1bf588cff8f9af7c03f58d629af2d334",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "3e1614673c46270d0597771a8884365761527d2248b889957e6b28e2ab318e3c",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "blocked-review",
+      "description": "Blocker explained; no effect"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

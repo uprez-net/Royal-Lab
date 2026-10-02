@@ -435,6 +435,33 @@
     "controller": {
       "type": "object",
       "properties": {
+        "readFailure": {
+          "type": "object",
+          "properties": {
+            "tool": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+            },
+            "occurrence": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "timeout",
+                "specialist-error"
+              ]
+            }
+          },
+          "required": [
+            "tool",
+            "occurrence",
+            "kind"
+          ],
+          "additionalProperties": false
+        },
         "acknowledgementLoss": {
           "type": "object",
           "properties": {

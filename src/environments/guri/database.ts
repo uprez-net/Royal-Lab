@@ -34,6 +34,7 @@ export function fixtureControlUrl(value: string) {
 export class DisposableDatabase {
   readonly writer: Pool;
   readonly verifier: Pool;
+  private connectionClosures = new Set<Promise<void>>();
   private constructor(
     readonly name: string,
     private admin: Pool,
@@ -57,6 +58,20 @@ export class DisposableDatabase {
             : types.getTypeParser(oid, format),
       },
     });
+    for (const pool of [this.writer, this.verifier])
+      pool.on('connect', (client) => {
+        const closed = new Promise<void>((resolve) => client.once('end', resolve));
+        this.connectionClosures.add(closed);
+        void closed.then(() => this.connectionClosures.delete(closed));
+      });
+  }
+  private async closeConnections() {
+    // pg-pool resolves end() when clients leave the pool, before their sockets
+    // finish closing. Wait for the actual client end events before FORCE drop.
+    const closing = [...this.connectionClosures];
+    const shutdown = await Promise.allSettled([this.writer.end(), this.verifier.end()]);
+    await Promise.all(closing);
+    return shutdown;
   }
   static async create(controlUrl: string, schemaSql: string) {
     const parsed = fixtureControlUrl(controlUrl);
@@ -95,8 +110,7 @@ export class DisposableDatabase {
       );
       return database;
     } catch (error) {
-      await database?.writer.end().catch(() => {});
-      await database?.verifier.end().catch(() => {});
+      await database?.closeConnections();
       try {
         if (created) await admin.query(`DROP DATABASE "${name}" WITH (FORCE)`);
       } finally {
@@ -331,7 +345,7 @@ export class DisposableDatabase {
     return result;
   }
   async dispose() {
-    const shutdown = await Promise.allSettled([this.writer.end(), this.verifier.end()]);
+    const shutdown = await this.closeConnections();
     if (!/^royal_lab_run_[a-f0-9]{32}$/.test(this.name))
       throw new Error('DATABASE_DENIED: invalid cleanup target');
     try {

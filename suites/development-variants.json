@@ -1,13 +1,16 @@
 {
   "schemaVersion": "1.0.0",
   "id": "development-variants",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "split": "development",
   "profile": "documents",
   "cases": [
     "offers/reconcile-quote-build-up/cedar",
     "insurance/read-certificate-number/cedar-number-not-printed",
-    "compliance/check-title-owners/cedar-unreadable"
+    "compliance/check-title-owners/cedar-unreadable",
+    "compliance/prepare-outreach-and-respect-cancel/cedar-client-plans-unapproved",
+    "compliance/prepare-outreach-and-respect-cancel/cedar-da-route",
+    "compliance/prepare-outreach-and-respect-cancel/cedar-stale-title-alert"
   ],
   "description": "Labelled development document variants and superseded specimens. Separate denominator; never pooled with core results."
 }

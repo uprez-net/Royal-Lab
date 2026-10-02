@@ -19,7 +19,8 @@ import { DurableRecordingProvider } from '#src/environments/guri/recording-provi
 import { Session } from '#src/environments/session';
 import { Interactions } from '#src/harness/interactions';
 import { ScriptedOperator, InteractionScriptSchema } from '#src/harness/operator';
-import { FIXED_TOOL_SCHEMAS } from '#src/environments/fixed-tools';
+import { FixedToolsEnvironment, FIXED_TOOL_SCHEMAS } from '#src/environments/fixed-tools';
+import type { DocumentWorkspace } from '#src/environments/documents';
 import { GURI_CAPABILITIES } from '#src/environments/guri/capabilities';
 import { fixtureControlUrl } from '#src/environments/guri/database';
 
@@ -258,4 +259,56 @@ test('stale-version guidance never authorizes refreshed arguments and draft scri
     /APPROVAL_REQUIRED/,
   );
   assert.equal(interactions.events.filter((event) => event.type === 'approval').length, 0);
+});
+
+test('simulated reader faults fire once at the selected read and cannot target a mutation', async () => {
+  const operator = new ScriptedOperator(
+    {
+      schemaVersion: '1.0.0',
+      version: '1.0.0',
+      review: {
+        status: 'draft',
+        reviewer: null,
+        reviewedAt: null,
+        notes: 'Synthetic fault control.',
+      },
+      maxUnexpectedQuestions: 0,
+      branches: [],
+    },
+    'offline-control',
+  );
+  const dispatched: string[] = [];
+  const bridge = {
+    execute: async (tool: string) => {
+      dispatched.push(tool);
+      return { status: 'success', data: {} };
+    },
+  } as unknown as GuriBridge;
+  const documents = {} as DocumentWorkspace;
+  const session = new Session('fault-session', 'builder-owner');
+  assert.throws(
+    () =>
+      new FixedToolsEnvironment(documents, bridge, session, operator, {
+        readFailure: { tool: 'create_lead_task', occurrence: 1, kind: 'timeout' },
+      }),
+    /REQUIRES_READ_TOOL/,
+  );
+  for (const kind of ['timeout', 'specialist-error'] as const) {
+    dispatched.length = 0;
+    const environment = new FixedToolsEnvironment(documents, bridge, session, operator, {
+      readFailure: { tool: 'get_lead', occurrence: 2, kind },
+    });
+    await environment.execute('get_project', { projectId: 'p' }, 'other-read');
+    await environment.execute('get_lead', { leadId: 101 }, 'first-read');
+    await assert.rejects(
+      environment.execute('get_lead', { leadId: 101 }, 'failed-read'),
+      kind === 'timeout' ? /TOOL_TIMEOUT/ : /SPECIALIST_ERROR/,
+    );
+    await environment.execute('get_lead', { leadId: 101 }, 'third-read');
+    assert.deepEqual(dispatched, ['get_project', 'get_lead', 'get_lead']);
+    assert.deepEqual(environment.controllerEvents, [
+      { kind: 'read-failure', tool: 'get_lead', callId: 'failed-read', status: kind },
+    ]);
+    assert.equal(environment.committedEffects(), 0);
+  }
 });

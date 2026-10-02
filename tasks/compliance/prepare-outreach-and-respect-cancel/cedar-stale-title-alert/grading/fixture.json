@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "worldId": "cedar-world",
+  "worldPath": "fixtures/worlds/cedar-world.json",
+  "worldHash": "c855ee2914134b034496b68506a03828d0562f697e9051b53ebf355475287a45",
+  "entityIds": [
+    "builder-0a4d851f8c7d",
+    "project-a-db84b324c017",
+    "owner-a-a6aa41764e57",
+    "owner-b-7c2b8cd7cdb5",
+    "certifier-a-81c4068ff870"
+  ],
+  "expectedFacts": {
+    "readiness.json#/cdcSendAllowed": false,
+    "readiness.json#/route": "CDC",
+    "readiness.json#/nextAction": "obtain-and-check-replacement-title"
+  }
+}

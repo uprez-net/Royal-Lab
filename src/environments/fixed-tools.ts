@@ -19,6 +19,8 @@ export const FIXED_TOOL_SCHEMAS = {
 // Trusted harness controls from an authored case environment. They change what
 // the candidate observes, never what canonical commands decide or approval binds.
 export interface EnvironmentController {
+  readFailure?:
+    { tool: string; occurrence: number; kind: 'timeout' | 'specialist-error' } | undefined;
   // The Nth committed result of this tool is withheld: the candidate receives an
   // uncertain-outcome error while the canonical effect remains committed.
   acknowledgementLoss?: { tool: string; occurrence: number } | undefined;
@@ -30,7 +32,7 @@ export interface EnvironmentController {
     | undefined;
 }
 export interface ControllerEvent {
-  kind: 'acknowledgement-loss' | 'stale-version-injection';
+  kind: 'acknowledgement-loss' | 'stale-version-injection' | 'read-failure';
   tool: string;
   callId: string;
   readCallId?: string;
@@ -44,6 +46,7 @@ export class FixedToolsEnvironment {
   private emit: (event: Record<string, unknown>) => void = () => {};
   private committed = new Set<string>();
   private acknowledged = 0;
+  private faultReads = 0;
   private staleRead: string | null = null;
   private staleFired = false;
   constructor(
@@ -53,9 +56,20 @@ export class FixedToolsEnvironment {
     operator: ScriptedOperator,
     readonly controller: EnvironmentController = {},
   ) {
+    if (controller.readFailure && GURI_EFFECTS[guriTool(controller.readFailure.tool)] !== 'read')
+      throw new Error('CONTROLLER_FAULT_REQUIRES_READ_TOOL');
     this.interactions = new Interactions(session, operator, (event) => this.record(event));
   }
   private async dispatch(tool: string, args: Record<string, unknown>, callId: string) {
+    const fault = this.controller.readFailure;
+    if (fault?.tool === tool && ++this.faultReads === fault.occurrence) {
+      this.controllerEvents.push({ kind: 'read-failure', tool, callId, status: fault.kind });
+      throw new Error(
+        fault.kind === 'timeout'
+          ? 'TOOL_TIMEOUT: no result obtained; no write was dispatched'
+          : 'SPECIALIST_ERROR: the simulated child reader failed; no result obtained or write dispatched',
+      );
+    }
     const stale = this.controller.staleVersion;
     if (
       stale &&

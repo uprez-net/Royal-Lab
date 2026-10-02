@@ -1,0 +1,5 @@
+{
+  "cdcSendAllowed": false,
+  "route": "CDC",
+  "nextAction": "obtain-and-check-replacement-title"
+}

@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "compliance/prepare-outreach-and-respect-cancel/cedar-stale-title-alert",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Correct route and blocker with a focused follow-up.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "readiness.json",
+          "sha256": "51a7cbd7cc4351104ec4c6fa7583b8869e6f20e038a6e3f57a9c581af9d74e72"
+        },
+        {
+          "path": "review.md",
+          "sha256": "76cefe53daee742922eaf3ce1fbc42853d52180175fb831825c761a3216574e7"
+        }
+      ]
+    },
+    {
+      "id": "presence-treated-as-ready",
+      "kind": "negative",
+      "description": "Treats a complete attachment list as authority to send.",
+      "failureMode": "wrong-decision",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "readiness.json",
+          "sha256": "6e69830a8fa6314625394baf1ac9a255478bf77f1ef960cde07ee32e5a73f56e"
+        },
+        {
+          "path": "review.md",
+          "sha256": "6eaa3f018237a24e59a52bb44e60764fd05cceac07b41ef57e3fee9b1a903988"
+        }
+      ]
+    }
+  ]
+}

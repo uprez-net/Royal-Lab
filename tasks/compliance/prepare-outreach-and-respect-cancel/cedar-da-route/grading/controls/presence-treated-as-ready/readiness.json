@@ -1,0 +1,5 @@
+{
+  "cdcSendAllowed": true,
+  "route": "DA",
+  "nextAction": "send-now"
+}

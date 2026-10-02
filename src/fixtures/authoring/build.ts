@@ -274,7 +274,7 @@ export async function buildCase(spec: CaseSpec): Promise<Map<string, string>> {
     spec.profile === 'fixed-tools'
       ? jsonText({
           schemaVersion: '1.0.0',
-          version: '1.0.0',
+          version: spec.environment.controller?.readFailure ? '1.1.0' : '1.0.0',
           taskId: spec.id,
           review: AUTHORED_DRAFT,
           session: spec.environment.session ?? {
@@ -303,7 +303,7 @@ export async function buildCase(spec: CaseSpec): Promise<Map<string, string>> {
     version: '1.0.0',
     taskId: spec.id,
     worldId: world.id,
-    author: 'Royal-Lab case authoring (Claude Code draft for issues #12-#15)',
+    author: spec.author ?? 'Royal-Lab case authoring (Claude Code draft for issues #12-#15)',
     owner: 'uprez-net/Royal-Lab',
     license: 'LicenseRef-Royal-Lab-Proprietary',
     synthetic: true,

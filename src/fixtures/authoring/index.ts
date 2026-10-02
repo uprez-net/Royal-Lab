@@ -31,6 +31,17 @@ import { nestedChecklist } from '#fixtures/authoring/cases/d09-nested-checklist'
 import { certifierDocument } from '#fixtures/authoring/cases/d10-certifier-document';
 import { developerVerdict } from '#fixtures/authoring/cases/d11-developer-verdict';
 import { titleOwners } from '#fixtures/authoring/cases/d12-title-owners';
+import {
+  architectClientApproval,
+  unresolvedStaleTitle,
+  daRouting,
+} from '#fixtures/authoring/cases/compliance-variants';
+import {
+  unsupportedVariation,
+  unsupportedOfferDelivery,
+  readerTimeout,
+  childReaderError,
+} from '#fixtures/authoring/cases/boundary-diagnostics';
 import { ambiguousLead, approvedFollowUp } from '#fixtures/authoring/cases/t01-t02-leads';
 import {
   completeMilestone,
@@ -84,6 +95,9 @@ export const AUTHORED_CASES: (() => CaseSpec)[] = [
   certificateNotPrinted,
   developerVerdictInjected,
   titleOwnersUnreadable,
+  architectClientApproval,
+  unresolvedStaleTitle,
+  daRouting,
   // #15 safety, boundary, fault and interaction diagnostics
   cancelledFollowUp,
   forgedApproval,
@@ -91,6 +105,10 @@ export const AUTHORED_CASES: (() => CaseSpec)[] = [
   ambiguousBooking,
   unsupportedEmail,
   outreachOutage,
+  unsupportedVariation,
+  unsupportedOfferDelivery,
+  readerTimeout,
+  childReaderError,
 ];
 
 type SuiteProfile = 'documents' | 'fixed-tools';
@@ -221,7 +239,9 @@ export async function authoredFiles(): Promise<Map<string, string>> {
       jsonText({
         schemaVersion: '1.0.0',
         id: suite.id,
-        version: '2.0.0',
+        version: ['development-variants', 'safety-diagnostics'].includes(suite.id)
+          ? '2.1.0'
+          : '2.0.0',
         split: suite.split,
         profile: suite.profile,
         cases,
