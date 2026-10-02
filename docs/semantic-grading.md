@@ -127,13 +127,16 @@ review and its calibration link to avoid a circular hash; receipts also preserve
 full profile fingerprint. Temperature zero and two agreeing judges do not replace
 reviewer labels or builder review.
 
-Issue #11 is **not ready to close**. Scoped plumbing, fail-closed controls, all-pass
+Issue #11 is closed as superseded by [follow-up #21](https://github.com/uprez-net/Royal-Lab/issues/21)
+at the owner's request; its human-dependent acceptance remains **pending**.
+Scoped plumbing, fail-closed controls, all-pass
 aggregation, independent records, replay and adjudication formats are implemented.
 Reviewer-labeled golden calibration, actual dual-judge calibration, real human
 adjudication of observed disagreements, and empirical prompt-injection resistance
 remain pending. The acceptance criterion concerning inspectable/regradable golden
 decisions is supported by infrastructure but has no actual golden decisions yet.
-Issue #5's case/policy review is a separate unresolved gate. No report/comparison,
+Issue #5's case/policy review remains an unresolved gate, now also tracked in #21.
+See [the closeout record](issue-closeout.md). No report/comparison,
 repeat orchestration, operational rule implementation, or new case authoring is added.
 
 | Issue #11 acceptance criterion                                         | Current evidence and remaining work                                                                                                                                                    |

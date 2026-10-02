@@ -22,6 +22,7 @@ an offline validation pass does not permit execution of draft cases.
 | [Configuration](configuration.md)              | Inputs to obtain from the owner, explicit local configuration, credentials and pricing                         |
 | [Execution](execution.md)                      | Candidate loop, budgets, current CLI/API support and saved evidence                                            |
 | [Semantic grading](semantic-grading.md)        | Scoped judges, preserved disagreements, offline replay and pending real calibration                            |
+| [Issue closeout](issue-closeout.md)            | Completed checkpoints and outstanding work consolidated into issue #21                                         |
 | [Measurement specification](benchmark-spec.md) | Domain, profiles, success definition, denominators, comparison rules and planned scope                         |
 | [Task authoring](task-authoring.md)            | Synthetic case design, hidden expectations, review and versioning                                              |
 | [Contracts](contracts.md)                      | Schemas, hashes, safe paths and cross-file validation                                                          |
