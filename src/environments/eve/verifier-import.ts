@@ -47,7 +47,8 @@ export function importFixtureVerify(
       declared.audits = Number(match[1]);
       continue;
     }
-    if (/^[✓✗] /.test(line)) {
+    // ✓/✗, or their UTF-8-as-CP437 mojibake from a Windows console (Γ£ô/Γ£ù).
+    if (/^(?:[✓✗]|Γ£[ôù]) /.test(line)) {
       section = null;
       continue;
     }

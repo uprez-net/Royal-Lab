@@ -473,6 +473,26 @@ describe('Royal Eve staging profile (#18)', () => {
       () => importFixtureVerify(`${verifyText('x')}unexpected line\n`, importMeta),
       /UNRECOGNIZED_LINE/,
     );
+    // A Windows console renders the UTF-8 check mark as CP437 mojibake; the raw
+    // bytes are still hashed unchanged. A clean empty window imports as zero rows
+    // and cannot verify a write.
+    const baseline = importFixtureVerify(
+      [
+        'Last 24h for eval@example.test:',
+        '',
+        'Marked lead tasks (0):',
+        '',
+        'Agent operations (0):',
+        '',
+        'Audit rows (0):',
+        '',
+        'Γ£ô 0 succeeded operation(s), 0 completed audit row(s).',
+        '',
+      ].join('\n'),
+      importMeta,
+    );
+    assert.deepEqual([baseline.operations, baseline.audits, baseline.leadTasks], [[], [], []]);
+    assert.equal(gradeEveRun(item, result, baseline, PINNED.neverApprove).strictSuccess, false);
   });
 
   test('child failures and working receipts cannot pass a write task', async () => {
