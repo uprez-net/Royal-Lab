@@ -69,6 +69,21 @@ target produces a `blocked-input` record with no session.
 `templates/eve-config.example.json` shows the evaluator config. Deployment pins
 go in its `deploymentPins` overlay and stay private.
 
+### Deriving the pins
+
+`pnpm lab eve pins --eve-config <file> --checkout <product checkout> --commit <sha>`
+reads the **committed tree** of the deployed commit with git. It does not read the
+working tree or any environment file, and changes nothing. It returns:
+
+- `promptsHash`: hashed paths and blob IDs of the orchestrator and specialist
+  instructions and skills;
+- `toolCatalogueHash`: the same over `agent/tools` and the specialist `tools`.
+
+It also reports findings, and exits non-zero, when the deployed model, a supported
+case's tool, or the product's never-approve list no longer matches the profile.
+Copy the result into the private config's `deploymentPins` together with the
+deployment host.
+
 ## Supported subset and exclusions
 
 | Case                           | Based on | Kind               | Gate summary                                                                                          |

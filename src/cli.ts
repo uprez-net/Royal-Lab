@@ -38,6 +38,8 @@ Usage: pnpm lab <command> [arguments] [options]
   grade <run-id>                 Regrade saved artifacts offline (--replay-judge <receipt>)
   grade <run-id> --judge-profile <file> --judge-credentials <file> --suite <path> --allow-paid
                                 Opt-in scoped semantic judging of saved evidence
+  eve pins --eve-config <file> --checkout <dir> --commit <sha>
+                                Derive deployed-agent pins from a product checkout's committed tree
   eve preflight --eve-config <file>
                                 Offline Royal Eve target/pin/credential/case checks (no request)
   eve run <case-id> --eve-config <file> --allow-paid
@@ -82,6 +84,8 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       'verify-output': { type: 'string' },
       'produced-at': { type: 'string' },
       'exit-code': { type: 'string' },
+      checkout: { type: 'string' },
+      commit: { type: 'string' },
       exploratory: { type: 'boolean' },
     },
   });
@@ -453,6 +457,19 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
     const selected = sub === 'run' ? [arguments_[1] ?? ''] : eveConfig.cases;
     const { deploymentPins: _pins, ...runConfig } = eveConfig;
     const check = evePreflight(profile, { ...runConfig, cases: selected }, process.env);
+    if (sub === 'pins') {
+      required(1);
+      if (!options.checkout || !options.commit)
+        throw new Error('eve pins requires --checkout <product checkout> and --commit <sha>');
+      const { deriveEvePins } = await import('#src/environments/eve/pins');
+      const pins = await deriveEvePins(
+        path.resolve(root, options.checkout),
+        options.commit,
+        profile.deployment!,
+      );
+      output(pins);
+      return pins.findings.length ? 1 : 0;
+    }
     if (sub === 'preflight') {
       required(1);
       output(check);
