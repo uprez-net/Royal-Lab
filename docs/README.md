@@ -23,6 +23,7 @@ an offline validation pass does not permit execution of draft cases.
 | [Execution](execution.md)                       | Candidate loop, budgets, current CLI/API support and saved evidence                                            |
 | [Experiments](experiments.md)                   | Repeat matrices, paired order, spend ceilings, immutable trial bundles, resume and regrading                   |
 | [Reporting](reporting.md)                       | Reports, denominators, compatible paired comparisons, safe exports and offline/paid CI                         |
+| [Royal Eve staging](eve-staging.md)             | Composed-agent staging profile, credentials, nested traces, durable evidence import and limits                 |
 | [Semantic grading](semantic-grading.md)         | Scoped judges, preserved disagreements, offline replay and pending real calibration                            |
 | [Issue closeout](issue-closeout.md)             | Completed checkpoints and outstanding work consolidated into issue #21                                         |
 | [Measurement specification](benchmark-spec.md)  | Domain, profiles, success definition, denominators, comparison rules and planned scope                         |

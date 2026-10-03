@@ -134,6 +134,262 @@
         "isolated-binary",
         "product-native"
       ]
+    },
+    "deployment": {
+      "type": "object",
+      "properties": {
+        "transport": {
+          "type": "string",
+          "const": "eve-http-session"
+        },
+        "mcpTransport": {
+          "type": "string",
+          "const": "not-enabled"
+        },
+        "infoVersion": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "agentCommit": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{40}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "deploymentHost": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "modelSource": {
+          "type": "string",
+          "minLength": 1
+        },
+        "promptsHash": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "toolCatalogueHash": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "specialists": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+          }
+        },
+        "requiredFlags": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "operationsAgentEnabled",
+              "specialistsEnabled"
+            ]
+          }
+        },
+        "budgets": {
+          "type": "object",
+          "properties": {
+            "maxTurnMs": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "maxTurns": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "maxTurnMs",
+            "maxTurns"
+          ],
+          "additionalProperties": false
+        },
+        "databaseLabel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fixtureVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "clock": {
+          "type": "string",
+          "const": "dynamic-absolute-dates"
+        },
+        "tokenTtlSeconds": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 300
+        },
+        "refreshMarginSeconds": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "neverApprove": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+          }
+        },
+        "supportedCases": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+              },
+              "basedOn": {
+                "type": "string",
+                "minLength": 1
+              },
+              "definitionId": {
+                "type": "string",
+                "pattern": "^T\\d{2}$"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "read",
+                  "approved-write",
+                  "cancelled-external"
+                ]
+              },
+              "prompt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "fixtureLabelEnv": {
+                "type": "string",
+                "pattern": "^EVE_EVAL_[A-Z0-9_]+$"
+              },
+              "tool": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+              },
+              "absoluteDate": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "inputProfileDifferences": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "id",
+              "basedOn",
+              "definitionId",
+              "kind",
+              "prompt",
+              "fixtureLabelEnv",
+              "tool",
+              "absoluteDate",
+              "inputProfileDifferences"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "exclusions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "scope": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "scope",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "transport",
+        "mcpTransport",
+        "infoVersion",
+        "agentCommit",
+        "deploymentHost",
+        "model",
+        "modelSource",
+        "promptsHash",
+        "toolCatalogueHash",
+        "specialists",
+        "requiredFlags",
+        "budgets",
+        "databaseLabel",
+        "fixtureVersion",
+        "clock",
+        "tokenTtlSeconds",
+        "refreshMarginSeconds",
+        "neverApprove",
+        "supportedCases",
+        "exclusions"
+      ],
+      "additionalProperties": false
     }
   },
   "required": [

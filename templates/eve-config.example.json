@@ -1,0 +1,12 @@
+{
+  "target": "https://REPLACE-preview.vercel.app",
+  "stagingHost": null,
+  "secretEnv": "ROYAL_EVE_BOOTSTRAP_SECRET",
+  "cases": ["eve-lead-tasks-read", "eve-lead-task-approved-write", "eve-outreach-cancelled"],
+  "deploymentPins": {
+    "agentCommit": null,
+    "deploymentHost": null,
+    "promptsHash": null,
+    "toolCatalogueHash": null
+  }
+}

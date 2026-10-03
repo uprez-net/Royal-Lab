@@ -47,7 +47,8 @@ operational case or full operational CLI run yet. Scoped semantic judging and sa
 replay are implemented; real calibration and human review remain pending. Repeated
 experiments are planned, executed and sealed by the [experiment runner](experiments.md),
 and [reports/comparisons](reporting.md) are built offline from sealed bundles. The
-composed Royal Eve profile is later work.
+[Royal Eve profile](eve-staging.md) drives the composed staging agent; it is
+implemented and verified offline, with no live staging run yet.
 
 | Layer                    | Main paths                                                   | Responsibility                                                                           |
 | ------------------------ | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |

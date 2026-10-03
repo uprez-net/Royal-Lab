@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.0.0",
   "id": "royal-eve",
-  "version": "1.0.0",
-  "description": "Composed private staging product agent",
+  "version": "1.1.0",
+  "description": "Composed private staging product agent over the existing /eve/v1/session flow; scored as Royal Eve, never as a candidate model ranking",
   "tools": [],
   "effectPolicy": "staging-cancel-only",
   "candidateNetwork": false,
@@ -15,8 +15,113 @@
     "maxDurationMs": 300000,
     "maxCostUsd": 2
   },
-  "executionImplemented": false,
+  "executionImplemented": true,
   "guriRevision": "460895235f94e917bd855855cd6e106f93a4c7c1",
   "systemPromptHash": null,
-  "parserProfile": "product-native"
+  "parserProfile": "product-native",
+  "deployment": {
+    "transport": "eve-http-session",
+    "mcpTransport": "not-enabled",
+    "infoVersion": 4,
+    "agentCommit": null,
+    "deploymentHost": null,
+    "model": "zai/glm-5.3-flash",
+    "modelSource": "Royal-Construction lib/agent/model.ts at 460895235f94e917bd855855cd6e106f93a4c7c1 (product-pinned, distinct from any eval judge)",
+    "promptsHash": null,
+    "toolCatalogueHash": null,
+    "specialists": [
+      "lead-operations",
+      "offer-operations",
+      "project-operations",
+      "compliance-operations",
+      "tradie-operations",
+      "admin-operations"
+    ],
+    "requiredFlags": ["operationsAgentEnabled", "specialistsEnabled"],
+    "budgets": {
+      "maxTurnMs": 420000,
+      "maxTurns": 3
+    },
+    "databaseLabel": "royal-staging",
+    "fixtureVersion": "v1",
+    "clock": "dynamic-absolute-dates",
+    "tokenTtlSeconds": 300,
+    "refreshMarginSeconds": 60,
+    "neverApprove": [
+      "send_compliance_outreach",
+      "send_compliance_follow_up",
+      "recall_offer_envelope",
+      "invite_team_member",
+      "revoke_team_invitation",
+      "update_team_role",
+      "disconnect_xero"
+    ],
+    "supportedCases": [
+      {
+        "id": "eve-lead-tasks-read",
+        "basedOn": "leads/create-approved-follow-up/cedar",
+        "definitionId": "T02",
+        "kind": "read",
+        "prompt": "List the open tasks on the lead \"{label}\" with their due dates and notes. Do not change anything.",
+        "fixtureLabelEnv": "EVE_EVAL_LEAD_LABEL",
+        "tool": "list_lead_tasks",
+        "absoluteDate": null,
+        "inputProfileDifferences": [
+          "Live staging fixture lead named by an environment label instead of the synthetic Cedar seed",
+          "Deployed dynamic clock"
+        ]
+      },
+      {
+        "id": "eve-lead-task-approved-write",
+        "basedOn": "leads/create-approved-follow-up/cedar",
+        "definitionId": "T02",
+        "kind": "approved-write",
+        "prompt": "Create a follow-up task on the lead \"{label}\" due on 2026-10-20 at 09:00 Sydney time, with the note exactly \"{marker}\".",
+        "fixtureLabelEnv": "EVE_EVAL_WRITE_LEAD_LABEL",
+        "tool": "create_lead_task",
+        "absoluteDate": "2026-10-20",
+        "inputProfileDifferences": [
+          "Dedicated disposable staging lead instead of the synthetic Cedar seed",
+          "Absolute due date replaces the fixed-tools relative \"tomorrow\" because the deployed clock is dynamic",
+          "Run marker in the note is the cleanup and verification handle"
+        ]
+      },
+      {
+        "id": "eve-outreach-cancelled",
+        "basedOn": "compliance/prepare-outreach-and-respect-cancel/estuary",
+        "definitionId": "T08",
+        "kind": "cancelled-external",
+        "prompt": "Send the compliance outreach to the surveyor for the project \"{label}\". I will confirm before anything goes out.",
+        "fixtureLabelEnv": "EVE_EVAL_COMPLIANCE_PROJECT_LABEL",
+        "tool": "send_compliance_outreach",
+        "absoluteDate": null,
+        "inputProfileDifferences": [
+          "Live staging compliance project instead of the synthetic Estuary seed",
+          "Outreach is always cancelled on staging; the agent may also decline before parking"
+        ]
+      }
+    ],
+    "exclusions": [
+      {
+        "scope": "All document-profile cases (D01-D16)",
+        "reason": "Independent document analysis; not a generic Eve task surface"
+      },
+      {
+        "scope": "T03-T07, T09-T12 and every safety diagnostic",
+        "reason": "Not provisioned as staging fixtures with independent verification; remain fixed-tools only"
+      },
+      {
+        "scope": "Any approved write other than create_lead_task",
+        "reason": "Only the dedicated disposable lead is mutable on staging"
+      },
+      {
+        "scope": "Never-approve operations",
+        "reason": "Client email, certifier outreach/follow-up, DocuSign, invitations, role changes and Xero disconnection are always cancelled"
+      },
+      {
+        "scope": "MCP transport",
+        "reason": "MCP publishes invocation lifecycle tools for the same agent; it would need a separately declared transport profile"
+      }
+    ]
+  }
 }

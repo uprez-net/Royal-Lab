@@ -38,6 +38,12 @@ Usage: pnpm lab <command> [arguments] [options]
   grade <run-id>                 Regrade saved artifacts offline (--replay-judge <receipt>)
   grade <run-id> --judge-profile <file> --judge-credentials <file> --suite <path> --allow-paid
                                 Opt-in scoped semantic judging of saved evidence
+  eve preflight --eve-config <file>
+                                Offline Royal Eve target/pin/credential/case checks (no request)
+  eve run <case-id> --eve-config <file> --allow-paid
+                                One live staging case (product model spend); saves record + traces
+  eve grade <eve-run-id> --eve-config <file> [--verify-output <file> --produced-at <iso> --exit-code <n>]
+                                Grade a saved Eve run; durable evidence comes from the fixture maintainer
   report <experiment-id> [--format json|csv|html]
                                 Offline report: coverage, criteria, tools, spend; writes under reports/
   compare <exp-a>:<config> <exp-b>:<config> [--exploratory] [--format json|html]
@@ -72,6 +78,10 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       experiment: { type: 'string' },
       'lock-file': { type: 'string' },
       format: { type: 'string' },
+      'eve-config': { type: 'string' },
+      'verify-output': { type: 'string' },
+      'produced-at': { type: 'string' },
+      'exit-code': { type: 'string' },
       exploratory: { type: 'boolean' },
     },
   });
@@ -413,6 +423,132 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       );
     }
     return 0;
+  }
+  if (command === 'eve') {
+    if (!options['eve-config']) throw new Error('eve requires --eve-config <file>');
+    const { evePreflight } = await import('#src/environments/eve/preflight');
+    const { ProfileSchema } = await import('#contracts/profile');
+    const { z } = await import('zod');
+    const { mkdir, writeFile, readFile: read } = await import('node:fs/promises');
+    const { securePath } = await import('#src/io');
+    // Explicit evaluator config: target, optional staging host, the NAME of the
+    // bootstrap secret variable, an optional pinned-deployment overlay, and cases.
+    const eveConfig = z
+      .looseObject({
+        target: z.string(),
+        stagingHost: z.string().nullable().default(null),
+        secretEnv: z.string(),
+        cases: z.array(z.string()).default([]),
+        deploymentPins: z.record(z.string(), z.json()).default({}),
+      })
+      .parse(await readJson(path.resolve(root, options['eve-config'])));
+    const base = ProfileSchema.parse(
+      await readJson(await securePath(root, 'profiles/royal-eve.json')),
+    );
+    const profile = ProfileSchema.parse({
+      ...base,
+      deployment: { ...base.deployment, ...eveConfig.deploymentPins },
+    });
+    const sub = arguments_[0];
+    const selected = sub === 'run' ? [arguments_[1] ?? ''] : eveConfig.cases;
+    const { deploymentPins: _pins, ...runConfig } = eveConfig;
+    const check = evePreflight(profile, { ...runConfig, cases: selected }, process.env);
+    if (sub === 'preflight') {
+      required(1);
+      output(check);
+      return check.valid ? 0 : 1;
+    }
+    const resultsRoot = path.join(root, 'results', 'eve');
+    if (sub === 'run') {
+      required(2);
+      if (!options['allow-paid'])
+        throw new Error('PAID_EXECUTION_DISABLED: a live Eve case spends the product model budget');
+      if (!check.valid || check.selected[0]?.status !== 'ready')
+        throw new Error(
+          `EVE_PREFLIGHT_FAILED: ${[...check.errors, ...check.selected.map((s) => s.reason ?? '')].filter(Boolean).join('; ')}`,
+        );
+      const { RoyalEveClient, runEveCase } = await import('#src/harness/adapters/royal-eve');
+      const item = check.deployment!.supportedCases.find((c) => c.id === arguments_[1])!;
+      const client = new RoyalEveClient({
+        target: eveConfig.target,
+        stagingHost: eveConfig.stagingHost,
+        secret: () => process.env[eveConfig.secretEnv] ?? '',
+        deployment: check.deployment!,
+      });
+      try {
+        const run = await runEveCase(client, item, {
+          profileVersion: profile.version,
+          labels: { [item.fixtureLabelEnv]: process.env[item.fixtureLabelEnv] },
+          turnTimeoutMs: check.deployment!.budgets.maxTurnMs,
+        });
+        const directory = path.join(resultsRoot, run.record.runId);
+        await mkdir(directory, { recursive: true });
+        await writeFile(path.join(directory, 'record.json'), jsonText(run.record), { flag: 'wx' });
+        await writeFile(
+          path.join(directory, 'observation.json'),
+          jsonText(redact(run.observation)),
+          { flag: 'wx' },
+        );
+        await writeFile(path.join(directory, 'deployment.json'), jsonText(check.deployment), {
+          flag: 'wx',
+        });
+        output({
+          runId: run.record.runId,
+          outcome: run.record.outcome,
+          reason: run.record.reason,
+          label: 'Royal Eve (composed product agent)',
+          next: 'Ask the fixture maintainer for eve:eval:fixtures verify output, then run eve grade.',
+        });
+        return run.record.outcome === 'completed' ? 0 : 1;
+      } finally {
+        await client.close();
+      }
+    }
+    if (sub === 'grade') {
+      required(2);
+      const { Id } = await import('#contracts/common');
+      const { EveRunRecordSchema, EveDeploymentSchema } = await import('#contracts/eve');
+      const { gradeEveRun } = await import('#src/environments/eve/grade');
+      const { importFixtureVerify } = await import('#src/environments/eve/verifier-import');
+      const directory = path.join(resultsRoot, Id.parse(arguments_[1]));
+      const record = EveRunRecordSchema.parse(await readJson(path.join(directory, 'record.json')));
+      const deployment = EveDeploymentSchema.parse(
+        await readJson(path.join(directory, 'deployment.json')),
+      );
+      const observation = (await readJson(path.join(directory, 'observation.json'))) as Parameters<
+        typeof gradeEveRun
+      >[1]['observation'];
+      const item = deployment.supportedCases.find((c) => c.id === record.caseId)!;
+      let evidence = null;
+      if (options['verify-output']) {
+        if (!options['produced-at'] || options['exit-code'] === undefined)
+          throw new Error('--verify-output requires --produced-at and --exit-code');
+        evidence = importFixtureVerify(
+          await read(path.resolve(root, options['verify-output']), 'utf8'),
+          {
+            productRevision: profile.guriRevision!,
+            producedAt: options['produced-at'],
+            databaseLabel: deployment.databaseLabel,
+            fixtureVersion: deployment.fixtureVersion,
+            exitCode: Number(options['exit-code']),
+          },
+        );
+        await writeFile(
+          path.join(directory, `durable-evidence-${evidence.rawHash.slice(0, 12)}.json`),
+          jsonText(evidence),
+          { flag: 'wx' },
+        );
+      }
+      const grade = gradeEveRun(item, { record, observation }, evidence, deployment.neverApprove);
+      const file = `eve-grade-${new Date()
+        .toISOString()
+        .replace(/[^0-9]/g, '')
+        .slice(0, 14)}.json`;
+      await writeFile(path.join(directory, file), jsonText(grade), { flag: 'wx' });
+      output({ file, ...grade });
+      return 0;
+    }
+    throw new Error('eve requires preflight, run or grade');
   }
   if (command === 'report' || command === 'compare') {
     const { experimentDirectory } = await import('#runs/artifacts');

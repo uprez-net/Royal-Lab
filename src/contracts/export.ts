@@ -32,6 +32,7 @@ import {
   JudgeCalibrationSchema,
 } from '#contracts/judge';
 import { CaseSeedSchema, CaseEnvironmentSchema, CaseControlsSchema } from '#contracts/authoring';
+import { EveDeploymentSchema, EveDurableEvidenceSchema, EveRunRecordSchema } from '#contracts/eve';
 import {
   ExperimentSpecSchema,
   ExperimentPlanSchema,
@@ -72,6 +73,9 @@ export async function exportSchemas(root: string) {
     'experiment-plan': ExperimentPlanSchema,
     'experiment-ledger-event': LedgerEventSchema,
     'trial-bundle-receipt': TrialBundleReceiptSchema,
+    'eve-deployment': EveDeploymentSchema,
+    'eve-durable-evidence': EveDurableEvidenceSchema,
+    'eve-run-record': EveRunRecordSchema,
     'semantic-receipt': SemanticReceiptSchema,
     'human-adjudication': HumanAdjudicationSchema,
     'judge-calibration': JudgeCalibrationSchema,
