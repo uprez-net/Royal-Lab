@@ -390,13 +390,13 @@ describe('Royal Eve staging profile (#18)', () => {
       [{ deployment: 'other.vercel.app' }, /DEPLOYMENT_MISMATCH/],
       [{ expiresInSeconds: 3600 }, /BOOTSTRAP_INVALID/],
     ] as const) {
-      const result = await run(
-        mockEve('read', { bootstrap: override }),
-        caseOf('eve-lead-tasks-read'),
-      );
+      const mock = mockEve('read', { bootstrap: override });
+      const result = await run(mock, caseOf('eve-lead-tasks-read'));
       assert.equal(result.record.outcome, 'blocked-input');
       assert.match(result.record.reason!, pattern);
       assert.equal(result.record.rootSessionId, null, 'no session is created on a refused target');
+      // Every refusal after a token was minted revokes it immediately.
+      assert.deepEqual(mock.revoked, ['sess_1'], 'a token minted for a refused target is revoked');
     }
   });
 

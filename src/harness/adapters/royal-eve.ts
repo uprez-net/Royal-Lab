@@ -96,26 +96,37 @@ export class RoyalEveClient {
       );
     const body = (await response.json()) as Record<string, unknown>;
     const { deployment } = this.options;
+    // A token minted for a refused target is revoked at once, never left live.
+    const refuse = async (message: string): Promise<never> => {
+      if (typeof body.token === 'string') await this.revoke(body.token);
+      throw new EveTargetError(message);
+    };
     if (
       typeof body.token !== 'string' ||
       body.environment !== 'preview' ||
       typeof body.expiresInSeconds !== 'number' ||
       body.expiresInSeconds > deployment.tokenTtlSeconds
     )
-      throw new EveTargetError('EVE_BOOTSTRAP_INVALID: not a short-lived preview evaluator token');
+      await refuse('EVE_BOOTSTRAP_INVALID: not a short-lived preview evaluator token');
     for (const flag of deployment.requiredFlags)
-      if (body[flag] !== true) throw new EveTargetError(`EVE_FLAG_DISABLED: ${flag}`);
+      if (body[flag] !== true) await refuse(`EVE_FLAG_DISABLED: ${flag}`);
     if (body.databaseLabel !== deployment.databaseLabel)
-      throw new EveTargetError(
+      await refuse(
         `EVE_WRONG_DATABASE: target reports ${JSON.stringify(body.databaseLabel)}, profile pins ${JSON.stringify(deployment.databaseLabel)}`,
       );
     if (body.fixtureVersion !== deployment.fixtureVersion)
-      throw new EveTargetError('EVE_FIXTURE_VERSION_MISMATCH');
+      await refuse(
+        `EVE_FIXTURE_VERSION_MISMATCH: target reports ${JSON.stringify(body.fixtureVersion)}, profile pins ${JSON.stringify(deployment.fixtureVersion)}`,
+      );
     if (deployment.deploymentHost && body.deployment !== deployment.deploymentHost)
-      throw new EveTargetError('EVE_DEPLOYMENT_MISMATCH: not the pinned deployment');
+      await refuse(
+        `EVE_DEPLOYMENT_MISMATCH: target reports deployment ${JSON.stringify(body.deployment)}, pinned ${JSON.stringify(deployment.deploymentHost)}`,
+      );
+    const token = body.token as string;
+    const expiresInSeconds = body.expiresInSeconds as number;
     const previous = this.token;
-    this.token = body.token;
-    this.expiresAt = this.now() + body.expiresInSeconds * 1000;
+    this.token = token;
+    this.expiresAt = this.now() + expiresInSeconds * 1000;
     if (previous) {
       this.refreshes++;
       await this.revoke(previous);
