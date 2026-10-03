@@ -102,9 +102,18 @@ export function gradeEveRun(
   }
   if (item.kind === 'approved-write') {
     const marker = run.record.marker ?? '';
-    const approval = observation.approvals.find(
+    // Eve forwards a child's approval request to the root session; the decision
+    // may be recorded on either copy, which share the request ID.
+    const forwarded = observation.approvals.find(
       (entry) => entry.sessionId === root && entry.tool === item.tool,
     );
+    const approval = forwarded && {
+      ...forwarded,
+      resolution:
+        observation.approvals.find(
+          (entry) => entry.requestId === forwarded.requestId && entry.resolution !== null,
+        )?.resolution ?? null,
+    };
     criteria.push({
       id: 'E-APPROVAL',
       title: 'The write parked for owner approval on the same session and named the marker',

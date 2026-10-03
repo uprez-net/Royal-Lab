@@ -134,7 +134,9 @@ export class RoyalEveClient {
     const info = await this.authorized('/eve/v1/info', { method: 'GET' });
     const infoBody = (await info.json()) as { kind?: unknown; version?: unknown };
     if (infoBody.kind !== 'eve-agent-info' || infoBody.version !== deployment.infoVersion)
-      throw new EveTargetError('EVE_INFO_MISMATCH: not the expected Eve deployment');
+      throw new EveTargetError(
+        `EVE_INFO_MISMATCH: target reports ${JSON.stringify({ kind: infoBody.kind, version: infoBody.version })}, profile pins version ${deployment.infoVersion}`,
+      );
     this.evidence = EveTargetEvidenceSchema.parse({
       origin: this.origin.origin,
       environment: 'preview',
