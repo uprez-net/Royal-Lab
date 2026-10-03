@@ -514,7 +514,12 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
           outcome: run.record.outcome,
           reason: run.record.reason,
           label: 'Royal Eve (composed product agent)',
-          next: 'Ask the fixture maintainer for eve:eval:fixtures verify output, then run eve grade.',
+          next:
+            run.record.outcome !== 'completed'
+              ? 'Not executed: fix the reported target/credential/fixture issue; nothing ran on staging.'
+              : item.kind === 'approved-write'
+                ? 'Ask the fixture maintainer for eve:eval:fixtures verify output, then run eve grade.'
+                : 'Run eve grade to grade the saved observation.',
         });
         return run.record.outcome === 'completed' ? 0 : 1;
       } finally {
