@@ -28,6 +28,13 @@ Usage: pnpm lab <command> [arguments] [options]
   config show [--config <file>]   Display explicit effective config with secrets redacted
   bridge prepare|check           Build or verify the pinned private canonical bridge
   run <task> --suite <path>       One reviewed document trial (--allow-paid required)
+  plan --experiment <file>       Dry run: full suite x configuration x repeat matrix and bounded spend
+  sweep --experiment <file> --allow-paid
+                                Freeze the plan, then run every trial (reviewed cases only)
+  resume <experiment-id> --allow-paid
+                                Resume unstarted trials; interrupted ones stay recorded
+  grade --experiment <experiment-id>
+                                Regrade every sealed trial bundle as new grade records
   grade <run-id>                 Regrade saved artifacts offline (--replay-judge <receipt>)
   grade <run-id> --judge-profile <file> --judge-credentials <file> --suite <path> --allow-paid
                                 Opt-in scoped semantic judging of saved evidence
@@ -60,6 +67,8 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       'judge-credentials': { type: 'string' },
       'replay-judge': { type: 'string' },
       calibration: { type: 'string' },
+      experiment: { type: 'string' },
+      'lock-file': { type: 'string' },
     },
   });
   const [command, ...arguments_] = parsed.positionals;
@@ -271,6 +280,89 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
     output(result);
     return result.status === 'completed' ? 0 : 1;
   }
+  if (command === 'plan' || command === 'sweep') {
+    required(0);
+    if (!options.experiment) throw new Error(`${command} requires --experiment <file>`);
+    const { loadExperimentSpec, planExperiment, describePlan } = await import('#runs/manifest');
+    const spec = await loadExperimentSpec(root, options.experiment);
+    if (command === 'plan') {
+      const plan = await planExperiment(root, spec);
+      output(options.json ? plan : describePlan(plan));
+      return plan.preflight.valid ? 0 : 1;
+    }
+    if (!options['allow-paid'])
+      throw new Error(
+        'PAID_EXECUTION_DISABLED: use --allow-paid only for intentional candidate requests',
+      );
+    const { ExperimentLedger, experimentDirectory } = await import('#runs/artifacts');
+    const { runExperiment, documentTrialExecutor, paidAdapterFactory } =
+      await import('#runs/sweep');
+    const plan = await planExperiment(root, spec);
+    // The frozen plan and ledger are kept even when preflight blocks execution.
+    const ledger = await ExperimentLedger.create(
+      experimentDirectory(root, plan.experimentId),
+      plan,
+    );
+    if (plan.suite.profile !== 'documents')
+      throw new Error('SWEEP_PROFILE_UNSUPPORTED: CLI sweeps execute the documents profile');
+    try {
+      const outcome = await runExperiment(root, ledger, {
+        allowPaid: true,
+        executor: documentTrialExecutor(
+          paidAdapterFactory,
+          (await loadConfig(options.config)).binaryParser,
+        ),
+        ...(options['lock-file'] ? { externalLockFile: options['lock-file'] } : {}),
+      });
+      output(summarizeOutcome(outcome));
+      return outcome.stopped || outcome.controllerErrors.length ? 1 : 0;
+    } catch (error) {
+      output({
+        status: 'blocked-input',
+        experimentId: plan.experimentId,
+        reason: String(redact(error instanceof Error ? error.message : error)),
+      });
+      return 1;
+    }
+  }
+  if (command === 'resume') {
+    required(1);
+    if (!options['allow-paid'])
+      throw new Error(
+        'PAID_EXECUTION_DISABLED: use --allow-paid only for intentional candidate requests',
+      );
+    const { ExperimentLedger, experimentDirectory } = await import('#runs/artifacts');
+    const { runExperiment, documentTrialExecutor, paidAdapterFactory } =
+      await import('#runs/sweep');
+    const { Id } = await import('#contracts/common');
+    const ledger = await ExperimentLedger.open(experimentDirectory(root, Id.parse(arguments_[0])));
+    const outcome = await runExperiment(root, ledger, {
+      allowPaid: true,
+      executor: documentTrialExecutor(
+        paidAdapterFactory,
+        (await loadConfig(options.config)).binaryParser,
+      ),
+      ...(options['lock-file'] ? { externalLockFile: options['lock-file'] } : {}),
+    });
+    output(summarizeOutcome(outcome));
+    return outcome.stopped || outcome.controllerErrors.length ? 1 : 0;
+  }
+  if (command === 'grade' && options.experiment) {
+    required(0);
+    const { ExperimentLedger, experimentDirectory } = await import('#runs/artifacts');
+    const { regradeExperiment } = await import('#runs/sweep');
+    const { Id } = await import('#contracts/common');
+    const ledger = await ExperimentLedger.open(
+      experimentDirectory(root, Id.parse(options.experiment)),
+    );
+    const graded = await regradeExperiment(ledger);
+    output({
+      experimentId: ledger.plan.experimentId,
+      regraded: graded.length,
+      records: graded.map((event) => event.gradeFile),
+    });
+    return 0;
+  }
   if (command === 'grade') {
     required(1);
     const { securePath } = await import('#src/io');
@@ -333,6 +425,25 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
     return 3;
   }
   throw new Error(`Unknown command: ${command}; see --help.`);
+}
+function summarizeOutcome(
+  outcome: Awaited<ReturnType<typeof import('#runs/sweep').runExperiment>>,
+) {
+  const counts: Record<string, number> = {};
+  for (const state of outcome.states) {
+    const key = state.status ?? state.state;
+    counts[key] = (counts[key] ?? 0) + 1;
+  }
+  return {
+    experimentId: outcome.experimentId,
+    stopped: outcome.stopped,
+    interrupted: outcome.interrupted,
+    trials: outcome.states.length,
+    counts,
+    gradingErrors: outcome.gradingErrors,
+    controllerErrors: outcome.controllerErrors,
+    note: 'Completion is not correctness; see the report for graded coverage.',
+  };
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   main()

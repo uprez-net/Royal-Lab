@@ -7,7 +7,7 @@ its facts, artifacts, permissions and effects. Intended builder policy is the
 authority. Royal-Construction supplies canonical operational commands, not the
 expected policy for every builder.
 
-The current repository has 28 task definitions, four **draft** document specimens,
+The current repository has 28 task definitions, 49 **draft** case packs,
 a closed document workspace, candidate transports, deterministic verification and
 a tested minimum canonical bridge covering lead tools and T03–T12 boundaries. It is an implementation under development,
 with no approved benchmark release or paid model baseline. Review gates are real:
@@ -21,13 +21,14 @@ an offline validation pass does not permit execution of draft cases.
 | [Architecture](architecture.md)                 | Components, trust boundaries, case lifecycle, evidence, approval/replay and scoring                            |
 | [Configuration](configuration.md)               | Inputs to obtain from the owner, explicit local configuration, credentials and pricing                         |
 | [Execution](execution.md)                       | Candidate loop, budgets, current CLI/API support and saved evidence                                            |
+| [Experiments](experiments.md)                   | Repeat matrices, paired order, spend ceilings, immutable trial bundles, resume and regrading                   |
 | [Semantic grading](semantic-grading.md)         | Scoped judges, preserved disagreements, offline replay and pending real calibration                            |
 | [Issue closeout](issue-closeout.md)             | Completed checkpoints and outstanding work consolidated into issue #21                                         |
 | [Measurement specification](benchmark-spec.md)  | Domain, profiles, success definition, denominators, comparison rules and planned scope                         |
 | [Task authoring](task-authoring.md)             | Synthetic case design, hidden expectations, review and versioning                                              |
 | [Contracts](contracts.md)                       | Schemas, hashes, safe paths and cross-file validation                                                          |
 | [Business review pack](review-pack.md)          | Policies, worlds, specimens and authored expectations needing actual builder review                            |
-| [Draft case library](authored-cases.md)         | D01–D12/T01–T12 packs, variants, diagnostics, controls and review boundaries                                   |
+| [Draft case library](authored-cases.md)         | D01–D16/T01–T12 packs, variants, diagnostics, controls and review boundaries                                   |
 | [Document workspace](document-workspace.md)     | Readers, citations, extraction gaps and isolated binary parsing                                                |
 | [Canonical bridge](guri-bridge.md)              | Pinned product commands, disposable databases and independently observed effects                               |
 | [Operational controls](operational-controls.md) | Minimum T03–T12 adapters, canonical stale-version execution, recording ports and cleanup evidence              |

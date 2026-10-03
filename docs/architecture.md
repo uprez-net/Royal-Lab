@@ -45,7 +45,8 @@ The document CLI is implemented for one reviewed trial. The fixed-tools API and
 integration controls compose the bridge and operator; there is no release-ready
 operational case or full operational CLI run yet. Scoped semantic judging and saved
 replay are implemented; real calibration and human review remain pending. Repeated
-suite execution, reports/comparisons and the composed Royal Eve profile are later work.
+experiments are planned, executed and sealed by the [experiment runner](experiments.md);
+reports/comparisons and the composed Royal Eve profile are later work.
 
 | Layer                    | Main paths                                                   | Responsibility                                                                           |
 | ------------------------ | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
@@ -99,10 +100,9 @@ version/review update. Schema 1.1.0 adds frozen hidden verifier references;
 7. Artifacts and independently observed effects are checked against the frozen
    hidden plan. Saved evidence can be regraded without rerunning the candidate.
 
-The current CLI requires `repeats: 1` and `concurrency: 1`. It retains the full
-suite selection and marks other cases explicitly excluded for the selected single
-trial. This is not a full-suite result. Broader repeated/concurrent orchestration
-belongs to #16.
+`pnpm lab run` still executes one explicitly selected trial with `repeats: 1` and
+`concurrency: 1`, retaining other cases as excluded. Repeated, paired and bounded
+suite experiments use `pnpm lab plan|sweep|resume`; see [experiments](experiments.md).
 
 ## Document evidence
 

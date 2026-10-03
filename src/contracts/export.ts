@@ -32,6 +32,12 @@ import {
   JudgeCalibrationSchema,
 } from '#contracts/judge';
 import { CaseSeedSchema, CaseEnvironmentSchema, CaseControlsSchema } from '#contracts/authoring';
+import {
+  ExperimentSpecSchema,
+  ExperimentPlanSchema,
+  LedgerEventSchema,
+  TrialBundleReceiptSchema,
+} from '#contracts/experiment';
 
 export async function exportSchemas(root: string) {
   const directory = path.join(root, 'schemas');
@@ -62,6 +68,10 @@ export async function exportSchemas(root: string) {
     'judge-scope': JudgeScopeSchema,
     'judge-response': JudgeResponseSchema,
     'judge-record': JudgeRecordSchema,
+    'experiment-spec': ExperimentSpecSchema,
+    'experiment-plan': ExperimentPlanSchema,
+    'experiment-ledger-event': LedgerEventSchema,
+    'trial-bundle-receipt': TrialBundleReceiptSchema,
     'semantic-receipt': SemanticReceiptSchema,
     'human-adjudication': HumanAdjudicationSchema,
     'judge-calibration': JudgeCalibrationSchema,

@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "stability-d13",
+  "version": "1.0.0",
+  "description": "Example first stability exercise: two candidate configurations, three repeats of one reviewed document case. Placeholders only; pin real models, pricing and the credential variable names privately.",
+  "suite": "suites/held-out.json",
+  "cases": ["analytics/explain-pipeline-forecast/estuary"],
+  "repeats": 3,
+  "seed": "stability-2026-10",
+  "concurrency": 2,
+  "configurations": [
+    {
+      "id": "candidate-a",
+      "provider": "direct",
+      "model": "REPLACE-with-exact-model-id",
+      "parameters": { "temperature": 0 },
+      "apiKeyEnv": "ROYAL_LAB_CANDIDATE_A_KEY",
+      "pricing": {
+        "version": "0.0.0",
+        "asOf": "2026-10-01T00:00:00Z",
+        "inputUsdPerMillion": 0,
+        "outputUsdPerMillion": 0
+      }
+    },
+    {
+      "id": "candidate-b",
+      "provider": "gateway",
+      "model": "REPLACE/with-exact-model-id",
+      "parameters": { "temperature": 0 },
+      "apiKeyEnv": "ROYAL_LAB_CANDIDATE_B_KEY",
+      "pricing": {
+        "version": "0.0.0",
+        "asOf": "2026-10-01T00:00:00Z",
+        "inputUsdPerMillion": 0,
+        "outputUsdPerMillion": 0
+      }
+    }
+  ],
+  "judgeProfile": null,
+  "budget": {
+    "perTrialCandidateUsd": 1,
+    "perTrialJudgeUsd": 0,
+    "totalCandidateUsd": 6,
+    "totalJudgeUsd": 0,
+    "maxWallClockMs": 3600000
+  },
+  "usageAssumptions": {
+    "candidateInputTokensPerTrial": 60000,
+    "candidateCachedInputTokensPerTrial": 0,
+    "candidateOutputTokensPerTrial": 4000,
+    "judgeInputTokensPerCall": 6000,
+    "judgeOutputTokensPerCall": 600
+  },
+  "transportRetries": 0,
+  "retention": { "traceDays": 30 }
+}

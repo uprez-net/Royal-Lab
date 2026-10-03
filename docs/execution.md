@@ -21,7 +21,7 @@ The CLI executes one reviewed document trial with explicit `--allow-paid`, narro
 effective limits, a spend cap and a clean checkpoint. Full-suite preflight runs first,
 including frozen verification hashes and real review metadata. All selected cases
 remain in saved preflight/manifest coverage. Other cases are explicitly excluded by
-single-trial selection; repeated/concurrent suite orchestration is #16.
+single-trial selection. Repeated/concurrent suites use the [experiment runner](experiments.md).
 
 Saved configuration hashes include prompt, schemas, limits, provider settings, SDK,
 pricing, raw/parser/extract fingerprints and runner/dependency versions. Prompt,
