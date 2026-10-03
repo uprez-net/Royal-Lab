@@ -45,8 +45,9 @@ The document CLI is implemented for one reviewed trial. The fixed-tools API and
 integration controls compose the bridge and operator; there is no release-ready
 operational case or full operational CLI run yet. Scoped semantic judging and saved
 replay are implemented; real calibration and human review remain pending. Repeated
-experiments are planned, executed and sealed by the [experiment runner](experiments.md);
-reports/comparisons and the composed Royal Eve profile are later work.
+experiments are planned, executed and sealed by the [experiment runner](experiments.md),
+and [reports/comparisons](reporting.md) are built offline from sealed bundles. The
+composed Royal Eve profile is later work.
 
 | Layer                    | Main paths                                                   | Responsibility                                                                           |
 | ------------------------ | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |

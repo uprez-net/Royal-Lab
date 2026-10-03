@@ -8,7 +8,7 @@ import { loadConfig, redact } from '#src/config';
 import { generate } from '#fixtures/generate';
 import { lint } from '#fixtures/lint';
 import { exportSchemas } from '#contracts/export';
-import { readJson, walk } from '#src/io';
+import { jsonText, readJson, walk } from '#src/io';
 
 const HELP = `Royal-Lab 0.1 • NSW residential builder benchmark
 
@@ -38,8 +38,10 @@ Usage: pnpm lab <command> [arguments] [options]
   grade <run-id>                 Regrade saved artifacts offline (--replay-judge <receipt>)
   grade <run-id> --judge-profile <file> --judge-credentials <file> --suite <path> --allow-paid
                                 Opt-in scoped semantic judging of saved evidence
-  report <run>                   Reserved for reports (#17)
-  compare <run-a> <run-b>         Reserved for compatible comparisons (#17)
+  report <experiment-id> [--format json|csv|html]
+                                Offline report: coverage, criteria, tools, spend; writes under reports/
+  compare <exp-a>:<config> <exp-b>:<config> [--exploratory] [--format json|html]
+                                Hash-compatible paired comparison (refused if incompatible)
 
 Options: --root <directory> --json --help
 No API credentials are needed for authoring. See docs/configuration.md.
@@ -69,6 +71,8 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       calibration: { type: 'string' },
       experiment: { type: 'string' },
       'lock-file': { type: 'string' },
+      format: { type: 'string' },
+      exploratory: { type: 'boolean' },
     },
   });
   const [command, ...arguments_] = parsed.positionals;
@@ -410,19 +414,77 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
     }
     return 0;
   }
-  const reserved: Record<string, string> = {
-    report: '#17',
-    compare: '#17',
-  };
-  if (reserved[command]) {
-    required(command === 'compare' ? 2 : 1);
+  if (command === 'report' || command === 'compare') {
+    const { experimentDirectory } = await import('#runs/artifacts');
+    const { buildExperimentReport } = await import('#reporting/report');
+    const exporter = await import('#reporting/export');
+    const { Id } = await import('#contracts/common');
+    const { mkdir, writeFile } = await import('node:fs/promises');
+    const format = options.format ?? (options.json ? 'json' : 'html');
+    if (!['json', 'csv', 'html'].includes(format) || (command === 'compare' && format === 'csv'))
+      throw new Error('--format must be json, csv or html (compare: json or html)');
+    const stamp = new Date()
+      .toISOString()
+      .replace(/[^0-9]/g, '')
+      .slice(0, 14);
+    // Reports are new files beside the sealed evidence; nothing is overwritten.
+    const save = async (directory: string, name: string, text: string) => {
+      const reports = path.join(directory, 'reports');
+      await mkdir(reports, { recursive: true });
+      const file = path.join(reports, `${name}-${stamp}.${format}`);
+      await writeFile(file, text, { flag: 'wx' });
+      return file;
+    };
+    if (command === 'report') {
+      required(1);
+      const directory = experimentDirectory(root, Id.parse(arguments_[0]));
+      const report = await buildExperimentReport(directory, { linkBase: '..' });
+      const text =
+        format === 'json'
+          ? exporter.reportJson(report)
+          : format === 'csv'
+            ? exporter.reportCsv(report)
+            : exporter.reportHtml(report);
+      const file = await save(directory, 'report', text);
+      output({
+        file,
+        label: report.label,
+        configurations: report.configurations.map((item) => ({
+          configurationId: item.configurationId,
+          strictSuccessRate: item.headline.strictSuccessRate,
+          reason: item.headline.reason,
+        })),
+      });
+      return 0;
+    }
+    required(2);
+    const { compare } = await import('#reporting/compare');
+    const arm = async (value: string) => {
+      const [experimentId, configurationId] = value.split(':');
+      if (!experimentId || !configurationId)
+        throw new Error('compare arms are <experiment-id>:<configuration-id>');
+      const directory = experimentDirectory(root, Id.parse(experimentId));
+      return {
+        directory,
+        report: await buildExperimentReport(directory, { linkBase: '..' }),
+        configurationId,
+      };
+    };
+    const a = await arm(arguments_[0]!);
+    const b =
+      arguments_[1]!.split(':')[0] === arguments_[0]!.split(':')[0]
+        ? { ...(await arm(arguments_[1]!)), report: a.report }
+        : await arm(arguments_[1]!);
+    const comparison = compare(a, b, { exploratory: options.exploratory ?? false });
+    const text = format === 'json' ? jsonText(comparison) : exporter.comparisonHtml(comparison);
+    const file = await save(a.directory, `compare-${comparison.status}`, text);
     output({
-      status: 'not-implemented',
-      command,
-      owningIssue: reserved[command],
-      message: 'No candidate call, grading or successful benchmark receipt was produced.',
+      file,
+      status: comparison.status,
+      ranking: comparison.ranking,
+      mismatches: comparison.mismatches,
     });
-    return 3;
+    return 0;
   }
   throw new Error(`Unknown command: ${command}; see --help.`);
 }

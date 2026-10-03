@@ -1,0 +1,82 @@
+name: Paid benchmark (manual, bounded)
+# Explicit dispatch only. Never runs on push or pull_request. Requires the
+# protected `paid-benchmark` environment (configure required reviewers there),
+# private credentials and a typed confirmation. Documents profile only: no
+# production, staging or Royal Eve target is reachable from this workflow.
+on:
+  workflow_dispatch:
+    inputs:
+      experiment:
+        description: 'Experiment spec under experiments/ (e.g. experiments/stability.json)'
+        required: true
+        type: string
+      max_candidate_usd:
+        description: 'Hard cap; the frozen plan bounded candidate spend must not exceed it'
+        required: true
+        type: string
+      confirm:
+        description: 'Type RUN-PAID to confirm a paid candidate run'
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: royal-lab-paid-benchmark
+  cancel-in-progress: false
+jobs:
+  paid:
+    if: ${{ inputs.confirm == 'RUN-PAID' }}
+    runs-on: ubuntu-latest
+    environment: paid-benchmark
+    timeout-minutes: 120
+    env:
+      EXPERIMENT: ${{ inputs.experiment }}
+      MAX_CANDIDATE_USD: ${{ inputs.max_candidate_usd }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: pnpm/action-setup@v6.1.0
+        with:
+          version: 11.1.2
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - name: Validate inputs
+        run: |
+          [[ "$EXPERIMENT" =~ ^experiments/[A-Za-z0-9._-]+\.json$ ]] || { echo "Invalid experiment path"; exit 1; }
+          [[ "$MAX_CANDIDATE_USD" =~ ^[0-9]+(\.[0-9]+)?$ ]] || { echo "Invalid cap"; exit 1; }
+      - name: Dry run and spend bound check (no request)
+        run: |
+          node --conditions=development --import tsx src/cli.ts plan --experiment "$EXPERIMENT" --json > plan.json
+          node -e '
+            const plan = JSON.parse(require("fs").readFileSync("plan.json", "utf8"));
+            const cap = Number(process.env.MAX_CANDIDATE_USD);
+            if (plan.suite.profile !== "documents") throw new Error("Only the documents profile runs here");
+            if (!plan.preflight.valid) throw new Error("Run preflight failed");
+            if (plan.estimate.boundedCandidateUsd > cap || plan.spec.budget.totalCandidateUsd > cap)
+              throw new Error("Bounded spend exceeds the dispatch cap");
+            if (plan.estimate.expectedJudgeUsd === null) throw new Error("Judge pricing is not pinned");
+            console.log(`Planned ${plan.trials.length} trials; bounded $${plan.estimate.boundedCandidateUsd}`);
+          '
+      - name: Sweep (paid, bounded)
+        env:
+          ROYAL_LAB_CANDIDATE_A_KEY: ${{ secrets.ROYAL_LAB_CANDIDATE_A_KEY }}
+          ROYAL_LAB_CANDIDATE_B_KEY: ${{ secrets.ROYAL_LAB_CANDIDATE_B_KEY }}
+        run: pnpm -s lab sweep --experiment "$EXPERIMENT" --allow-paid
+      - name: Offline reports
+        if: always()
+        run: |
+          for directory in results/experiments/*/; do
+            id=$(basename "$directory")
+            pnpm -s lab report "$id" --format html || true
+            pnpm -s lab report "$id" --format csv || true
+          done
+      - uses: actions/upload-artifact@v7.0.1
+        if: always()
+        with:
+          name: royal-lab-experiment-${{ github.run_id }}
+          path: results/experiments/
+          retention-days: 7
+          if-no-files-found: warn

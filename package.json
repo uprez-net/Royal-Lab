@@ -32,6 +32,10 @@
     "#runs/*": {
       "development": "./src/runs/*.ts",
       "default": "./dist/runs/*.js"
+    },
+    "#reporting/*": {
+      "development": "./src/reporting/*.ts",
+      "default": "./dist/reporting/*.js"
     }
   },
   "scripts": {

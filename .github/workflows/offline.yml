@@ -5,6 +5,8 @@ permissions:
 jobs:
   offline:
     runs-on: ubuntu-latest
+    # No secrets or model credentials are referenced: pull-request CI makes no
+    # candidate or judge request and spends no model credit.
     steps:
       # These releases all declare the native node24 action runtime.
       - uses: actions/checkout@v7.0.1
@@ -16,7 +18,16 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # Schemas, fixtures/provenance, privacy lint, suites, graders, harness contracts and build.
       - run: pnpm check
       - run: pnpm fixtures:generate --check
+      # Known-positive and known-negative grader controls for every authored document pack.
+      - run: pnpm lab controls
+      # The experiment dry run works without credentials; draft packs stay blocked (exit 1).
+      - name: Experiment dry run is offline and blocked for drafts
+        run: |
+          set +e
+          pnpm -s lab plan --experiment templates/experiment.example.json
+          test $? -eq 1
       - run: pnpm schemas:export
       - run: git diff --exit-code -- schemas
