@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "worldId": "estuary-world",
+  "worldPath": "fixtures/worlds/estuary-world.json",
+  "worldHash": "9d7bcd1f4e2bfc90133d76ecec1433f9ee45ae5073ec984912b1abbb0d6607b8",
+  "entityIds": [
+    "builder-fe9b57a5bffe",
+    "owner-a-05b24088bb21",
+    "lead-a-5d9dba01cb0c",
+    "lead-b-1d766ac47096",
+    "offer-a-dfdb4404bb10",
+    "offer-b-0b99aecd259a"
+  ],
+  "expectedFacts": {
+    "facts.json#/weightedPipelineCents": 138682500,
+    "facts.json#/unknownValueCount": 2,
+    "facts.json#/wonValueCents": 43680000,
+    "facts.json#/openWeightedCents": 95002500,
+    "facts.json#/inWindowLeadCount": 8,
+    "facts.json#/saltmarshProbabilityPercent": 10,
+    "facts.json#/weightedPipelineIsRevenue": false
+  }
+}

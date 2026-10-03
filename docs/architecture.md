@@ -11,7 +11,7 @@ produce the declared artifacts or approved operational effect.
 Definitions D01–D16 cover documents and analysis; T01–T12 cover operations. The
 catalogue is a roadmap. The [case library](authored-cases.md) includes 24 new core
 drafts for D01–D12/T01–T12, variants, diagnostics and four preserved specimens.
-D13–D15 still use specimens; D16 remains unauthored. No pack is reviewed or runnable
+D13–D16 core drafts were added for #20. No pack is reviewed or runnable
 as a measured benchmark yet. Fictional Cedar and Estuary worlds
 are structurally different, separated between development and held-out data.
 

@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "analytics/project-cost-margin/cedar",
+  "definitionId": "D14",
+  "title": "Project the Cedar duplex cost to complete and margin",
+  "family": "analytics",
+  "workType": "analyze",
+  "instruction": "Analyze the Cedar duplex using contract-summary.md, cost-report.csv, variations.md and site-email.eml. Write facts.json with contractValueExGstCents, actualCostExGstCents, remainingEstimateExGstCents, projectedCostCents, projectedProfitCents, marginBasisPoints, overrunCategories, lowConfidenceCategories, pendingVariationIncluded and savingsIncludedCents. Write review.md. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Labels: Contract value ex GST, Actual cost to date ex GST, Remaining estimate ex GST, Projected cost, Projected profit, Projected margin (basis points), Pending variation counted as revenue, Recovery savings included, Overrun categories, Low-confidence estimate.",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "contract",
+      "path": "documents/contract-summary.md",
+      "sha256": "c1ccbf8d5bbb3a288ef8a73735e4309b71386fb27fc693d2d5499569e4006333",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "costs",
+      "path": "documents/cost-report.csv",
+      "sha256": "f17f51be9607756a9097f34f6d5c0d8be5bf53e9f24948ba5e2ebed97b95a59e",
+      "kind": "document",
+      "mediaType": "text/csv"
+    },
+    {
+      "id": "variations",
+      "path": "documents/variations.md",
+      "sha256": "cb3b280ebba91d47ac2a7b477ac8f928e8d5377471a970b3c8495462d0a33722",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "email",
+      "path": "documents/site-email.eml",
+      "sha256": "5007aa274147de0baeea4d37dc32362b4279cd600a724e57967d95e783a5fc2b",
+      "kind": "document",
+      "mediaType": "message/rfc822"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "aa24a84e4aafea6ae493b081bb0f3d84af398a96c381bdbe0451748fa4d65253",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "facts.json",
+      "mediaType": "application/json",
+      "description": "Cost and margin facts",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited cost forecast and actions",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "7768bba7eac2ebe5dfa80637b97f9932d0edb09923345270190c7d5767f4b8d6",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "5ba3d7a7cc43571d899a138a31c8d7f0346634d6b0167a56f7576058bb110f59",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "ed84b21a6d54818ba98f61df75066bd34321fc82f8af7c8f7d6830aecab21887",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "2f9446850d30837d4eed89892db1d968bd95813d6a5e08db227851a8e1340fb9",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "ad189148dc590b1ab4cc6423e75607aea1c410cf938a6047b888732d27d8d22f",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "forecast-produced",
+      "description": "Ex-GST cost, profit and margin forecast with uncertainties identified"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

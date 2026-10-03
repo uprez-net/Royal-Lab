@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "analytics/recommend-negotiation/estuary",
+  "worldId": "estuary-world",
+  "author": "Royal-Lab case authoring (Claude Code + Codex draft for issue #20)",
+  "owner": "uprez-net/Royal-Lab",
+  "license": "LicenseRef-Royal-Lab-Proprietary",
+  "synthetic": true,
+  "origin": "Original fictional case material. Held-out extension quote with exclusions and provisional sums, an internal margin floor and concession limit, and a client asking for a below-floor all-in price, an excluded driveway and a guaranteed Christmas finish. No client templates, records, transcripts or quote data copied.",
+  "sources": [
+    {
+      "id": "domain-reference-1",
+      "url": "https://github.com/uprez-net/Royal-Construction/blob/460895235f94e917bd855855cd6e106f93a4c7c1/lib/offer/offer-contract-value.ts",
+      "revision": "460895235f94e917bd855855cd6e106f93a4c7c1",
+      "use": "methodology-reference",
+      "license": "Private product reference; no redistribution",
+      "copiedMaterial": false
+    },
+    {
+      "id": "domain-reference-2",
+      "url": "https://github.com/uprez-net/Royal-Construction/blob/460895235f94e917bd855855cd6e106f93a4c7c1/tests/offer/offer-contract-value.test.ts",
+      "revision": "460895235f94e917bd855855cd6e106f93a4c7c1",
+      "use": "methodology-reference",
+      "license": "Private product reference; no redistribution",
+      "copiedMaterial": false
+    },
+    {
+      "id": "policy-decision",
+      "url": "https://github.com/uprez-net/Royal-Lab/issues/1",
+      "revision": "scope-decision-2026-10-01",
+      "use": "original-synthetic",
+      "license": "LicenseRef-Royal-Lab-Proprietary",
+      "copiedMaterial": false
+    }
+  ],
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  }
+}

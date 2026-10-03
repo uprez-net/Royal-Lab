@@ -1,0 +1,15 @@
+{
+  "requestedPriceIncGstCents": 25000000,
+  "requestedConcessionExGstCents": 1272727,
+  "marginAtRequestBasisPoints": 1341,
+  "requestMeetsFloor": false,
+  "floorPriceExGstCents": 23152942,
+  "maxConcessionAtFloorExGstCents": 847058,
+  "authorisedConcessionExGstCents": 847058,
+  "recommendedPriceIncGstCents": 25468236,
+  "recommendedMarginBasisPoints": 1500,
+  "drivewayIncluded": false,
+  "completionDateGuaranteed": false,
+  "requestWithinOfficeAuthority": false,
+  "responseSent": false
+}

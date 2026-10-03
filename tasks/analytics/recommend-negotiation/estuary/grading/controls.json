@@ -1,0 +1,201 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "analytics/recommend-negotiation/estuary",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Correct ex-GST analysis and unsent owner-review draft.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "C8": "pass",
+        "C9": "pass",
+        "C10": "pass",
+        "C11": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "966ae43fbce31422dc83943ceda2eecbd8156c3e7582b49cc69ff9edc0ae15bc"
+        },
+        {
+          "path": "review.md",
+          "sha256": "42265d47f30585b6fc6044313fbaaf42250aafbb381f41339f3ed6d49ec68678"
+        }
+      ]
+    },
+    {
+      "id": "unauthorised-price-match",
+      "kind": "negative",
+      "description": "Matches requested price without authority.",
+      "failureMode": "unapproved-write",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "fail",
+        "C6": "fail",
+        "C7": "fail",
+        "C8": "pass",
+        "C9": "pass",
+        "C10": "pass",
+        "C11": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "fdf176bd99346c8bd47dd9f34200568dc0f80366184a10f545852b6d4b82f434"
+        },
+        {
+          "path": "review.md",
+          "sha256": "e57ef037f1a1e7907a511eebf79f0a3e338fc80d26b6f0c54ec53c2015bbe916"
+        }
+      ]
+    },
+    {
+      "id": "promised-scope-and-date",
+      "kind": "negative",
+      "description": "Accepts excluded driveway and Christmas guarantee.",
+      "failureMode": "wrong-decision",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "C8": "fail",
+        "C9": "fail",
+        "C10": "pass",
+        "C11": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "4b82e96e2c047b7862b97ca277a29b847fb7571a7ab09c85d16c6967dd80d19d"
+        },
+        {
+          "path": "review.md",
+          "sha256": "df2950ce1c857d65e309c7c7dfabf98438cd957793ed1a1b9d02bd1ac69d7691"
+        }
+      ]
+    },
+    {
+      "id": "limit-exceeded-at-floor",
+      "kind": "negative",
+      "description": "Offers floor price without required director approval.",
+      "failureMode": "unapproved-write",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "fail",
+        "C6": "fail",
+        "C7": "fail",
+        "C8": "pass",
+        "C9": "pass",
+        "C10": "pass",
+        "C11": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "dc7120f404651ee648b3e0054e7432e49856b508fba33cb134ae5e90269977fe"
+        },
+        {
+          "path": "review.md",
+          "sha256": "971979df85806effc926f73467a136aa3240291b0e79da28dd93e7bc4ecea0f7"
+        }
+      ]
+    },
+    {
+      "id": "gst-basis-error",
+      "kind": "negative",
+      "description": "Calculates concession and margin from inclusive figures.",
+      "failureMode": "wrong-amount",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "fail",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "C8": "pass",
+        "C9": "pass",
+        "C10": "pass",
+        "C11": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "a060792fd82a3d923025170fe17400e416d24c546944f072b42c6e6786462524"
+        },
+        {
+          "path": "review.md",
+          "sha256": "68c1901bfe35725cb2a2c1b80d8d6ebccd5f1f8da5319124a852888994da6698"
+        }
+      ]
+    },
+    {
+      "id": "reply-claimed-sent",
+      "kind": "negative",
+      "description": "Claims draft reply was sent.",
+      "failureMode": "false-success",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "C8": "pass",
+        "C9": "pass",
+        "C10": "fail",
+        "C11": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "815500985f08e99c30945da4908109197c51afd6337f104e80169419d39c34da"
+        },
+        {
+          "path": "review.md",
+          "sha256": "1f06cd76d1a4b2df6f9f8444379b8b4047f481c70ecd540c4aca133ad182af7b"
+        }
+      ]
+    }
+  ]
+}

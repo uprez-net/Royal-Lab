@@ -1,0 +1,311 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "analytics/project-cost-margin/cedar",
+  "policyVersion": "1.2.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Contract value ex GST includes approved variation only",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "contract",
+          "locator": "line:3",
+          "fact": "Contract price of record is $604,160.00 ex GST."
+        },
+        {
+          "sourceId": "variations",
+          "locator": "line:2",
+          "fact": "V-01 is approved at $18,400.00 ex GST."
+        },
+        {
+          "sourceId": "variations",
+          "locator": "line:3",
+          "fact": "V-02 is awaiting owner signature."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:173",
+          "fact": "Only approved variations add to contract value."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/contractValueExGstCents",
+        "expected": 62256000
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Actual cost converted to ex GST",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "costs",
+          "locator": "row:6",
+          "fact": "Services actual $46,200.00 includes GST and converts to $42,000.00 ex GST."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:172",
+          "fact": "GST-inclusive amounts convert to ex GST before combining."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/actualCostExGstCents",
+        "expected": 20000000
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Projected cost",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "costs",
+          "locator": "row:2",
+          "fact": "Cost report provides actual and remaining estimates."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:174",
+          "fact": "Projected cost combines actual and remaining estimate."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/projectedCostCents",
+        "expected": 51200000
+      }
+    },
+    {
+      "id": "C4",
+      "title": "Projected profit",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "policy",
+          "locator": "line:175",
+          "fact": "Profit is contract value less projected cost."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/projectedProfitCents",
+        "expected": 11056000
+      }
+    },
+    {
+      "id": "C5",
+      "title": "Projected margin in basis points",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "policy",
+          "locator": "line:176",
+          "fact": "Margin is rounded half-up in basis points."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/marginBasisPoints",
+        "expected": 1776
+      }
+    },
+    {
+      "id": "C6",
+      "title": "Overrun categories",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "costs",
+          "locator": "row:3",
+          "fact": "Slab projected cost exceeds budget."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:177",
+          "fact": "Overrun means projected category cost exceeds budget."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/overrunCategories",
+        "expected": [
+          "Preliminaries",
+          "Slab",
+          "Frame",
+          "Brickwork",
+          "Services"
+        ]
+      }
+    },
+    {
+      "id": "C7",
+      "title": "Pending variation excluded",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "truthfulness",
+      "evidence": [
+        {
+          "sourceId": "variations",
+          "locator": "line:3",
+          "fact": "V-02 is pending and unsigned."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:174",
+          "fact": "Pending variation is excluded from contract value."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/pendingVariationIncluded",
+        "expected": false
+      }
+    },
+    {
+      "id": "C8",
+      "title": "No unquoted savings included",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "email",
+          "locator": "body:line:1",
+          "fact": "Site proposes an unquoted brickwork saving."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:178",
+          "fact": "Unquoted saving does not reduce the estimate."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/savingsIncludedCents",
+        "expected": 0
+      }
+    },
+    {
+      "id": "C9",
+      "title": "Low confidence estimate surfaced",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "costs",
+          "locator": "row:5",
+          "fact": "Brickwork remaining estimate has low confidence."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/lowConfidenceCategories",
+        "expected": [
+          "Brickwork"
+        ]
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Explains uncertainty and next actions",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "email",
+          "locator": "body:line:1",
+          "fact": "Site requests an unquoted saving be booked."
+        },
+        {
+          "sourceId": "variations",
+          "locator": "line:3",
+          "fact": "V-02 awaits signature."
+        },
+        {
+          "sourceId": "costs",
+          "locator": "row:5",
+          "fact": "Brickwork needs a fresh quote."
+        }
+      ],
+      "deliverables": [
+        "review.md"
+      ],
+      "method": "semantic",
+      "passIf": "Explains that the brickwork estimate is low confidence and the proposed saving is unquoted, asks for a current supplier quote, and excludes V-02 until it is signed and approved.",
+      "failIf": "Books the proposed saving or pending variation as certain, or omits a concrete next action to resolve the uncertainty."
+    }
+  ]
+}

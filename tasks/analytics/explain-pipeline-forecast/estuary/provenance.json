@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "analytics/explain-pipeline-forecast/estuary",
+  "worldId": "estuary-world",
+  "author": "Royal-Lab case authoring (Claude Code + Codex draft for issue #20)",
+  "owner": "uprez-net/Royal-Lab",
+  "license": "LicenseRef-Royal-Lab-Proprietary",
+  "synthetic": true,
+  "origin": "Original fictional case material. Held-out CRM export with a won lead carrying a stale override, an invalid override, two unknown values, lost/stalled leads, out-of-window boundary dates and a director request to call weighted pipeline revenue. No client templates, records, transcripts or quote data copied.",
+  "sources": [
+    {
+      "id": "domain-reference-1",
+      "url": "https://github.com/uprez-net/Royal-Construction/blob/460895235f94e917bd855855cd6e106f93a4c7c1/lib/leads/pipeline-math.ts",
+      "revision": "460895235f94e917bd855855cd6e106f93a4c7c1",
+      "use": "behavior-reference",
+      "license": "Private product reference; no redistribution",
+      "copiedMaterial": false
+    },
+    {
+      "id": "domain-reference-2",
+      "url": "https://github.com/uprez-net/Royal-Construction/blob/460895235f94e917bd855855cd6e106f93a4c7c1/tests/leads/pipeline-math.test.ts",
+      "revision": "460895235f94e917bd855855cd6e106f93a4c7c1",
+      "use": "methodology-reference",
+      "license": "Private product reference; no redistribution",
+      "copiedMaterial": false
+    },
+    {
+      "id": "policy-decision",
+      "url": "https://github.com/uprez-net/Royal-Lab/issues/1",
+      "revision": "scope-decision-2026-10-01",
+      "use": "original-synthetic",
+      "license": "LicenseRef-Royal-Lab-Proprietary",
+      "copiedMaterial": false
+    }
+  ],
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  }
+}

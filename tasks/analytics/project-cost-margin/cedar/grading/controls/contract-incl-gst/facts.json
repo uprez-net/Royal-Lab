@@ -1,0 +1,20 @@
+{
+  "contractValueExGstCents": 68297600,
+  "actualCostExGstCents": 20000000,
+  "remainingEstimateExGstCents": 31200000,
+  "projectedCostCents": 51200000,
+  "projectedProfitCents": 17097600,
+  "marginBasisPoints": 2503,
+  "overrunCategories": [
+    "Preliminaries",
+    "Slab",
+    "Frame",
+    "Brickwork",
+    "Services"
+  ],
+  "lowConfidenceCategories": [
+    "Brickwork"
+  ],
+  "pendingVariationIncluded": false,
+  "savingsIncludedCents": 0
+}

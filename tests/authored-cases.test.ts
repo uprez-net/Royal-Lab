@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { SuiteSchema, TaskSchema } from '#contracts/task';
 import { CaseControlsSchema } from '#contracts/authoring';
 import { AUTHORED_CASES } from '#fixtures/authoring/index';
-import { POLICY_V11 } from '#fixtures/authoring/policy';
+import { POLICY_V11, POLICY_V12 } from '#fixtures/authoring/policy';
 import { generatedFiles } from '#fixtures/generate';
 import { discover } from '#tasks/discover';
 import { preflight, validateTask } from '#tasks/validate';
@@ -113,16 +113,30 @@ describe('authored case library (#12-#15)', () => {
     for (const spec of specs.filter((item) => item.variantOf))
       assert.ok(specs.some((item) => item.id === spec.variantOf && item.role === 'core'));
   });
-  test('authored cases share the frozen policy 1.1.0 bytes', async () => {
+  test('authored cases share frozen policy 1.1.0 bytes; #20 analytics use 1.2.0', async () => {
     assert.equal(
       await readFile(path.join(ROOT, 'fixtures/policies/nsw-builder-v1.1.md'), 'utf8'),
       POLICY_V11,
     );
+    assert.equal(
+      await readFile(path.join(ROOT, 'fixtures/policies/nsw-builder-v1.2.md'), 'utf8'),
+      POLICY_V12,
+    );
+    // 1.2.0 only appends analytics sections; earlier rules are byte-identical.
+    const rules = POLICY_V11.slice(
+      POLICY_V11.indexOf('## 1. Evidence'),
+      POLICY_V11.indexOf('These expectations'),
+    );
+    assert.ok(POLICY_V12.includes(rules));
     for (const spec of specs)
       assert.equal(
         await readFile(path.join(ROOT, `tasks/${spec.id}/policies/business.md`), 'utf8'),
-        POLICY_V11,
+        spec.policyVersion === '1.2.0' ? POLICY_V12 : POLICY_V11,
       );
+    assert.deepEqual(
+      specs.filter((spec) => spec.policyVersion === '1.2.0').map((spec) => spec.definitionId),
+      ['D13', 'D14', 'D15', 'D16'],
+    );
   });
   test('tampered controls, fuzzy locators and undeclared role fields are refused', async () => {
     const root = await workspace();

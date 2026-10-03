@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "id": "held-out",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "split": "held-out",
   "profile": "documents",
   "cases": [
@@ -11,8 +11,8 @@
     "finance/reconcile-stage-claim/estuary",
     "compliance/extract-nested-checklist/estuary",
     "compliance/read-developer-verdict/estuary",
-    "analytics/project-cost-margin/estuary",
-    "analytics/summarize-cash-flow/estuary"
+    "analytics/explain-pipeline-forecast/estuary",
+    "analytics/recommend-negotiation/estuary"
   ],
   "description": "Draft held-out core document cases: one core case per authored definition. Never tune prompts or rubrics on these results."
 }

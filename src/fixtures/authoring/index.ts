@@ -1,7 +1,7 @@
 import { jsonText } from '#src/io';
 import { SPECIMENS } from '#fixtures/generate';
 import { buildCase } from '#fixtures/authoring/build';
-import { POLICY_V11 } from '#fixtures/authoring/policy';
+import { POLICY_V11, POLICY_V12 } from '#fixtures/authoring/policy';
 import type { CaseSpec } from '#fixtures/authoring/types';
 import { adversarialCatalogue } from '#fixtures/authoring/adversarial';
 import { graderControlFiles } from '#fixtures/authoring/grader-controls';
@@ -31,6 +31,10 @@ import { nestedChecklist } from '#fixtures/authoring/cases/d09-nested-checklist'
 import { certifierDocument } from '#fixtures/authoring/cases/d10-certifier-document';
 import { developerVerdict } from '#fixtures/authoring/cases/d11-developer-verdict';
 import { titleOwners } from '#fixtures/authoring/cases/d12-title-owners';
+import { pipelineForecast } from '#fixtures/authoring/cases/d13-pipeline-forecast';
+import { costMargin } from '#fixtures/authoring/cases/d14-cost-margin';
+import { cashFlow } from '#fixtures/authoring/cases/d15-cash-flow';
+import { negotiation } from '#fixtures/authoring/cases/d16-negotiation';
 import {
   architectClientApproval,
   unresolvedStaleTitle,
@@ -75,6 +79,11 @@ export const AUTHORED_CASES: (() => CaseSpec)[] = [
   certifierDocument,
   developerVerdict,
   titleOwners,
+  // #20 business analytics and negotiation (policy 1.2.0)
+  pipelineForecast,
+  costMargin,
+  cashFlow,
+  negotiation,
   // #14 lead, offer, project and tradie operations
   ambiguousLead,
   approvedFollowUp,
@@ -184,9 +193,19 @@ const SUITES: {
   },
 ];
 
+// Explicit selection versions. #20 adds D13-D16 core cases, which moves the
+// D13-D15 specimens into the labelled variant suites (2.0.0/2.1.0 -> next minor).
+const SUITE_VERSIONS: Record<string, string> = {
+  development: '2.1.0',
+  'held-out': '2.1.0',
+  'development-variants': '2.2.0',
+  'held-out-variants': '2.1.0',
+  'safety-diagnostics': '2.1.0',
+};
 export async function authoredFiles(): Promise<Map<string, string>> {
   const files = new Map<string, string>();
   files.set('fixtures/policies/nsw-builder-v1.1.md', POLICY_V11);
+  files.set('fixtures/policies/nsw-builder-v1.2.md', POLICY_V12);
   files.set('fixtures/adversarial/payloads.json', adversarialCatalogue());
   const rows: SuiteRow[] = [];
   const seen = new Set<string>();
@@ -239,9 +258,7 @@ export async function authoredFiles(): Promise<Map<string, string>> {
       jsonText({
         schemaVersion: '1.0.0',
         id: suite.id,
-        version: ['development-variants', 'safety-diagnostics'].includes(suite.id)
-          ? '2.1.0'
-          : '2.0.0',
+        version: SUITE_VERSIONS[suite.id] ?? '2.0.0',
         split: suite.split,
         profile: suite.profile,
         cases,

@@ -67,7 +67,7 @@ test('keyboard navigation keeps loaded cases, details and every check result acc
   // Expectations follow the discovered library so authored cases can grow.
   const library = (await discover(root)).map(({ task }) => task);
   const row = (index: number) =>
-    `› ${library[index]!.definitionId} ${library[index]!.title.slice(0, 12)}`;
+    `› ${library[index]!.definitionId} ${library[index]!.title.slice(0, 24)}`;
   try {
     await waitFor(() => new RegExp(`\\b${library.length}\\s*│`).test(frame));
     stdin.write('\t');

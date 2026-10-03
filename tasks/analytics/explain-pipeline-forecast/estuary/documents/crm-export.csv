@@ -1,0 +1,11 @@
+Lead,Name,Stage,Status,Expected close,Value ex GST (AUD),Probability override,Last updated
+L-201,Coastal staged build,Contract issued,WON,2026-10-02,436800.00,60%,2026-09-29
+L-202,Coastal delayed extension,Negotiation,OPEN,2026-10-20,240000.00,,2026-09-30
+L-203,Heron Point knockdown rebuild,Negotiation,OPEN,2026-11-14,912500.00,85%,2026-10-01
+L-204,Mangrove Road extension,Site visit,OPEN,2026-12-05,TBC,,2026-10-01
+L-205,Pelican Avenue pool house,Quote sent,LOST,2026-10-10,120000.00,,2026-09-30
+L-206,Breakwater duplex,Contract issued,OPEN,2027-01-15,1240000.00,,2026-10-01
+L-207,Saltmarsh renovation,Enquiry,OPEN,2026-12-31,64000.00,140%,2026-10-02
+L-208,Tidal Flats deck,Quote sent,STALLED,2026-11-02,38000.00,,2026-10-01
+L-209,Jetty Lane ensuite,Quote sent,OPEN,2026-09-30,42000.00,,2026-09-29
+L-210,Sandbar studio,Negotiation,OPEN,2026-12-12,,,2026-10-02

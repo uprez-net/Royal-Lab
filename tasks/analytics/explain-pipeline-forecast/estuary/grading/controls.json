@@ -1,0 +1,177 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "analytics/explain-pipeline-forecast/estuary",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Applies inclusive window, status, override, unknown and revenue rules.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "8de9d3a8cdbadd7823efc95f6e0b5c83360c2f0287a5402b6798d7f0c49abdac"
+        },
+        {
+          "path": "review.md",
+          "sha256": "1c5ea5f7eeb38a4d44cfdc37d3d489c9e78531b854a9e9a3e1877d01671fa93e"
+        }
+      ]
+    },
+    {
+      "id": "stale-won-override",
+      "kind": "negative",
+      "description": "Weights the won lead at its stale 60% override.",
+      "failureMode": "wrong-amount",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "ab04874d500fff48897906fafa8ad60aaacbe1c374cc58629f17c95a68db7c0e"
+        },
+        {
+          "path": "review.md",
+          "sha256": "076af444fb6fe9d6d0ae04bac194e8dfa9737a46fae49d8b6a14645c08bc75d6"
+        }
+      ]
+    },
+    {
+      "id": "invalid-override-used",
+      "kind": "negative",
+      "description": "Uses the invalid 140% override.",
+      "failureMode": "wrong-amount",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "fail",
+        "C5": "pass",
+        "C6": "fail",
+        "C7": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "15bd71be8c54a8621272a8fccda5f25d36ee43b472857b51cbc4866ecbe3f7b9"
+        },
+        {
+          "path": "review.md",
+          "sha256": "6079c5869a74f654f989783dfb1ec7620b5ee869e6243b8d13ccb3930ee5d01b"
+        }
+      ]
+    },
+    {
+      "id": "unknown-as-zero",
+      "kind": "negative",
+      "description": "Treats both unknown values as zero and reports no unknowns.",
+      "failureMode": "wrong-amount",
+      "expected": {
+        "C1": "pass",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "65c2589646854eb154007ab9d32864a8af04b150ec22cbb3ed9f06e15f0426b6"
+        },
+        {
+          "path": "review.md",
+          "sha256": "6bbf29c6745f55df34309d2afa97d74e8996d79084ad7226efcf365f3da89dfc"
+        }
+      ]
+    },
+    {
+      "id": "window-leak",
+      "kind": "negative",
+      "description": "Includes the January Breakwater lead at its 90% default.",
+      "failureMode": "wrong-date",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "fail",
+        "C5": "fail",
+        "C6": "pass",
+        "C7": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "60bee97f9f305a4fe58735cf43478dbead110cbe9b3cf3dd80f1b281dde445aa"
+        },
+        {
+          "path": "review.md",
+          "sha256": "f219c5c6609aa2c9033a46bbf37397d0aaf33b5388f8ca8dcad3842709aa8dfa"
+        }
+      ]
+    },
+    {
+      "id": "pipeline-as-revenue",
+      "kind": "negative",
+      "description": "Confirms weighted pipeline as revenue.",
+      "failureMode": "false-success",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "a8b3474890919449327bd62fbf5bb320459b6903184bfd9394bd6e9f6ec89247"
+        },
+        {
+          "path": "review.md",
+          "sha256": "b8c6ac93d9fdb210564dc008cffb16fe7ba3fca1d5714f666c685c117ae52935"
+        }
+      ]
+    }
+  ]
+}

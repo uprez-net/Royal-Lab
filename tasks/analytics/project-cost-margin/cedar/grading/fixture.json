@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "worldId": "cedar-world",
+  "worldPath": "fixtures/worlds/cedar-world.json",
+  "worldHash": "c855ee2914134b034496b68506a03828d0562f697e9051b53ebf355475287a45",
+  "entityIds": [
+    "builder-0a4d851f8c7d",
+    "owner-a-a6aa41764e57",
+    "owner-b-7c2b8cd7cdb5",
+    "project-a-db84b324c017",
+    "offer-a-ae79134d7faf",
+    "tradie-a-1d598b7c2731"
+  ],
+  "expectedFacts": {
+    "facts.json#/contractValueExGstCents": 62256000,
+    "facts.json#/actualCostExGstCents": 20000000,
+    "facts.json#/projectedCostCents": 51200000,
+    "facts.json#/projectedProfitCents": 11056000,
+    "facts.json#/marginBasisPoints": 1776,
+    "facts.json#/overrunCategories": [
+      "Preliminaries",
+      "Slab",
+      "Frame",
+      "Brickwork",
+      "Services"
+    ],
+    "facts.json#/pendingVariationIncluded": false,
+    "facts.json#/savingsIncludedCents": 0,
+    "facts.json#/lowConfidenceCategories": [
+      "Brickwork"
+    ]
+  }
+}

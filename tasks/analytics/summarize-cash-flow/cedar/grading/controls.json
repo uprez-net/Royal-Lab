@@ -1,0 +1,183 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "analytics/summarize-cash-flow/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Bank-only cash and separately projected collections.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "C8": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "9f0294dbe3f39e9cef2b20f419d7b2dc4638e4a45f569c93c045972471a2a681"
+        },
+        {
+          "path": "review.md",
+          "sha256": "edfb84d047785d99ea131cb49f7428ebe41c67fa4f6a37b0f7b241b56174276f"
+        }
+      ]
+    },
+    {
+      "id": "forecast-as-cash",
+      "kind": "negative",
+      "description": "Treats the expected collection as cash already banked.",
+      "failureMode": "wrong-amount",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "fail",
+        "C7": "pass",
+        "C8": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "3d82f94eba8ec0a8a4346e0a3d831e9a12abd879865b91353c7955a346c694c0"
+        },
+        {
+          "path": "review.md",
+          "sha256": "a0d8b5015fea2e91d7bc5c626cfa56d5bf9131bb8d43a8688f174b6ac14cdb61"
+        }
+      ]
+    },
+    {
+      "id": "xero-verified",
+      "kind": "negative",
+      "description": "Treats the Xero paid mark as bank verification and removes the receivable.",
+      "failureMode": "false-success",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "fail",
+        "C6": "pass",
+        "C7": "fail",
+        "C8": "fail",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "c530a9d6bcfb8d066a1c902e83d925d6462a501694caa4f7fe482f97a96873ea"
+        },
+        {
+          "path": "review.md",
+          "sha256": "8ac09fbe303b99ccfcb2871778fd29a070520da30f0f49ed1149f1589a6218ea"
+        }
+      ]
+    },
+    {
+      "id": "overdue-missed",
+      "kind": "negative",
+      "description": "Misses the overdue V-01 invoice.",
+      "failureMode": "wrong-date",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "fail",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "C8": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "2775e153cad32f1c3e27fc315f511c91f3ea947f2a362441356f28397b4a4588"
+        },
+        {
+          "path": "review.md",
+          "sha256": "a55667f89df65cae067baa6b8fa3b99fb3b07947617b6b404bcffb8e0af7ba32"
+        }
+      ]
+    },
+    {
+      "id": "draft-as-receivable",
+      "kind": "negative",
+      "description": "Includes draft INV-C-013 as a receivable.",
+      "failureMode": "wrong-amount",
+      "expected": {
+        "C1": "pass",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "C8": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "fbfeaed7d87a6a418f9c0098cd91c748fb848687582ade90538005e8271de89e"
+        },
+        {
+          "path": "review.md",
+          "sha256": "acd1f43fe84bf4d1650a9a5a1318fb5bd66a6e1a1ef9ec5c30b2966c75a837a1"
+        }
+      ]
+    },
+    {
+      "id": "window-commitment-leak",
+      "kind": "negative",
+      "description": "Includes the 24 October commitment outside the outlook window.",
+      "failureMode": "wrong-amount",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "fail",
+        "C5": "pass",
+        "C6": "fail",
+        "C7": "pass",
+        "C8": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "c7130f4307e1ca823ae20fe55e79192514844f4014fe133ce805448bc0d96445"
+        },
+        {
+          "path": "review.md",
+          "sha256": "4be9cd0a3fa2cb3b457f0c04e73faff9d10dcaf861d801bce86ec6b07ab3900d"
+        }
+      ]
+    }
+  ]
+}

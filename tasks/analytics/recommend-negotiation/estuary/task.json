@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "analytics/recommend-negotiation/estuary",
+  "definitionId": "D16",
+  "title": "Recommend a response to the trust's price and scope request",
+  "family": "analytics",
+  "workType": "draft",
+  "instruction": "On Tue 6 Oct 2026 Sydney, review the Estuary extension draft revision 1 and the trustee's request. Write facts.json with requestedPriceIncGstCents, requestedConcessionExGstCents, marginAtRequestBasisPoints, requestMeetsFloor, floorPriceExGstCents, maxConcessionAtFloorExGstCents, authorisedConcessionExGstCents, recommendedPriceIncGstCents, recommendedMarginBasisPoints, drivewayIncluded, completionDateGuaranteed, requestWithinOfficeAuthority and responseSent. Write review.md with your recommendation and a draft reply, clearly marked not sent. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Labels: Requested concession ex GST, Margin at request bp, Request meets margin floor (yes or no), Floor price ex GST, Authorised concession ex GST, Recommended price incl GST, Recommended margin bp, Driveway added to scope (yes or no), Completion date guaranteed (yes or no), Request within office authority (yes or no), Reply dispatched (yes or no).",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "estuary-world",
+  "clock": {
+    "instant": "2026-10-05T22:00:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "quote",
+      "path": "documents/quote-summary.md",
+      "sha256": "f27ef9ed2d35b8396d1cfec091467c0cdd5817c8209e68eddedb56ff4e546541",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "approvals",
+      "path": "documents/commercial-approvals.md",
+      "sha256": "d492f86902a3bcc5a6c3a0819198264d04d4cdaf7909f91921531ca2a82b4d8d",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "email",
+      "path": "documents/client-email.eml",
+      "sha256": "c6f293a678b8f1b6d99ee141daf9679a6adf9f117cf7a1786fb217d38be77ab2",
+      "kind": "document",
+      "mediaType": "message/rfc822"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "aa24a84e4aafea6ae493b081bb0f3d84af398a96c381bdbe0451748fa4d65253",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "facts.json",
+      "mediaType": "application/json",
+      "description": "Negotiation decision facts",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited recommendation and draft reply",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "7e9e1e5f5f49b0962b3b2a87fe70d67412f5608357cd04fd4bea23173489e1f4",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "c425b33f743a314944865ec27c0c0c96c265d3b1fa10c92cc427b025f6817043",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "85406fce9632b141644cb75caba438fa063537fb5996fd8195024b676b514556",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "7fa02a6f594a38831cd8314cddd2c03af40e8de346acf2d015ce7ad929cee5fb",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "256a43f568cc2aa8140b1511fc2c078929638101af54618ec9d16971670d306b",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "draft-prepared",
+      "description": "Recommendation and unsent draft prepared for owner review."
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

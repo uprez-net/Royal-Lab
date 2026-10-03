@@ -126,6 +126,8 @@ interface CaseSpecBase {
   }[];
   references: { path: string; use?: 'behavior-reference' | 'methodology-reference' }[];
   scenario: string;
+  // Analytics cases (#20) use policy 1.2.0; earlier cases keep 1.1.0 bytes.
+  policyVersion?: '1.1.0' | '1.2.0';
   limits?: Partial<Record<'maxTurns' | 'maxToolCalls', number>>;
 }
 export interface DocumentCaseSpec extends CaseSpecBase {

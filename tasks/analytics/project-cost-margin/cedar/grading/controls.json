@@ -1,0 +1,160 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "analytics/project-cost-margin/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Correct ex-GST project cost and margin forecast.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "C7": "pass",
+        "C8": "pass",
+        "C9": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "5243409083e159c7ee3f113eeaac432c607ec62f11bad993306ce066f07604e8"
+        },
+        {
+          "path": "review.md",
+          "sha256": "cf50af4f814fdd85dd854bd9549312d73ff96b301bed30bdd35c73f55b883d9d"
+        }
+      ]
+    },
+    {
+      "id": "gst-inclusive-actual",
+      "kind": "negative",
+      "description": "Uses the services actual inclusive of GST.",
+      "failureMode": "wrong-amount",
+      "expected": {
+        "C1": "pass",
+        "C2": "fail",
+        "C3": "fail",
+        "C4": "fail",
+        "C5": "fail",
+        "C6": "pass",
+        "C7": "pass",
+        "C8": "pass",
+        "C9": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "c8fe5cc2f2b0a60df24ae0f85cbc42209802a6b085ad1d734eebec3f59cb0482"
+        },
+        {
+          "path": "review.md",
+          "sha256": "7842337157cd604fc9c4e184ab286a6d19fc40d420dea4cce32f7dc68a67befb"
+        }
+      ]
+    },
+    {
+      "id": "pending-variation-revenue",
+      "kind": "negative",
+      "description": "Counts the unsigned cladding variation as revenue.",
+      "failureMode": "wrong-decision",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "fail",
+        "C5": "fail",
+        "C6": "pass",
+        "C7": "fail",
+        "C8": "pass",
+        "C9": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "54510aade0209bcff7993c1431df9a4b3f88fc23ebb2369edcf356f5acf31e98"
+        },
+        {
+          "path": "review.md",
+          "sha256": "3d8152120ee027401496152a39d6d89c744fbabc7a6c529445f0c82d476d0045"
+        }
+      ]
+    },
+    {
+      "id": "invented-savings",
+      "kind": "negative",
+      "description": "Books the suggested unquoted brickwork saving.",
+      "failureMode": "invented-value",
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "fail",
+        "C4": "fail",
+        "C5": "fail",
+        "C6": "pass",
+        "C7": "pass",
+        "C8": "fail",
+        "C9": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "b936342c704df9186819b54824026030c2eef37b610b53b503b42d7f27ef2dc5"
+        },
+        {
+          "path": "review.md",
+          "sha256": "9a9c176036e1e6234ab06ba5c25e79aeb9ad81aec5a0a7cde1f522e6589c9eb9"
+        }
+      ]
+    },
+    {
+      "id": "contract-incl-gst",
+      "kind": "negative",
+      "description": "Uses the GST-inclusive contract price as contract value.",
+      "failureMode": "wrong-amount",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "fail",
+        "C5": "fail",
+        "C6": "pass",
+        "C7": "pass",
+        "C8": "pass",
+        "C9": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "artifacts",
+      "outputs": [
+        {
+          "path": "facts.json",
+          "sha256": "5b32fc404e6403e5715db95a9fd7c31444a803e573daed6d4aefa205bcf470d7"
+        },
+        {
+          "path": "review.md",
+          "sha256": "f7f0957a49ff436e18319f0007b85efc93cd8dad21e863ad0bb7be4d916e960d"
+        }
+      ]
+    }
+  ]
+}

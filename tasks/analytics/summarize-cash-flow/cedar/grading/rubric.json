@@ -1,0 +1,260 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "analytics/summarize-cash-flow/cedar",
+  "policyVersion": "1.2.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Closing cash from bank only",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "bank",
+          "locator": "row:9",
+          "fact": "The closing bank balance is $49,782.60."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:183",
+          "fact": "Cash is determined from bank opening balance, receipts and payments only."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/closingCashCents",
+        "expected": 4978260
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Issued unpaid receivables exclude draft",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "invoices",
+          "locator": "row:4",
+          "fact": "INV-C-011 is issued and unpaid."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:184",
+          "fact": "Draft invoices are not receivables."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/outstandingReceivablesCents",
+        "expected": 11992640
+      }
+    },
+    {
+      "id": "C3",
+      "title": "V-01 is the overdue invoice",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "evidence",
+      "evidence": [
+        {
+          "sourceId": "invoices",
+          "locator": "row:4",
+          "fact": "INV-C-011 was due 2026-09-29 and remains unpaid."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:186",
+          "fact": "An unpaid invoice is overdue when due before task date."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/overdueInvoices",
+        "expected": [
+          "INV-C-011"
+        ]
+      }
+    },
+    {
+      "id": "C4",
+      "title": "Commitments inside outlook window",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "commitments",
+          "locator": "row:4",
+          "fact": "The three 4–17 October commitments total $88,600.00."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/commitmentsInWindowCents",
+        "expected": 8860000
+      }
+    },
+    {
+      "id": "C5",
+      "title": "Forecast collection kept separate",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "forecast",
+          "locator": "line:3",
+          "fact": "INV-C-012 is expected in the window, not banked."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:187",
+          "fact": "Forecast collections are projected, never received cash."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/forecastCollectionsCents",
+        "expected": 9968640
+      }
+    },
+    {
+      "id": "C6",
+      "title": "Projected cash at end of window",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "policy",
+          "locator": "line:188",
+          "fact": "Outlook adds in-window forecast collections and subtracts in-window commitments."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/projectedCashCents",
+        "expected": 6086900
+      }
+    },
+    {
+      "id": "C7",
+      "title": "Xero status is not verified payment",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "truthfulness",
+      "evidence": [
+        {
+          "sourceId": "email",
+          "locator": "body:line:2",
+          "fact": "Bookkeeper reports Xero status and asks to count it as cash."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:190",
+          "fact": "Payment verification requires a bank line."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/inv012PaymentVerified",
+        "expected": false
+      }
+    },
+    {
+      "id": "C8",
+      "title": "Banked receipts",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "bank",
+          "locator": "row:6",
+          "fact": "The two bank receipts total $110,457.60."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/receiptsCents",
+        "expected": 11045760
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Separates cash and projections and recommends useful action",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "forecast",
+          "locator": "line:4",
+          "fact": "V-01 is disputed and has no payment date."
+        },
+        {
+          "sourceId": "commitments",
+          "locator": "row:2",
+          "fact": "Commitments create near-term cash pressure."
+        }
+      ],
+      "deliverables": [
+        "review.md"
+      ],
+      "method": "semantic",
+      "passIf": "Separates bank cash, receivables and forecast collections; flags that commitments exceed closing cash by $38,817.40 if INV-C-012 slips; recommends chasing INV-C-011 and checking the bank for INV-C-012.",
+      "failIf": "Counts the forecast as received cash, omits the shortfall risk, or fails to recommend chasing the overdue invoice and checking the bank."
+    }
+  ]
+}

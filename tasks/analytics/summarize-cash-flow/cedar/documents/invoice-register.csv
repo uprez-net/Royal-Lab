@@ -1,0 +1,6 @@
+Invoice,Project,Issued,Due,Total incl GST (AUD),Amount paid (AUD),Status,Note
+INV-C-009,Cedar duplex,2026-08-28,2026-09-04,66457.60,66457.60,PAID,
+INV-C-010,Cedar duplex,2026-09-12,2026-09-26,44000.00,44000.00,PAID,
+INV-C-011,Cedar duplex variation V-01,2026-09-15,2026-09-29,20240.00,0.00,AUTHORISED,
+INV-C-012,Cedar duplex lock-up,2026-09-24,2026-10-08,99686.40,0.00,AUTHORISED,Marked paid in Xero 2026-10-01 per bookkeeper
+INV-C-013,Cedar duplex variation V-02,,,16500.00,0.00,DRAFT,

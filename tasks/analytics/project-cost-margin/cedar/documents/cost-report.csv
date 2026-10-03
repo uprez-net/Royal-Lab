@@ -1,0 +1,7 @@
+Category,Budget ex GST (AUD),Actual to date (AUD),Actual basis,Remaining estimate ex GST (AUD),Estimate confidence,Note
+Preliminaries,32000.00,30550.00,ex GST,4000.00,high,
+Slab,68000.00,73450.00,ex GST,0.00,high,Complete
+Frame,96000.00,54000.00,ex GST,45000.00,medium,
+Brickwork,72000.00,0.00,ex GST,79000.00,low,Supplier quote expired; re-quote pending
+Services,84000.00,46200.00,inc GST,43000.00,medium,Actual from supplier statement incl GST
+Fit-out,146000.00,0.00,ex GST,141000.00,medium,

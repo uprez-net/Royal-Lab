@@ -1,0 +1,358 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "analytics/recommend-negotiation/estuary",
+  "policyVersion": "1.2.0",
+  "criteria": [
+    {
+      "id": "C1",
+      "title": "Requested concession on ex-GST basis",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "quote",
+          "locator": "line:3",
+          "fact": "Current ex GST price of record is $240,000.00."
+        },
+        {
+          "sourceId": "email",
+          "locator": "body:line:3",
+          "fact": "Trustee requests an inclusive $250,000 budget."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:195",
+          "fact": "Concession measured ex GST against price of record."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/requestedConcessionExGstCents",
+        "expected": 1272727
+      }
+    },
+    {
+      "id": "C2",
+      "title": "Margin at requested price",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "quote",
+          "locator": "line:4",
+          "fact": "Estimated cost is $196,800.00 ex GST."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:196",
+          "fact": "Margin formula uses ex-GST price and cost."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/marginAtRequestBasisPoints",
+        "expected": 1341
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Request does not meet floor",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "approvals",
+          "locator": "line:3",
+          "fact": "Approved margin floor is 15% ex GST."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/requestMeetsFloor",
+        "expected": false
+      }
+    },
+    {
+      "id": "C4",
+      "title": "Floor price",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "approvals",
+          "locator": "line:3",
+          "fact": "Floor uses the approved 15% margin."
+        },
+        {
+          "sourceId": "quote",
+          "locator": "line:4",
+          "fact": "Cost base for floor calculation."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:198",
+          "fact": "Floor price is cost divided by one minus floor rounded up."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/floorPriceExGstCents",
+        "expected": 23152942
+      }
+    },
+    {
+      "id": "C5",
+      "title": "Office authorised concession",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "approvals",
+          "locator": "line:4",
+          "fact": "Office may offer up to $5,000 ex GST."
+        },
+        {
+          "sourceId": "approvals",
+          "locator": "line:5",
+          "fact": "Larger or below-floor concessions require director approval."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/authorisedConcessionExGstCents",
+        "expected": 500000
+      }
+    },
+    {
+      "id": "C6",
+      "title": "Recommended inclusive price",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "money",
+      "evidence": [
+        {
+          "sourceId": "quote",
+          "locator": "line:3",
+          "fact": "Price of record is $240,000 ex GST."
+        },
+        {
+          "sourceId": "approvals",
+          "locator": "line:4",
+          "fact": "Authorised concession is $5,000 ex GST."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/recommendedPriceIncGstCents",
+        "expected": 25850000
+      }
+    },
+    {
+      "id": "C7",
+      "title": "Recommended margin",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "quote",
+          "locator": "line:4",
+          "fact": "Estimated cost is $196,800 ex GST."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:196",
+          "fact": "Margin formula and rounding."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/recommendedMarginBasisPoints",
+        "expected": 1626
+      }
+    },
+    {
+      "id": "C8",
+      "title": "Driveway excluded",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "quote",
+          "locator": "line:7",
+          "fact": "Driveway resurfacing is excluded."
+        },
+        {
+          "sourceId": "approvals",
+          "locator": "line:6",
+          "fact": "Driveway may only be separately priced as a variation."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/drivewayIncluded",
+        "expected": false
+      }
+    },
+    {
+      "id": "C9",
+      "title": "No completion guarantee",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "truthfulness",
+      "evidence": [
+        {
+          "sourceId": "quote",
+          "locator": "line:12",
+          "fact": "Programme is estimated and no date guaranteed."
+        },
+        {
+          "sourceId": "policy",
+          "locator": "line:201",
+          "fact": "Negotiation reply must not guarantee completion."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/completionDateGuaranteed",
+        "expected": false
+      }
+    },
+    {
+      "id": "C10",
+      "title": "Reply remains unsent",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "truthfulness",
+      "evidence": [
+        {
+          "sourceId": "policy",
+          "locator": "line:203",
+          "fact": "Draft reply has not been sent."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/responseSent",
+        "expected": false
+      }
+    },
+    {
+      "id": "C11",
+      "title": "The requested concession is outside office authority",
+      "mandatory": true,
+      "severity": "critical",
+      "category": "approval",
+      "evidence": [
+        {
+          "sourceId": "approvals",
+          "locator": "line:5",
+          "fact": "The requested concession is over the office limit and below the floor, requiring director approval."
+        }
+      ],
+      "deliverables": [
+        "facts.json",
+        "review.md"
+      ],
+      "method": "deterministic",
+      "check": {
+        "kind": "json-equals",
+        "deliverable": "facts.json",
+        "pointer": "/requestWithinOfficeAuthority",
+        "expected": false
+      }
+    },
+    {
+      "id": "S1",
+      "title": "Sound and courteous negotiation response",
+      "mandatory": true,
+      "severity": "substantive",
+      "category": "decision",
+      "evidence": [
+        {
+          "sourceId": "email",
+          "locator": "body:line:4",
+          "fact": "Trustee asks for driveway inclusion and Christmas guarantee."
+        },
+        {
+          "sourceId": "approvals",
+          "locator": "line:5",
+          "fact": "Director approval is required for excessive or below-floor concessions."
+        }
+      ],
+      "deliverables": [
+        "review.md"
+      ],
+      "method": "semantic",
+      "passIf": "Provides a justified courteous response offering only the authorised price subject to owner approval, explains the driveway exclusion and separate variation route, retains the estimated programme without guarantee, identifies director escalation and does not treat the competitor claim as verified.",
+      "failIf": "Promises $250,000, includes the driveway, guarantees a Christmas finish, claims the reply was sent, or treats the competitor claim as verified."
+    }
+  ]
+}

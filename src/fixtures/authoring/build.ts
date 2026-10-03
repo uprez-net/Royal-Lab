@@ -3,7 +3,12 @@ import { jsonText, sha256 } from '#src/io';
 import { readText } from '#src/documents/readers/text';
 import { GURI_TOOL_VERSIONS, type GuriTool } from '#src/environments/guri/tools';
 import { entityId, GURI_REVISION, makeWorld } from '#fixtures/generate';
-import { POLICY_V11, POLICY_VERSION } from '#fixtures/authoring/policy';
+import {
+  POLICY_V11,
+  POLICY_V12,
+  POLICY_V12_VERSION,
+  POLICY_VERSION,
+} from '#fixtures/authoring/policy';
 import type { CaseSpec, CriterionSpec, Json, Ref, SourceSpec } from '#fixtures/authoring/types';
 import type { VerificationPlan } from '#src/grading/verification';
 
@@ -16,12 +21,12 @@ export const AUTHORED_DRAFT = {
   notes:
     'Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution.',
 };
-const POLICY_SOURCE: SourceSpec = {
+const policySource = (version: '1.1.0' | '1.2.0'): SourceSpec => ({
   id: 'policy',
   path: 'policies/business.md',
   mediaType: 'text/markdown',
-  content: POLICY_V11,
-};
+  content: version === POLICY_V12_VERSION ? POLICY_V12 : POLICY_V11,
+});
 const DOCUMENT_TOOLS = ['list', 'read', 'search', 'write'];
 
 type Units = Map<string, { locator: string; text: string }[]>;
@@ -84,7 +89,8 @@ export async function buildCase(spec: CaseSpec): Promise<Map<string, string>> {
   const prefix = `tasks/${spec.id}`;
   const world = makeWorld(spec.split);
   const worldText = jsonText(world);
-  const sources = [...spec.sources, POLICY_SOURCE];
+  const policyVersion = spec.policyVersion ?? POLICY_VERSION;
+  const sources = [...spec.sources, policySource(policyVersion)];
   for (const source of spec.sources)
     if (!source.path.startsWith('documents/'))
       throw new Error(`AUTHORING_SOURCE_PATH: ${source.path}`);
@@ -188,7 +194,7 @@ export async function buildCase(spec: CaseSpec): Promise<Map<string, string>> {
     schemaVersion: '1.0.0',
     version: '1.0.0',
     taskId: spec.id,
-    policyVersion: POLICY_VERSION,
+    policyVersion,
     criteria,
   });
   const verification = jsonText({

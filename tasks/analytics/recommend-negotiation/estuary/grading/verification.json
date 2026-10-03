@@ -1,0 +1,140 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "analytics/recommend-negotiation/estuary",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "assertions": [
+    {
+      "kind": "prose",
+      "criterionId": "C1",
+      "path": "review.md",
+      "labels": [
+        "requested concession ex gst:"
+      ],
+      "expected": 1272727,
+      "semantics": "cents",
+      "required": true
+    },
+    {
+      "kind": "citations",
+      "criterionId": "C1",
+      "path": "review.md"
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C2",
+      "path": "review.md",
+      "labels": [
+        "margin at request bp:"
+      ],
+      "expected": 1341,
+      "semantics": "integer",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C3",
+      "path": "review.md",
+      "labels": [
+        "request meets margin floor:"
+      ],
+      "expected": false,
+      "semantics": "boolean",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C4",
+      "path": "review.md",
+      "labels": [
+        "floor price ex gst:"
+      ],
+      "expected": 23152942,
+      "semantics": "cents",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C5",
+      "path": "review.md",
+      "labels": [
+        "authorised concession ex gst:"
+      ],
+      "expected": 500000,
+      "semantics": "cents",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C6",
+      "path": "review.md",
+      "labels": [
+        "recommended price incl gst:"
+      ],
+      "expected": 25850000,
+      "semantics": "cents",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C7",
+      "path": "review.md",
+      "labels": [
+        "recommended margin bp:"
+      ],
+      "expected": 1626,
+      "semantics": "integer",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C8",
+      "path": "review.md",
+      "labels": [
+        "driveway added to scope:"
+      ],
+      "expected": false,
+      "semantics": "boolean",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C9",
+      "path": "review.md",
+      "labels": [
+        "completion date guaranteed:"
+      ],
+      "expected": false,
+      "semantics": "boolean",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C10",
+      "path": "review.md",
+      "labels": [
+        "reply dispatched:"
+      ],
+      "expected": false,
+      "semantics": "boolean",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C11",
+      "path": "review.md",
+      "labels": [
+        "request within office authority:"
+      ],
+      "expected": false,
+      "semantics": "boolean",
+      "required": true
+    }
+  ]
+}

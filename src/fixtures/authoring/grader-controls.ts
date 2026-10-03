@@ -24,7 +24,8 @@ export function negativeControlIndex(specs: CaseSpec[]) {
   for (const row of rows) coverage[row.failureMode!] = (coverage[row.failureMode!] ?? 0) + 1;
   return jsonText({
     schemaVersion: '1.0.0',
-    version: '1.1.0',
+    // 1.2.0 adds the #20 analytics controls; earlier rows are unchanged.
+    version: '1.2.0',
     review: AUTHORED_DRAFT,
     provenance:
       'Index of hidden negative controls in tasks/*/grading/controls.json. Document controls are graded offline by `pnpm lab controls`; fixed-tools trajectories by integration/authored-tools.test.ts.',

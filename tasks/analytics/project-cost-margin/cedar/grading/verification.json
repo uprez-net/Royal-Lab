@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "analytics/project-cost-margin/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "assertions": [
+    {
+      "kind": "prose",
+      "criterionId": "C1",
+      "path": "review.md",
+      "labels": [
+        "contract value ex gst:"
+      ],
+      "expected": 62256000,
+      "semantics": "cents",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C2",
+      "path": "review.md",
+      "labels": [
+        "actual cost to date ex gst:"
+      ],
+      "expected": 20000000,
+      "semantics": "cents",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C3",
+      "path": "review.md",
+      "labels": [
+        "projected cost:"
+      ],
+      "expected": 51200000,
+      "semantics": "cents",
+      "required": true
+    },
+    {
+      "kind": "citations",
+      "criterionId": "C3",
+      "path": "review.md"
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C4",
+      "path": "review.md",
+      "labels": [
+        "projected profit:"
+      ],
+      "expected": 11056000,
+      "semantics": "cents",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C5",
+      "path": "review.md",
+      "labels": [
+        "projected margin (basis points):"
+      ],
+      "expected": 1776,
+      "semantics": "integer",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C6",
+      "path": "review.md",
+      "labels": [
+        "overrun categories:"
+      ],
+      "expected": "Preliminaries, Slab, Frame, Brickwork, Services",
+      "semantics": "identifier",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C7",
+      "path": "review.md",
+      "labels": [
+        "pending variation counted as revenue:"
+      ],
+      "expected": false,
+      "semantics": "boolean",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C8",
+      "path": "review.md",
+      "labels": [
+        "recovery savings included:"
+      ],
+      "expected": 0,
+      "semantics": "cents",
+      "required": true
+    },
+    {
+      "kind": "prose",
+      "criterionId": "C9",
+      "path": "review.md",
+      "labels": [
+        "low-confidence estimate:"
+      ],
+      "expected": "Brickwork",
+      "semantics": "identifier",
+      "required": true
+    }
+  ]
+}

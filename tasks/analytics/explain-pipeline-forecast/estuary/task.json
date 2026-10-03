@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "analytics/explain-pipeline-forecast/estuary",
+  "definitionId": "D13",
+  "title": "Explain the October–December pipeline forecast to the director",
+  "family": "analytics",
+  "workType": "analyze",
+  "instruction": "The director needs the held-out CRM forecast for the bank meeting. Calculate the inclusive 1 October to 31 December 2026 window using the supplied stage defaults and POLICY_V12. Write facts.json with inWindowLeadCount, unknownValueCount, wonValueCents, weightedPipelineCents, openWeightedCents, saltmarshProbabilityPercent and weightedPipelineIsRevenue. Write review.md answering the director and explaining the treatment. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Labels: Leads in window, Unknown-value leads, Won value, Total weighted pipeline, Open-lead weighted value, Saltmarsh probability, Pipeline classified as revenue (yes or no).",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "estuary-world",
+  "clock": {
+    "instant": "2026-10-05T22:00:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "crm",
+      "path": "documents/crm-export.csv",
+      "sha256": "23be0e912340cf4d582be78defacb9023cc6ece41a4a1a13e55166bc12baa141",
+      "kind": "document",
+      "mediaType": "text/csv"
+    },
+    {
+      "id": "stages",
+      "path": "documents/stage-defaults.md",
+      "sha256": "12853398758985f009fabbb13c15fdc3b69171b80176bdf4c4614f93a51b864f",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "email",
+      "path": "documents/director-email.eml",
+      "sha256": "a9f5124f8cc3281423b29dc582939db28eefc7470e994766b57042c892ce5304",
+      "kind": "document",
+      "mediaType": "message/rfc822"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "aa24a84e4aafea6ae493b081bb0f3d84af398a96c381bdbe0451748fa4d65253",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "facts.json",
+      "mediaType": "application/json",
+      "description": "Forecast facts",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited explanation and response to the director",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "48bcdbcfe72aa1da5b3cb27613129c0ab5bc7b43b961819ddbe13f0737103680",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "5feb500e136a52c63cd131a5c47437da4487f3663b16f097389099e7255acfe2",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "8811ac548a5e7cfc6e0e75fed13855bb3c6b0efdb5e04143bb5bcf7e5dccc620",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "c9339055ee6ac254695e42d83f1afae803a130874cc2c128c13d34daea5025d8",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "c2a8adbb51868ef171867f625f176777eb1412a7e57323a29a618d472740cb00",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "forecast-explained",
+      "description": "Forecast explained with unknown values and non-revenue limitation disclosed."
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

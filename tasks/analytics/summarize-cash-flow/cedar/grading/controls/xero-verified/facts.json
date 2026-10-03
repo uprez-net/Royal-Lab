@@ -1,0 +1,13 @@
+{
+  "closingCashCents": 14946900,
+  "receiptsCents": 21014400,
+  "paymentsCents": 14502500,
+  "outstandingReceivablesCents": 2024000,
+  "overdueInvoices": [
+    "INV-C-011"
+  ],
+  "commitmentsInWindowCents": 8860000,
+  "forecastCollectionsCents": 0,
+  "projectedCashCents": 6086900,
+  "inv012PaymentVerified": true
+}

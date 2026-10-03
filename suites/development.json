@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "id": "development",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "split": "development",
   "profile": "documents",
   "cases": [
@@ -11,7 +11,8 @@
     "insurance/read-certificate-number/cedar",
     "compliance/classify-certifier-document/cedar",
     "compliance/check-title-owners/cedar",
-    "analytics/explain-pipeline-forecast/cedar"
+    "analytics/project-cost-margin/cedar",
+    "analytics/summarize-cash-flow/cedar"
   ],
   "description": "Draft development core document cases: one core case per authored definition. Not reviewed, calibrated or execution-ready."
 }

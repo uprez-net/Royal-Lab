@@ -1,8 +1,9 @@
-# Draft case library for issues #12–#15
+# Draft case library for issues #12–#15 and #20
 
-The library contains **24 newly authored core cases** for D01–D12 and T01–T12,
+The library contains **28 authored core cases** for D01–D16 and T01–T12,
 **seven document variants** and **ten fixed-tools diagnostics**. Together with
-the four preserved specimens, discovery returns **45 case packs**. All source,
+the four preserved specimens (now all labelled variants), discovery returns
+**49 case packs**. All source,
 world, policy, verifier, environment, operator and control reviews remain draft.
 No expert review, measured model score or release approval has been recorded.
 
@@ -10,22 +11,24 @@ No expert review, measured model score or release approval has been recorded.
 
 | Selection                 | Cases | Profile     | Meaning                                                                                                                                                            |
 | ------------------------- | ----: | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `development`             |     7 | documents   | Six new core document cases plus the D13 specimen                                                                                                                  |
-| `held-out`                |     8 | documents   | Six new core document cases plus the D14/D15 specimens                                                                                                             |
+| `development`             |     8 | documents   | Six core document cases plus the D14 cost/margin and D15 cash-flow cases                                                                                           |
+| `held-out`                |     8 | documents   | Six core document cases plus the D13 pipeline and D16 negotiation cases                                                                                            |
 | `fixed-tools-development` |     6 | fixed-tools | T01/T02/T03/T05/T07/T09                                                                                                                                            |
 | `fixed-tools-held-out`    |     6 | fixed-tools | T04/T06/T08/T10/T11/T12                                                                                                                                            |
-| `development-variants`    |     6 | documents   | Missing number, unreadable title, three compliance readiness alternates and the preserved D01 specimen                                                             |
-| `held-out-variants`       |     2 | documents   | Quote-grader and developer-thread instruction injections                                                                                                           |
+| `development-variants`    |     7 | documents   | Missing number, unreadable title, three compliance readiness alternates and the preserved D01/D13 specimens                                                        |
+| `held-out-variants`       |     4 | documents   | Quote-grader and developer-thread instruction injections plus the preserved D14/D15 specimens                                                                      |
 | `safety-diagnostics`      |    10 | fixed-tools | Cancel, forged approval, wrong responder, ambiguous booking, unavailable email/outreach, unsupported variation/offer delivery, read timeout and child-reader error |
 
-The core selections contain one case for each of **27 definitions**. D13–D15
-still use the original specimens, and D16 remains unauthored under #20. The 28
-definition catalogue is unchanged. Superseding D01 moves its old specimen to the
-variant selection without altering its source, policy, verifier or review bytes.
+The core selections contain one case for each of all **28 definitions**. The 28
+definition catalogue is unchanged. Superseding D01 and D13–D15 moves their old
+specimens to the variant selections without altering their source, policy,
+verifier or review bytes. Each new analytics case uses the other world from its
+specimen, so development and held-out worlds stay structurally distinct.
 Variants and diagnostics must retain their own denominators in later reporting.
 
-The expanded development-variant and diagnostic suites are version **2.1.0**;
-other suite selections are **2.0.0**. The negative-control index is **1.1.0**.
+Suite versions: `development`, `held-out` and `held-out-variants` **2.1.0**,
+`development-variants` **2.2.0**, `safety-diagnostics` **2.1.0**, fixed-tools core
+**2.0.0**. The negative-control index is **1.2.0** (adds the #20 rows).
 Original suite version 1.0.0 selections and saved results are not rewritten.
 
 | Issue | New core definitions | Consequential evidence                                                                                                                                                                                                                                            |
@@ -40,6 +43,29 @@ plans lacking client approval, an unresolved stale-title alert and DA routing.
 Their own frozen workflow checklist is supplied to the candidate. They run in
 the **documents** profile: CERTIFIER outreach and those operational resolutions
 are outside the minimum SURVEYOR bridge. They do not claim those actions execute.
+
+## Business analytics and negotiation (#20)
+
+| ID  | Case                                          | World / split    | Consequential evidence and negative controls                                                                                                                       |
+| --- | --------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| D13 | `analytics/explain-pipeline-forecast/estuary` | Estuary held-out | Inclusive Oct–Dec window, won lead with a stale override, invalid 140% override, two unknown values, lost/stalled and boundary dates; pipeline is not revenue      |
+| D14 | `analytics/project-cost-margin/cedar`         | Cedar dev        | GST-inclusive services actual, approved versus pending variation, low-confidence brickwork estimate, unquoted savings suggestion; exact cost, profit and margin bp |
+| D15 | `analytics/summarize-cash-flow/cedar`         | Cedar dev        | Bank-only closing cash, paid/overdue/unpaid/draft invoices, dated commitments, collection forecast and a Xero "paid" note that is not bank evidence                |
+| D16 | `analytics/recommend-negotiation/estuary`     | Estuary held-out | Ex-GST concession, margin floor and office concession limit, excluded driveway, no completion guarantee, draft reply not sent                                      |
+
+They use visible policy **1.2.0**: policy 1.1.0 plus sections 14–17 (pipeline
+forecasts, cost and margin, cash position, negotiation). Earlier authored cases
+keep the byte-identical 1.1.0 policy; the specimens keep 1.0.0. Negative controls
+cover wrong/stale/invalid probability, unknown values counted as zero, window
+leakage, pipeline-as-revenue, GST-basis errors, pending variations as revenue,
+invented savings, projected receipts claimed as cash, unverified Xero payment,
+draft invoices as receivables, below-floor or over-authority concessions,
+promised scope/dates and a reply claimed sent. Boolean prose facts are expected
+`false` because the scoped prose matcher recognizes affirmations, not "yes".
+
+Case specs were drafted with Codex helper agents from fixed numeric briefs and
+then corrected and verified locally; all expected values are pinned by in-module
+arithmetic guards. Nothing here is human-reviewed: all four remain draft.
 
 ## Authoring and hidden controls
 
@@ -76,7 +102,7 @@ pnpm schemas:export
 pnpm check
 ```
 
-`controls` checks all **19 authored document packs**, including the read-only
+`controls` checks all **23 authored document packs**, including the read-only
 compliance variants. It compares every deterministic verdict with the hidden
 expectation. It does not call candidates or judges, grant review or produce a
 comparable model score. A failing control is a measurement-system defect.

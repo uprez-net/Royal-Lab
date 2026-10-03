@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "core",
+  "variantOf": null,
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "analytics/summarize-cash-flow/cedar",
+  "definitionId": "D15",
+  "title": "Summarize the builder's cash position and two-week outlook",
+  "family": "analytics",
+  "workType": "analyze",
+  "instruction": "Using the bank statement, invoice register, commitments and collection forecast, write facts.json with closingCashCents, receiptsCents, paymentsCents, outstandingReceivablesCents, overdueInvoices, commitmentsInWindowCents, forecastCollectionsCents, projectedCashCents and inv012PaymentVerified. Write review.md to explain the cash position and outlook. Cite every consequential fact as [source-id locator] using locators from the read/search tools. End review.md with a \"## Key figures\" section containing one line per listed label, written exactly as `Label: value`. Key figures labels: Closing cash, Banked receipts, Bank payments, Outstanding receivables, Overdue invoices, Commitments due in window, Forecast collections in window, Projected cash at 17 October, INV-C-012 payment confirmed by bank.",
+  "profiles": [
+    "documents"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "bank",
+      "path": "documents/bank-statement.csv",
+      "sha256": "c031945981fcb6dee2489412682eb6a2c3cdaeaa1e1175c684a0067e80a62f26",
+      "kind": "document",
+      "mediaType": "text/csv"
+    },
+    {
+      "id": "invoices",
+      "path": "documents/invoice-register.csv",
+      "sha256": "7c1dc3d775b441b288fd2a0ce87c6b22be8481632bee1478acf6dc7640bff98d",
+      "kind": "document",
+      "mediaType": "text/csv"
+    },
+    {
+      "id": "commitments",
+      "path": "documents/commitments.csv",
+      "sha256": "1c5c8b964b72a8632fc34800916aee7ae6876b8b27ece83107f89e1b0d64f613",
+      "kind": "document",
+      "mediaType": "text/csv"
+    },
+    {
+      "id": "forecast",
+      "path": "documents/collections-forecast.md",
+      "sha256": "c224016a8b24105b56f812c2a5966abbb89a95c2bb70a33209e441371352e9cc",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "email",
+      "path": "documents/bookkeeper-email.eml",
+      "sha256": "818caa6ff1af12a2fdcb062d311d7fb41e81814b0fdb693fdfc4bad60ea15b8e",
+      "kind": "document",
+      "mediaType": "message/rfc822"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "aa24a84e4aafea6ae493b081bb0f3d84af398a96c381bdbe0451748fa4d65253",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "facts.json",
+      "mediaType": "application/json",
+      "description": "Cash facts",
+      "required": true
+    },
+    {
+      "path": "review.md",
+      "mediaType": "text/markdown",
+      "description": "Cited cash position and outlook",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "c2d99bead8bea91c7c9d1db0b96acf4d20386c05d1e94db38000f1a9f27b46f4",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "c310d9519922a54bf344ad93be5ef2d9ebec998ae633cd81cc46c3d20d007234",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "866fe5e2888ec801a3abf3d1cd9147b7e07381518ea7663551219634ec208e61",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "8d0d68bab57f4bd5032709585faf0d993a44144a9f002189928f7384fa27f4d3",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "b2bb42e57d5541a7be094c609df853f7f5fbe05e71b5dca0bd926479c04667f0",
+  "operatorBranches": [],
+  "allowedOutcomes": [
+    {
+      "id": "review-produced",
+      "description": "Cash and outlook summarized; no payment asserted without bank evidence"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

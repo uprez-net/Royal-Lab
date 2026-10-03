@@ -21,8 +21,8 @@ forecasting, D14 cost/margin projection, D15 cash-flow summaries and D16 negotia
 recommendations. `scope/catalogue.json` and the case matrix name every assignment,
 source, relevant test, profile and effect class. These are definitions, not 28
 authored/run-ready cases. The [draft case library](authored-cases.md) now includes
-D01–D12/T01–T12 core packs, labelled variants and diagnostics. D13–D15 retain
-their specimens and D16 remains unauthored. All packs await actual review.
+D01–D16/T01–T12 core packs, labelled variants and diagnostics. The D13–D15
+specimens are preserved as labelled variants. All packs await actual review.
 
 ## Experiment profiles
 
