@@ -30,7 +30,8 @@ are retained. The execution receipt detects changed result/trace/config/document
 regrading verifies these and writes a new grade file without importing a candidate
 client or making a candidate request. Original execution evidence is kept.
 
-The typed hidden verification plan supplements rubric facts with scoped prose,
+The typed hidden verification plan supplements rubric facts with scoped prose, an
+additive `absent` check for protected synthetic values (#21),
 exact target/state/history/journal preservation, recording-port outcomes, safe
 attempt/approval checks and normalized citations. Monetary values use integer AUD
 cents; date-only, equivalent instant and Sydney date comparisons are distinct.

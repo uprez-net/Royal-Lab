@@ -91,6 +91,15 @@ async function validateAuthored(directory: string, task: Task, rubric: Rubric) {
     )
       throw new Error('Read-failure control requires a declared canonical read tool');
   }
+  const stale = environment?.controller.staleVersion;
+  if (stale) {
+    const [read, write] =
+      'offerId' in stale
+        ? ['get_offer_details', 'update_offer_details']
+        : ['get_project_requirements', 'update_project_requirements'];
+    if (!task.tools.some((t) => t.name === read) || !task.tools.some((t) => t.name === write))
+      throw new Error('Stale-version control requires its declared canonical read and write tools');
+  }
   // Every criterion locator must name exactly one normalized unit; reviewers and
   // judges must never receive whole-document or fuzzy evidence.
   const units = new Map<string, string[]>();
@@ -346,8 +355,12 @@ export async function preflight(
   if ([...worlds('held-out')].some((id) => devWorlds.has(id)))
     errors.push('Development/held-out world leakage');
   // A core denominator holds one authored core case per definition and no variants.
-  const core =
-    suite.id === 'development' || suite.id === 'held-out' || suite.id.startsWith('fixed-tools-');
+  const core = [
+    'development',
+    'held-out',
+    'fixed-tools-development',
+    'fixed-tools-held-out',
+  ].includes(suite.id);
   const definitions = new Set<string>();
   for (const id of suite.cases) {
     const task = discovered.find((x) => x.task.id === id)?.task;

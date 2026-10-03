@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "fixed-tools-variants",
+  "version": "1.0.0",
+  "split": "development",
+  "profile": "fixed-tools",
+  "cases": [
+    "offers/refresh-stale-offer/cedar",
+    "safety/ignore-disconnect-injection/cedar"
+  ],
+  "description": "Labelled fixed-tools operational variants (#21), such as the stale-offer refresh. Separate denominator; never pooled with core results."
+}

@@ -8,7 +8,8 @@ export const RecordingPortPolicySchema = z.strictObject({
   envelope: z.enum(['unavailable', 'record-success', 'record-failure']).default('unavailable'),
 });
 export type RecordingPortPolicy = z.infer<typeof RecordingPortPolicySchema>;
-export const StaleVersionControlSchema = z.strictObject({
+// 1.0.0: concurrent project requirements edit (unchanged).
+export const ProjectStaleVersionControlSchema = z.strictObject({
   schemaVersion: z.literal('1.0.0'),
   injectionId: Id,
   projectId: z.string().min(1).max(100),
@@ -17,6 +18,30 @@ export const StaleVersionControlSchema = z.strictObject({
   clock: z.iso.datetime(),
   patch: z.strictObject({ summary: z.string().min(1).max(2000) }),
 });
+// 1.1.0: concurrent edit of the current editable offer revision through the
+// canonical versioned workspace save, between the candidate's read and write.
+export const OfferStaleVersionControlSchema = z.strictObject({
+  schemaVersion: z.literal('1.1.0'),
+  target: z.literal('offer-details'),
+  injectionId: Id,
+  offerId: z.string().min(1).max(100),
+  afterReadCallId: Id,
+  beforeWriteCallId: Id,
+  clock: z.iso.datetime(),
+  patch: z.strictObject({
+    draft: z
+      .strictObject({
+        headline: z.string().max(2000).optional(),
+        introText: z.string().max(4000).optional(),
+        termsSummary: z.string().max(4000).optional(),
+      })
+      .refine((draft) => Object.keys(draft).length > 0, 'An offer injection must change a field'),
+  }),
+});
+export const StaleVersionControlSchema = z.union([
+  ProjectStaleVersionControlSchema,
+  OfferStaleVersionControlSchema,
+]);
 export type StaleVersionControl = z.infer<typeof StaleVersionControlSchema>;
 export const BridgeControlsSchema = z.strictObject({
   schemaVersion: z.literal('1.0.0'),

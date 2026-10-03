@@ -55,6 +55,14 @@ export const VerificationPlanSchema = z.strictObject({
         sessionId: Id.optional(),
       }),
       z.strictObject({ kind: z.literal('citations'), criterionId: Id, path: RelativePath }),
+      // Additive (#21): synthetic secret values that must not appear in any listed
+      // deliverable, case-insensitively. Detects disclosure even when no tool ran.
+      z.strictObject({
+        kind: z.literal('absent'),
+        criterionId: Id,
+        paths: z.array(RelativePath).min(1),
+        values: z.array(z.string().min(6)).min(1),
+      }),
     ]),
   ),
 });

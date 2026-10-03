@@ -18,6 +18,7 @@ import {
   outreachOutage,
   unsupportedEmail,
   wrongResponder,
+  wrongSession,
 } from '#fixtures/authoring/cases/diagnostics';
 import { quoteBuildUp } from '#fixtures/authoring/cases/d01-quote-build-up';
 import { revisionPrice } from '#fixtures/authoring/cases/d02-revision-price';
@@ -35,6 +36,8 @@ import { pipelineForecast } from '#fixtures/authoring/cases/d13-pipeline-forecas
 import { costMargin } from '#fixtures/authoring/cases/d14-cost-margin';
 import { cashFlow } from '#fixtures/authoring/cases/d15-cash-flow';
 import { negotiation } from '#fixtures/authoring/cases/d16-negotiation';
+import { staleOffer } from '#fixtures/authoring/cases/t-stale-offer';
+import { disconnectInjection } from '#fixtures/authoring/cases/t-disconnect-injection';
 import {
   architectClientApproval,
   unresolvedStaleTitle,
@@ -107,10 +110,14 @@ export const AUTHORED_CASES: (() => CaseSpec)[] = [
   architectClientApproval,
   unresolvedStaleTitle,
   daRouting,
+  // #21 operational variants (fixed-tools; separate selection and denominator)
+  staleOffer,
+  disconnectInjection,
   // #15 safety, boundary, fault and interaction diagnostics
   cancelledFollowUp,
   forgedApproval,
   wrongResponder,
+  wrongSession,
   ambiguousBooking,
   unsupportedEmail,
   outreachOutage,
@@ -184,10 +191,18 @@ const SUITES: {
       'Labelled held-out document variants. Separate denominator; never pooled with core results.',
   },
   {
+    id: 'fixed-tools-variants',
+    split: 'development',
+    profile: 'fixed-tools',
+    roles: ['variant'],
+    description:
+      'Labelled fixed-tools operational variants (#21), such as the stale-offer refresh. Separate denominator; never pooled with core results.',
+  },
+  {
     id: 'safety-diagnostics',
     split: 'development',
     profile: 'fixed-tools',
-    roles: ['diagnostic', 'variant'],
+    roles: ['diagnostic'],
     description:
       'Capability-boundary, fault and interaction diagnostics. Reported separately from supported capability success.',
   },
@@ -200,7 +215,8 @@ const SUITE_VERSIONS: Record<string, string> = {
   'held-out': '2.1.0',
   'development-variants': '2.2.0',
   'held-out-variants': '2.1.0',
-  'safety-diagnostics': '2.1.0',
+  'fixed-tools-variants': '1.0.0',
+  'safety-diagnostics': '2.2.0',
 };
 export async function authoredFiles(): Promise<Map<string, string>> {
   const files = new Map<string, string>();
@@ -245,10 +261,7 @@ export async function authoredFiles(): Promise<Map<string, string>> {
         (row) =>
           row.split === suite.split &&
           suite.roles.includes(row.role) &&
-          (suite.id === 'safety-diagnostics'
-            ? row.profile === 'fixed-tools' && row.role !== 'core'
-            : row.profile === suite.profile &&
-              !(row.profile === 'fixed-tools' && row.role !== 'core')),
+          row.profile === suite.profile,
       )
       .sort((a, b) => a.definitionId.localeCompare(b.definitionId) || a.id.localeCompare(b.id))
       .map((row) => row.id);

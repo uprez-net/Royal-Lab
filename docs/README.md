@@ -7,7 +7,7 @@ its facts, artifacts, permissions and effects. Intended builder policy is the
 authority. Royal-Construction supplies canonical operational commands, not the
 expected policy for every builder.
 
-The current repository has 28 task definitions, 49 **draft** case packs,
+The current repository has 28 task definitions, 52 **draft** case packs,
 a closed document workspace, candidate transports, deterministic verification and
 a tested minimum canonical bridge covering lead tools and T03–T12 boundaries. It is an implementation under development,
 with no approved benchmark release or paid model baseline. Review gates are real:

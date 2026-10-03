@@ -1,23 +1,24 @@
-# Draft case library for issues #12–#15 and #20
+# Draft case library for issues #12–#15, #20 and #21
 
 The library contains **28 authored core cases** for D01–D16 and T01–T12,
-**seven document variants** and **ten fixed-tools diagnostics**. Together with
-the four preserved specimens (now all labelled variants), discovery returns
-**49 case packs**. All source,
+**seven document variants**, **two fixed-tools variants** and **eleven fixed-tools
+diagnostics**. Together with the four preserved specimens (now all labelled
+variants), discovery returns **52 case packs**. All source,
 world, policy, verifier, environment, operator and control reviews remain draft.
 No expert review, measured model score or release approval has been recorded.
 
 ## Coverage and denominators
 
-| Selection                 | Cases | Profile     | Meaning                                                                                                                                                            |
-| ------------------------- | ----: | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `development`             |     8 | documents   | Six core document cases plus the D14 cost/margin and D15 cash-flow cases                                                                                           |
-| `held-out`                |     8 | documents   | Six core document cases plus the D13 pipeline and D16 negotiation cases                                                                                            |
-| `fixed-tools-development` |     6 | fixed-tools | T01/T02/T03/T05/T07/T09                                                                                                                                            |
-| `fixed-tools-held-out`    |     6 | fixed-tools | T04/T06/T08/T10/T11/T12                                                                                                                                            |
-| `development-variants`    |     7 | documents   | Missing number, unreadable title, three compliance readiness alternates and the preserved D01/D13 specimens                                                        |
-| `held-out-variants`       |     4 | documents   | Quote-grader and developer-thread instruction injections plus the preserved D14/D15 specimens                                                                      |
-| `safety-diagnostics`      |    10 | fixed-tools | Cancel, forged approval, wrong responder, ambiguous booking, unavailable email/outreach, unsupported variation/offer delivery, read timeout and child-reader error |
+| Selection                 | Cases | Profile     | Meaning                                                                                                                                                                                                |
+| ------------------------- | ----: | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `development`             |     8 | documents   | Six core document cases plus the D14 cost/margin and D15 cash-flow cases                                                                                                                               |
+| `held-out`                |     8 | documents   | Six core document cases plus the D13 pipeline and D16 negotiation cases                                                                                                                                |
+| `fixed-tools-development` |     6 | fixed-tools | T01/T02/T03/T05/T07/T09                                                                                                                                                                                |
+| `fixed-tools-held-out`    |     6 | fixed-tools | T04/T06/T08/T10/T11/T12                                                                                                                                                                                |
+| `development-variants`    |     7 | documents   | Missing number, unreadable title, three compliance readiness alternates and the preserved D01/D13 specimens                                                                                            |
+| `held-out-variants`       |     4 | documents   | Quote-grader and developer-thread instruction injections plus the preserved D14/D15 specimens                                                                                                          |
+| `fixed-tools-variants`    |     1 | fixed-tools | Stale-offer refresh variant of T03 (#21): canonical concurrent terms edit, refusal, reread and fresh approval                                                                                          |
+| `safety-diagnostics`      |    11 | fixed-tools | Cancel, forged approval, wrong responder, transported wrong-session approval, ambiguous booking, unavailable email/outreach, unsupported variation/offer delivery, read timeout and child-reader error |
 
 The core selections contain one case for each of all **28 definitions**. The 28
 definition catalogue is unchanged. Superseding D01 and D13–D15 moves their old

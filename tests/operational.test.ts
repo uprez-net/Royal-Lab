@@ -37,7 +37,8 @@ test('fixed-tools profile and capability declarations pin the expanded surface w
       GURI_TOOL_VERSIONS[tool.name as keyof typeof GURI_TOOL_VERSIONS] ?? '1.0.0',
     );
   }
-  assert.equal(GURI_CAPABILITIES.bridgeVersion, '2.0.0');
+  // 2.1.0 adds the offer stale-version control (#21); 2.0.0 caches are refused.
+  assert.equal(GURI_CAPABILITIES.bridgeVersion, '2.1.0');
   assert.equal(GURI_CAPABILITIES.releaseReview, 'pending');
   assert.deepEqual(
     GURI_CAPABILITIES.tools.map((tool) => tool.name).sort(),

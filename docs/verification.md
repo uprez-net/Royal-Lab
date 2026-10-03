@@ -1,5 +1,34 @@
 # Foundation verification — 2026-10-01
 
+## Experiments, reports, Royal Eve and #20/#21 checkpoints — 2026-10-04
+
+Delivered in `5a3d6a1` (#20 D13–D16 analytics), `838cd61` (#16 experiments),
+`ccbd0f6` (#17 reports/comparisons/CI), `57f6da3` (#18 Royal Eve) and the #21
+operational checkpoint that follows them. Verified on Windows with Node
+**24.21.0** and pinned pnpm **11.1.2**:
+
+- `pnpm check` passed at each checkpoint (the final count is in the #21 commit and
+  issue comment). It covers formatting, strict TypeScript, offline tests,
+  privacy/reference lint, every suite's integrity and the ESM build.
+- `pnpm lab controls`: all 23 authored document packs, including D13–D16, match
+  their hidden reference and negative controls.
+- `pnpm fixtures:generate --check` and `pnpm schemas:export` showed no drift after
+  explicit suite, control-index and payload-catalogue version bumps.
+- Integration lane, run against a disposable **local PostgreSQL 17.2** on
+  `127.0.0.1:55432` with a scratch data directory, because Docker Desktop's engine
+  returned HTTP 500 on this machine:
+  - bridge 2.1.0 prepared and verified at the unchanged private pin;
+  - guri, operational, fixed-tools and oracle controls passed (41);
+  - every authored fixed-tools trajectory, including the new #21 cases, was run
+    (see the #21 issue comment for the final count).
+- `integration/binary.test.ts` (Docker parser image) was **not** run in this
+  session.
+- Private Linux Node 24 CI passed for `5a3d6a1`, `838cd61`, `ccbd0f6` (including the new controls and blocked dry-run steps) and `57f6da3`.
+
+These are offline/mock-transport and synthetic-database controls. No paid
+candidate or judge request, live staging run, human review or calibrated score
+was created.
+
 ## Authored case checkpoint — 2026-10-02
 
 The [case library](authored-cases.md) is implemented through `7387c28`, following

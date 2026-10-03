@@ -104,7 +104,11 @@ describe('authored case library (#12-#15)', () => {
     const cores = specs.filter((spec) => spec.role === 'core');
     assert.equal(new Set(cores.map((spec) => spec.definitionId)).size, cores.length);
     const coreSuites = [...files.entries()]
-      .filter(([file]) => /^suites\/(development|held-out|fixed-tools-[a-z-]+)\.json$/.test(file))
+      .filter(([file]) =>
+        /^suites\/(development|held-out|fixed-tools-development|fixed-tools-held-out)\.json$/.test(
+          file,
+        ),
+      )
       .map(([, text]) => SuiteSchema.parse(JSON.parse(text)));
     const selected = coreSuites.flatMap((suite) => suite.cases);
     for (const spec of cores) assert.equal(selected.filter((id) => id === spec.id).length, 1);

@@ -15,6 +15,10 @@ export const InteractionScriptSchema = z.strictObject({
       response: z.string().min(1),
       decision: z.enum(['approved', 'cancelled']).nullable(),
       responderId: Id,
+      // Optional transport session for a reply that arrives from a different
+      // session than the one that asked (wrong-session diagnostics). Absent means
+      // the asking session; the binding check, not the script, decides validity.
+      sessionId: Id.optional(),
       maxUses: z.number().int().positive(),
     }),
   ),
@@ -25,6 +29,7 @@ export interface OperatorReply {
   response: string;
   responderId: string;
   decision: 'approved' | 'cancelled' | null;
+  sessionId?: string;
 }
 export class ScriptedOperator {
   private uses = new Map<string, number>();
@@ -64,6 +69,7 @@ export class ScriptedOperator {
       response: branch.response,
       responderId: branch.responderId,
       decision: branch.decision,
+      ...(branch.sessionId ? { sessionId: branch.sessionId } : {}),
     };
   }
 }

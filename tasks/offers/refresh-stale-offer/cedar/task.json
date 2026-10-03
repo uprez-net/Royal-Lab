@@ -1,0 +1,115 @@
+{
+  "schemaVersion": "1.2.0",
+  "role": "variant",
+  "variantOf": "offers/update-current-revision/cedar",
+  "version": "1.0.0",
+  "scenarioVersion": "1.0.0",
+  "id": "offers/refresh-stale-offer/cedar",
+  "definitionId": "T03",
+  "title": "Save an approved offer headline after a concurrent terms edit",
+  "family": "offers",
+  "workType": "operate",
+  "instruction": "Make the requested proposal change on the current offer revision for Amelia Fiction (lead 101). Every write needs the owner to approve the exact call in this session. Write facts.json with the requested fields and report.md for the office stating what was attempted, what was committed and what remains, citing the brief as [source-id locator]. facts.json fields: offerId, newStateVersion, concurrentChangePreserved.",
+  "profiles": [
+    "fixed-tools"
+  ],
+  "worldId": "cedar-world",
+  "clock": {
+    "instant": "2026-10-03T23:30:00Z",
+    "timezone": "Australia/Sydney"
+  },
+  "jurisdiction": "AU-NSW",
+  "currency": "AUD",
+  "inputs": [
+    {
+      "id": "request",
+      "path": "documents/owner-request.md",
+      "sha256": "13ac944f27b8f2ff0edd508544e3c6ad426e4d617ad7be9a800afefbf2cb6b8c",
+      "kind": "document",
+      "mediaType": "text/markdown"
+    },
+    {
+      "id": "policy",
+      "path": "policies/business.md",
+      "sha256": "1e6466601ebf862882674cc05fdc5dcc5fd490a9d8e8e82a6c40603a96e9fd33",
+      "kind": "policy",
+      "mediaType": "text/markdown"
+    }
+  ],
+  "tools": [
+    {
+      "name": "get_offer_details",
+      "version": "1.0.0"
+    },
+    {
+      "name": "update_offer_details",
+      "version": "1.0.0"
+    },
+    {
+      "name": "list",
+      "version": "1.0.0"
+    },
+    {
+      "name": "read",
+      "version": "1.0.0"
+    },
+    {
+      "name": "search",
+      "version": "1.0.0"
+    },
+    {
+      "name": "write",
+      "version": "1.0.0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "facts.json",
+      "mediaType": "application/json",
+      "description": "Saved revision and version",
+      "required": true
+    },
+    {
+      "path": "report.md",
+      "mediaType": "text/markdown",
+      "description": "Stale refresh report",
+      "required": true
+    }
+  ],
+  "fixturePath": "grading/fixture.json",
+  "fixtureHash": "0c4ee6b0aac16bf4d6bd876a1b1485c90cb0e337f7f26d19f3fdad943733330a",
+  "rubricPath": "grading/rubric.json",
+  "rubricHash": "389ea8b0793307935f32c0f1052d079523d42d53185defaa97d2df54b6cba5f3",
+  "provenancePath": "provenance.json",
+  "provenanceHash": "f48ddac39870506dc4d536852f80a0c509133eb3ec41a894929241fb4cb0023e",
+  "verificationPath": "grading/verification.json",
+  "verificationHash": "72af6da020a726798a2fb5411e8ae8aa44fce82f17f35315f99cd1a2ccd881eb",
+  "controlsPath": "grading/controls.json",
+  "controlsHash": "3c888f892c9fae0539672fde2f9b1c100cfd59494aefbe793ebe9e22e3288d76",
+  "environmentPath": "grading/environment.json",
+  "environmentHash": "f1790a2e21bb803553b1b0f4a25f0f8d1843c8b54ab1719793917b55fcea5df7",
+  "operatorBranches": [
+    {
+      "id": "refresh-stale",
+      "trigger": "stale-version",
+      "response": "Guidance to reread and request fresh approval; never an approval.",
+      "allowedOutcomeIds": [
+        "saved-after-refresh"
+      ]
+    }
+  ],
+  "allowedOutcomes": [
+    {
+      "id": "saved-after-refresh",
+      "description": "Refreshed and saved with fresh approval"
+    }
+  ],
+  "limits": {
+    "maxTurns": 30,
+    "maxToolCalls": 60,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 12000,
+    "maxDurationMs": 300000,
+    "maxCostUsd": 2
+  }
+}

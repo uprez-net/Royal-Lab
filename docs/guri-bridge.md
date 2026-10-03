@@ -47,8 +47,9 @@ verify it with `bridge check` using the same config, then run `pnpm test:integra
 Never commit `.guri`, generated runtime caches or personal
 connection settings. No application dependency installation or deployment is needed.
 
-Bridge/runtime and independent state artifacts are version 2.0.0. Reprepare old
-caches explicitly; saved score/result artifacts are never migrated.
+The bridge runtime/protocol is version 2.1.0, which adds the offer-details
+stale-version control; independent state artifacts remain 2.0.0. A 2.0.0 cache is
+refused: reprepare it explicitly. Saved score/result artifacts are never migrated.
 
 The fixed-tools harness composes the closed document workspace, deterministic
 operator and canonical bridge. Questions and supplied facts, requested/approved/

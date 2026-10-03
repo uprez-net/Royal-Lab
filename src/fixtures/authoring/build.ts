@@ -280,7 +280,15 @@ export async function buildCase(spec: CaseSpec): Promise<Map<string, string>> {
     spec.profile === 'fixed-tools'
       ? jsonText({
           schemaVersion: '1.0.0',
-          version: spec.environment.controller?.readFailure ? '1.1.0' : '1.0.0',
+          // 1.1.0 read faults; 1.2.0 offer stale-version injection. Earlier
+          // environments keep their versions and bytes.
+          version:
+            spec.environment.controller?.staleVersion &&
+            'offerId' in spec.environment.controller.staleVersion
+              ? '1.2.0'
+              : spec.environment.controller?.readFailure
+                ? '1.1.0'
+                : '1.0.0',
           taskId: spec.id,
           review: AUTHORED_DRAFT,
           session: spec.environment.session ?? {

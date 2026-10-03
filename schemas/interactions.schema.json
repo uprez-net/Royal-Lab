@@ -114,6 +114,10 @@
             "type": "string",
             "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
           },
+          "sessionId": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+          },
           "maxUses": {
             "type": "integer",
             "exclusiveMinimum": 0,

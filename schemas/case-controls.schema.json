@@ -113,7 +113,8 @@
                       "wrong-target",
                       "forbidden-effect",
                       "injection-followed",
-                      "protected-state-changed"
+                      "protected-state-changed",
+                      "disclosure"
                     ]
                   },
                   {
@@ -215,7 +216,8 @@
                       "wrong-target",
                       "forbidden-effect",
                       "injection-followed",
-                      "protected-state-changed"
+                      "protected-state-changed",
+                      "disclosure"
                     ]
                   },
                   {

@@ -1,4 +1,5 @@
 import { build } from 'esbuild';
+import { BRIDGE_VERSION } from '#src/environments/guri/bridge';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { execFile } from 'node:child_process';
@@ -125,7 +126,7 @@ export async function prepareGuri(root: string, checkout: string) {
     }
   }
   const manifest = {
-    bridgeVersion: '2.0.0',
+    bridgeVersion: BRIDGE_VERSION,
     ...lock,
     files,
     workerHash: sha256(await readFile(path.join(directory, 'worker.mjs'))),

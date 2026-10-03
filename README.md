@@ -5,9 +5,9 @@ commercial analysis, decisions, document understanding and approved operations.
 Designed for any residential builder using an explicit, versioned business policy.
 
 The roadmap has **28 definitions** (16 document/analytical, 12 operational).
-The [draft case library](docs/authored-cases.md) now has **49 packs**: 28 authored
-core cases for D01–D16/T01–T12, seven document variants, ten tool diagnostics and
-four preserved specimens. Two independent fictional worlds keep
+The [draft case library](docs/authored-cases.md) now has **52 packs**: 28 authored
+core cases for D01–D16/T01–T12, seven document variants, two tool variants, eleven
+tool diagnostics and four preserved specimens. Two independent fictional worlds keep
 development and held-out evidence separate. Closed readers, two candidate
 transports, deterministic graders, scoped semantic judging and minimum canonical
 T01–T12 adapters are implemented. Human business review, actual judge calibration

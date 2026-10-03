@@ -1,7 +1,7 @@
 import { GURI_EFFECTS, GURI_TOOL_VERSIONS, type GuriTool } from '#src/environments/guri/tools';
 // Execution capability, independent of case authoring/review and Eve availability.
 export const GURI_CAPABILITIES = {
-  bridgeVersion: '2.0.0',
+  bridgeVersion: '2.1.0',
   caseCoverage: ['T03', 'T04', 'T05', 'T06', 'T07', 'T08', 'T09', 'T10', 'T11', 'T12'],
   tools: Object.entries(GURI_EFFECTS).map(([name, effect]) => ({
     name,

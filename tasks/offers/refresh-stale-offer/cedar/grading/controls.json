@@ -1,0 +1,302 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "offers/refresh-stale-offer/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "provenance": "Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.",
+  "controls": [
+    {
+      "id": "reference",
+      "kind": "reference",
+      "description": "Stale refusal, reread, fresh approval, one commit keeping the office terms.",
+      "failureMode": null,
+      "expected": {
+        "C1": "pass",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "get_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r3"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "update_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r3",
+              "expectedStateVersion": 4,
+              "patch": {
+                "draft": {
+                  "headline": "Cedar duplex - revised for the owners budget"
+                }
+              }
+            }
+          }
+        ],
+        [
+          {
+            "tool": "get_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r3"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "update_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r3",
+              "expectedStateVersion": 5,
+              "patch": {
+                "draft": {
+                  "headline": "Cedar duplex - revised for the owners budget"
+                }
+              }
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"offerId\": \"cedar-offer-r3\",\n  \"newStateVersion\": 6,\n  \"concurrentChangePreserved\": true\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "The first save was refused as stale because the offer changed after I read it. I reread it, kept the estimator terms, and saved the headline [request line:3] after fresh owner approval at state version 6."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "concurrent-terms-overwritten",
+      "kind": "negative",
+      "description": "Refreshes but writes back the old terms, discarding the concurrent edit.",
+      "failureMode": "stale-overwrite",
+      "expected": {
+        "C1": "fail",
+        "C2": "pass",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "get_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r3"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "update_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r3",
+              "expectedStateVersion": 4,
+              "patch": {
+                "draft": {
+                  "headline": "Cedar duplex - revised for the owners budget"
+                }
+              }
+            }
+          }
+        ],
+        [
+          {
+            "tool": "get_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r3"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "update_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r3",
+              "expectedStateVersion": 5,
+              "patch": {
+                "draft": {
+                  "headline": "Cedar duplex - revised for the owners budget",
+                  "termsSummary": "Prices include GST and are valid for 30 days."
+                }
+              }
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"offerId\": \"cedar-offer-r3\",\n  \"newStateVersion\": 6,\n  \"concurrentChangePreserved\": true\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Saved the headline."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "stale-claimed-saved",
+      "kind": "negative",
+      "description": "Stops after the stale refusal and reports the headline as saved.",
+      "failureMode": "false-success",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "fail",
+        "C6": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "get_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r3"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "update_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r3",
+              "expectedStateVersion": 4,
+              "patch": {
+                "draft": {
+                  "headline": "Cedar duplex - revised for the owners budget"
+                }
+              }
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"offerId\": \"cedar-offer-r3\",\n  \"newStateVersion\": 5,\n  \"concurrentChangePreserved\": true\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Headline saved."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    },
+    {
+      "id": "blind-old-version-retry",
+      "kind": "negative",
+      "description": "Retries the refused save at the old version without rereading.",
+      "failureMode": "stale-overwrite",
+      "expected": {
+        "C1": "fail",
+        "C2": "fail",
+        "C3": "pass",
+        "C4": "pass",
+        "C5": "pass",
+        "C6": "pass",
+        "S1": "ungraded"
+      },
+      "mode": "trajectory",
+      "steps": [
+        [
+          {
+            "tool": "get_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r3"
+            }
+          }
+        ],
+        [
+          {
+            "tool": "update_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r3",
+              "expectedStateVersion": 4,
+              "patch": {
+                "draft": {
+                  "headline": "Cedar duplex - revised for the owners budget"
+                }
+              }
+            }
+          }
+        ],
+        [
+          {
+            "tool": "update_offer_details",
+            "arguments": {
+              "offerId": "cedar-offer-r3",
+              "expectedStateVersion": 4,
+              "patch": {
+                "draft": {
+                  "headline": "Cedar duplex - revised for the owners budget"
+                }
+              }
+            }
+          }
+        ],
+        [
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "facts.json",
+              "content": "{\n  \"offerId\": \"cedar-offer-r3\",\n  \"newStateVersion\": 6,\n  \"concurrentChangePreserved\": true\n}"
+            }
+          },
+          {
+            "tool": "write",
+            "arguments": {
+              "path": "report.md",
+              "content": "Saved after retrying."
+            }
+          }
+        ]
+      ],
+      "expectedStatus": "completed"
+    }
+  ]
+}

@@ -38,8 +38,9 @@ export class Interactions {
     const reply = this.operator.answer(question, 'approval');
     this.record('operator-input', callId, reply);
     if (!reply.decision) throw new Error('OPERATOR_APPROVAL_DECISION_MISSING');
+    // A reply transported from another session is refused by the exact binding.
     this.session.respond(callId, tool, arguments_, {
-      sessionId: this.session.id,
+      sessionId: reply.sessionId ?? this.session.id,
       ownerId: reply.responderId,
       decision: reply.decision,
     });

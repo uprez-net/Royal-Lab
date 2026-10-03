@@ -100,3 +100,45 @@ test('recording ports never contact real providers and preserve cancellation/fau
   assert.throws(() => ports.record({ ...effect, payloadHash: 'changed' }), /CONFLICT/);
   assert.throws(() => ports.unsupported('xero-raise'), /UNSUPPORTED/);
 });
+test('an owner approval transported from another session is refused and traced with its transport session', () => {
+  const session = new Session('case-session', 'builder-owner');
+  const branch = {
+    id: 'owner-elsewhere',
+    type: 'approval' as const,
+    allWords: ['approve'],
+    anyWords: [],
+    response: 'Approved.',
+    decision: 'approved' as const,
+    responderId: 'builder-owner',
+    maxUses: 2,
+  };
+  const script = (sessionId?: string) =>
+    InteractionScriptSchema.parse({
+      schemaVersion: '1.0.0',
+      version: '1.0.0',
+      review: { status: 'draft', reviewer: null, reviewedAt: null, notes: 'test' },
+      maxUnexpectedQuestions: 0,
+      branches: [{ ...branch, ...(sessionId ? { sessionId } : {}) }],
+    });
+  const args = { leadId: 101, type: 'CALL' };
+  const events: unknown[] = [];
+  const transported = new Interactions(
+    session,
+    new ScriptedOperator(script('other-owner-session'), 'offline-control'),
+    (event) => events.push(event),
+  );
+  assert.throws(
+    () =>
+      transported.approve('Please approve create lead task', 'call-1', 'create_lead_task', args),
+    /APPROVAL_WRONG_RESPONDER/,
+  );
+  assert.throws(() => session.requireApproval('call-1', 'create_lead_task', args), /REQUIRED/);
+  const input = events.find((event) => (event as { type: string }).type === 'operator-input') as {
+    data: { sessionId?: string };
+  };
+  assert.equal(input.data.sessionId, 'other-owner-session');
+  // The same owner answering on the asking session is accepted.
+  const local = new Interactions(session, new ScriptedOperator(script(), 'offline-control'));
+  local.approve('Please approve create lead task', 'call-1', 'create_lead_task', args);
+  session.requireApproval('call-1', 'create_lead_task', args);
+});

@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "taskId": "offers/refresh-stale-offer/cedar",
+  "rubricVersion": "1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "assertions": [
+    {
+      "kind": "state",
+      "collection": "offers",
+      "target": {
+        "id": "cedar-offer-r3"
+      },
+      "fields": {
+        "/workspaceState/draft/headline": "Cedar duplex - revised for the owners budget",
+        "/workspaceState/draft/termsSummary": "Prices include GST and are valid for 14 days because supplier pricing changes on 19 October 2026.",
+        "/workspaceState/draft/introText": "Thank you for the opportunity to quote your new home.",
+        "stateVersion": 6
+      },
+      "count": 1,
+      "preservePaths": [],
+      "criterionId": "C1"
+    },
+    {
+      "kind": "state",
+      "collection": "controlInjections",
+      "target": {},
+      "fields": {},
+      "count": 1,
+      "preservePaths": [],
+      "criterionId": "C2"
+    },
+    {
+      "kind": "state",
+      "collection": "operations",
+      "target": {
+        "status": "committed"
+      },
+      "fields": {},
+      "count": 1,
+      "preservePaths": [],
+      "criterionId": "C2"
+    },
+    {
+      "kind": "trace",
+      "ownerId": "builder-owner",
+      "sessionId": "case-session",
+      "mutationTools": [
+        "update_offer_details"
+      ],
+      "criterionId": "C3"
+    },
+    {
+      "kind": "state",
+      "collection": "offers",
+      "target": {
+        "id": "cedar-offer-r2"
+      },
+      "fields": {
+        "stateVersion": 1,
+        "offerStatus": "SUPERSEDED",
+        "/workspaceState/draft/termsSummary": "Prices include GST and are valid for 30 days."
+      },
+      "count": 1,
+      "preservePaths": [],
+      "criterionId": "C4"
+    }
+  ]
+}

@@ -352,6 +352,42 @@
               "path"
             ],
             "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "absent"
+              },
+              "criterionId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+              },
+              "paths": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "values": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 6
+                }
+              }
+            },
+            "required": [
+              "kind",
+              "criterionId",
+              "paths",
+              "values"
+            ],
+            "additionalProperties": false
           }
         ]
       }

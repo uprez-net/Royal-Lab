@@ -1,0 +1,345 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.2.0",
+  "taskId": "offers/refresh-stale-offer/cedar",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+  },
+  "session": {
+    "sessionId": "case-session",
+    "ownerId": "builder-owner"
+  },
+  "seed": {
+    "schemaVersion": "1.0.0",
+    "rows": [
+      {
+        "table": "User",
+        "values": {
+          "id": "builder-owner",
+          "name": "Fictional Cedar Office Admin",
+          "email": "builder-owner@staff.example",
+          "phone": "fictional-phone-builder-owner",
+          "role": "ADMIN",
+          "clerkId": "synthetic-clerk-builder-owner",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Lead",
+        "values": {
+          "id": 101,
+          "name": "Amelia Fiction",
+          "type": [],
+          "stage": "QUALIFIED",
+          "assignedId": "builder-owner",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Offer",
+        "values": {
+          "id": "cedar-offer-r2",
+          "leadId": 101,
+          "amount": 604160,
+          "gstAmount": 60416,
+          "totalAmount": 664576,
+          "contractValueIncGst": 664576,
+          "workspaceState": {
+            "$json": {
+              "schemaVersion": 6,
+              "calcVersion": 2,
+              "adminContentVersion": 0,
+              "job": {
+                "reference": "SYNTHETIC-101",
+                "revision": "1",
+                "clientNames": "Amelia Fiction",
+                "clientEmail": "amelia@client.example",
+                "clientPhone": "fictional-phone",
+                "currentLocation": "Fictional owner address",
+                "siteAddress": "Fictional Cedar site",
+                "buildType": "synthetic",
+                "groundFloorSqm": 80,
+                "firstFloorSqm": 0,
+                "garageSqm": 0,
+                "alfrescoPorchSqm": 0,
+                "porchSqm": 0,
+                "grannyFlatSqm": 0,
+                "validUntil": "2026-11-01",
+                "preparedBy": "Synthetic control",
+                "owners": [
+                  {
+                    "id": "synthetic-owner",
+                    "kind": "individual",
+                    "displayName": "Amelia Fiction",
+                    "currentLocation": "Fictional owner address",
+                    "abn": "",
+                    "signatories": [
+                      {
+                        "id": "synthetic-signer",
+                        "name": "Amelia Fiction",
+                        "email": "amelia@client.example",
+                        "phone": "",
+                        "mobile": "",
+                        "capacity": "Owner"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "costLines": [
+                {
+                  "id": "synthetic-line",
+                  "stageCode": "slab",
+                  "itemName": "Synthetic construction",
+                  "buildingSequenceTasks": [],
+                  "offerTenderLineItem": "Synthetic construction",
+                  "tradeOrVendor": "",
+                  "notesOrSpec": "",
+                  "costExGstCents": 10000000,
+                  "includedInContract": true
+                }
+              ],
+              "allowances": [],
+              "exclusions": [],
+              "draft": {
+                "headline": "Cedar duplex proposal - revision 2",
+                "introText": "Thank you for the opportunity to quote your new home.",
+                "exclusionBullets": [],
+                "inclusionHighlights": [],
+                "inclusionSchedule": [],
+                "termsSummary": "Prices include GST and are valid for 30 days."
+              },
+              "areaCalculator": {
+                "slabCost": 0,
+                "dropEdgeBeamSurfaceArea": 0,
+                "numberOfTrucks": 0,
+                "steel": 0,
+                "installer": 0,
+                "eaves": 0,
+                "bricksGroundFloor": 0,
+                "bricksFirstFloor": 0,
+                "bricksPillar": 0,
+                "tieCost": 0
+              },
+              "pricingSettings": {
+                "royalConstructionOverheadPct": 0,
+                "royalConstructionFeePct": 0,
+                "gstRate": 0.1,
+                "hbcfTotalContractValue": 0,
+                "hbcfRate": 0,
+                "homeWarrantyHbcfFixed": 0,
+                "impactFeeFixed": 0,
+                "loadingChargePercentage": 0
+              },
+              "paymentSchedule": [],
+              "rateCardProduct": "DOUBLE_STOREY",
+              "rateCardTier": "MID",
+              "overrideReason": "",
+              "priceAdjustmentLabel": "",
+              "selectedPriceCents": 66457600,
+              "standardPriceCents": 66457600,
+              "images": {},
+              "tenderGate": {
+                "needsArchitecturalPlan": null,
+                "architecturalPlanFeeCollected": false,
+                "architecturalPlanUploaded": null,
+                "architecturalPlanDesignChanges": null
+              }
+            }
+          },
+          "stateVersion": 1,
+          "isActive": false,
+          "revisionNumber": 2,
+          "offerStatus": "SUPERSEDED",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      },
+      {
+        "table": "Offer",
+        "values": {
+          "id": "cedar-offer-r3",
+          "leadId": 101,
+          "amount": 604160,
+          "gstAmount": 60416,
+          "totalAmount": 664576,
+          "contractValueIncGst": 664576,
+          "workspaceState": {
+            "$json": {
+              "schemaVersion": 6,
+              "calcVersion": 2,
+              "adminContentVersion": 0,
+              "job": {
+                "reference": "SYNTHETIC-101",
+                "revision": "1",
+                "clientNames": "Amelia Fiction",
+                "clientEmail": "amelia@client.example",
+                "clientPhone": "fictional-phone",
+                "currentLocation": "Fictional owner address",
+                "siteAddress": "Fictional Cedar site",
+                "buildType": "synthetic",
+                "groundFloorSqm": 80,
+                "firstFloorSqm": 0,
+                "garageSqm": 0,
+                "alfrescoPorchSqm": 0,
+                "porchSqm": 0,
+                "grannyFlatSqm": 0,
+                "validUntil": "2026-11-01",
+                "preparedBy": "Synthetic control",
+                "owners": [
+                  {
+                    "id": "synthetic-owner",
+                    "kind": "individual",
+                    "displayName": "Amelia Fiction",
+                    "currentLocation": "Fictional owner address",
+                    "abn": "",
+                    "signatories": [
+                      {
+                        "id": "synthetic-signer",
+                        "name": "Amelia Fiction",
+                        "email": "amelia@client.example",
+                        "phone": "",
+                        "mobile": "",
+                        "capacity": "Owner"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "costLines": [
+                {
+                  "id": "synthetic-line",
+                  "stageCode": "slab",
+                  "itemName": "Synthetic construction",
+                  "buildingSequenceTasks": [],
+                  "offerTenderLineItem": "Synthetic construction",
+                  "tradeOrVendor": "",
+                  "notesOrSpec": "",
+                  "costExGstCents": 10000000,
+                  "includedInContract": true
+                }
+              ],
+              "allowances": [],
+              "exclusions": [],
+              "draft": {
+                "headline": "Cedar duplex proposal - revision 3",
+                "introText": "Thank you for the opportunity to quote your new home.",
+                "exclusionBullets": [],
+                "inclusionHighlights": [],
+                "inclusionSchedule": [],
+                "termsSummary": "Prices include GST and are valid for 30 days."
+              },
+              "areaCalculator": {
+                "slabCost": 0,
+                "dropEdgeBeamSurfaceArea": 0,
+                "numberOfTrucks": 0,
+                "steel": 0,
+                "installer": 0,
+                "eaves": 0,
+                "bricksGroundFloor": 0,
+                "bricksFirstFloor": 0,
+                "bricksPillar": 0,
+                "tieCost": 0
+              },
+              "pricingSettings": {
+                "royalConstructionOverheadPct": 0,
+                "royalConstructionFeePct": 0,
+                "gstRate": 0.1,
+                "hbcfTotalContractValue": 0,
+                "hbcfRate": 0,
+                "homeWarrantyHbcfFixed": 0,
+                "impactFeeFixed": 0,
+                "loadingChargePercentage": 0
+              },
+              "paymentSchedule": [],
+              "rateCardProduct": "DOUBLE_STOREY",
+              "rateCardTier": "MID",
+              "overrideReason": "",
+              "priceAdjustmentLabel": "",
+              "selectedPriceCents": 66457600,
+              "standardPriceCents": 66457600,
+              "images": {},
+              "tenderGate": {
+                "needsArchitecturalPlan": null,
+                "architecturalPlanFeeCollected": false,
+                "architecturalPlanUploaded": null,
+                "architecturalPlanDesignChanges": null
+              }
+            }
+          },
+          "stateVersion": 4,
+          "isActive": true,
+          "revisionNumber": 3,
+          "offerStatus": "PENDING",
+          "updatedAt": "2026-10-03T20:00:00Z"
+        }
+      }
+    ]
+  },
+  "operator": {
+    "schemaVersion": "1.0.0",
+    "version": "1.0.0",
+    "review": {
+      "status": "draft",
+      "reviewer": null,
+      "reviewedAt": null,
+      "notes": "Original synthetic case authored for issues #12-#15. Named NSW residential builder review required before execution."
+    },
+    "maxUnexpectedQuestions": 1,
+    "branches": [
+      {
+        "id": "approve-edit",
+        "type": "approval",
+        "allWords": [
+          "approve",
+          "update",
+          "offer",
+          "details"
+        ],
+        "anyWords": [],
+        "response": "Approved for the exact displayed call and arguments.",
+        "decision": "approved",
+        "responderId": "builder-owner",
+        "maxUses": 2
+      },
+      {
+        "id": "refresh-stale",
+        "type": "stale-version",
+        "allWords": [
+          "stale",
+          "version",
+          "offer"
+        ],
+        "anyWords": [],
+        "response": "Reread the offer, keep the other change, and request fresh approval for the new arguments.",
+        "decision": null,
+        "responderId": "builder-owner",
+        "maxUses": 1
+      }
+    ]
+  },
+  "bridge": {
+    "schemaVersion": "1.0.0",
+    "mode": "benchmark",
+    "ports": {
+      "schemaVersion": "1.0.0",
+      "email": "unavailable",
+      "envelope": "unavailable"
+    },
+    "timeoutMs": 20000
+  },
+  "controller": {
+    "staleVersion": {
+      "injectionId": "estimator-terms-edit",
+      "offerId": "cedar-offer-r3",
+      "clock": "2026-10-03T23:20:00Z",
+      "patch": {
+        "draft": {
+          "termsSummary": "Prices include GST and are valid for 14 days because supplier pricing changes on 19 October 2026."
+        }
+      }
+    }
+  }
+}

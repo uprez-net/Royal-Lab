@@ -24,11 +24,23 @@ export interface EnvironmentController {
   // The Nth committed result of this tool is withheld: the candidate receives an
   // uncertain-outcome error while the canonical effect remains committed.
   acknowledgementLoss?: { tool: string; occurrence: number } | undefined;
-  // A canonical concurrent requirements edit armed by the first successful read
-  // of the project and fired before the first write to it, whatever call IDs a
-  // candidate chooses. Uses the existing offline-control stale injection.
+  // A canonical concurrent edit armed by the first successful read of the target
+  // and fired before the first write to it, whatever call IDs a candidate chooses.
+  // Requirements (projectId) or the current offer revision (offerId).
   staleVersion?:
     | { injectionId: string; projectId: string; clock: string; patch: { summary: string } }
+    | {
+        injectionId: string;
+        offerId: string;
+        clock: string;
+        patch: {
+          draft: {
+            headline?: string | undefined;
+            introText?: string | undefined;
+            termsSummary?: string | undefined;
+          };
+        };
+      }
     | undefined;
 }
 export interface ControllerEvent {
@@ -71,12 +83,28 @@ export class FixedToolsEnvironment {
       );
     }
     const stale = this.controller.staleVersion;
+    const scope = stale
+      ? 'offerId' in stale
+        ? {
+            read: 'get_offer_details',
+            write: 'update_offer_details',
+            key: 'offerId',
+            id: stale.offerId,
+          }
+        : {
+            read: 'get_project_requirements',
+            write: 'update_project_requirements',
+            key: 'projectId',
+            id: stale.projectId,
+          }
+      : null;
     if (
       stale &&
+      scope &&
       !this.staleFired &&
       this.staleRead &&
-      tool === 'update_project_requirements' &&
-      args.projectId === stale.projectId
+      tool === scope.write &&
+      args[scope.key] === scope.id
     ) {
       const armed = new GuriBridge(
         this.bridge.checkout,
@@ -87,24 +115,31 @@ export class FixedToolsEnvironment {
           schemaVersion: '1.0.0',
           mode: 'offline-control',
           timeoutMs: this.bridge.controls.timeoutMs,
-          staleVersion: {
-            schemaVersion: '1.0.0',
-            injectionId: stale.injectionId,
-            projectId: stale.projectId,
-            afterReadCallId: this.staleRead,
-            beforeWriteCallId: callId,
-            clock: stale.clock,
-            patch: stale.patch,
-          },
+          staleVersion:
+            'offerId' in stale
+              ? {
+                  schemaVersion: '1.1.0',
+                  target: 'offer-details',
+                  injectionId: stale.injectionId,
+                  offerId: stale.offerId,
+                  afterReadCallId: this.staleRead,
+                  beforeWriteCallId: callId,
+                  clock: stale.clock,
+                  patch: stale.patch,
+                }
+              : {
+                  schemaVersion: '1.0.0',
+                  injectionId: stale.injectionId,
+                  projectId: stale.projectId,
+                  afterReadCallId: this.staleRead,
+                  beforeWriteCallId: callId,
+                  clock: stale.clock,
+                  patch: stale.patch,
+                },
         },
       );
       // Re-arm on the same read identity (read-only), then fire before this write.
-      await armed.execute(
-        'get_project_requirements',
-        { projectId: stale.projectId },
-        this.session,
-        this.staleRead,
-      );
+      await armed.execute(scope.read, { [scope.key]: scope.id }, this.session, this.staleRead);
       this.staleFired = true;
       const result = await armed.execute(tool, args, this.session, callId);
       this.controllerEvents.push({
@@ -118,10 +153,10 @@ export class FixedToolsEnvironment {
     }
     const result = await this.bridge.execute(tool, args, this.session, callId);
     if (
-      stale &&
+      scope &&
       !this.staleRead &&
-      tool === 'get_project_requirements' &&
-      args.projectId === stale.projectId &&
+      tool === scope.read &&
+      args[scope.key] === scope.id &&
       result.status === 'success'
     )
       this.staleRead = callId;
@@ -216,7 +251,7 @@ export class FixedToolsEnvironment {
         branchId: data.branchId,
         response: data.response,
         responderId: data.responderId,
-        sessionId: event.sessionId,
+        sessionId: data.sessionId ?? event.sessionId,
       });
     else
       this.emit({

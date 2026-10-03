@@ -6,6 +6,23 @@ import { guriTool, GURI_EFFECTS, parseGuriArguments } from '#src/environments/gu
 import { BridgeControlsSchema, type BridgeControls } from '#contracts/operational';
 import { sha256 } from '#src/io';
 import type { Session } from '#src/environments/session';
+// 2.1.0 adds the offer-details stale-version control; 2.0.0 runtimes are refused.
+export const BRIDGE_VERSION = '2.1.0';
+// The read that arms and the write that fires a stale-version control, per target.
+const staleScope = (stale: NonNullable<BridgeControls['staleVersion']>) =>
+  'offerId' in stale
+    ? {
+        read: 'get_offer_details',
+        write: 'update_offer_details',
+        key: 'offerId',
+        id: stale.offerId,
+      }
+    : {
+        read: 'get_project_requirements',
+        write: 'update_project_requirements',
+        key: 'projectId',
+        id: stale.projectId,
+      };
 export class GuriBridge {
   lastDiagnostic: string | null = null;
   readonly controls: BridgeControls;
@@ -35,7 +52,7 @@ export class GuriBridge {
       await readFile(path.join(this.runtimeDirectory, 'source-lock.json'), 'utf8'),
     );
     if (
-      lock.bridgeVersion !== '2.0.0' ||
+      lock.bridgeVersion !== BRIDGE_VERSION ||
       lock.revision !== source.revision ||
       lock.schemaHash !== source.schemaHash ||
       lock.lockfileHash !== source.lockfileHash ||
@@ -61,10 +78,10 @@ export class GuriBridge {
     if (GURI_EFFECTS[tool] === 'mutation') session.requireApproval(callId, tool, args);
     const stale = this.controls.staleVersion;
     if (stale && callId === stale.beforeWriteCallId) {
+      const scope = staleScope(stale);
       if (
-        tool !== 'update_project_requirements' ||
-        !('projectId' in args) ||
-        args.projectId !== stale.projectId ||
+        tool !== scope.write ||
+        (args as Record<string, unknown>)[scope.key] !== scope.id ||
         this.staleRead?.session !== session.id ||
         this.staleRead?.owner !== session.ownerId
       )
@@ -89,11 +106,8 @@ export class GuriBridge {
       clock: this.clock,
     });
     if (stale && callId === stale.afterReadCallId && response.status === 'success') {
-      if (
-        tool !== 'get_project_requirements' ||
-        !('projectId' in args) ||
-        args.projectId !== stale.projectId
-      )
+      const scope = staleScope(stale);
+      if (tool !== scope.read || (args as Record<string, unknown>)[scope.key] !== scope.id)
         throw new Error('CONTROL_SCOPE_MISMATCH');
       this.staleRead = { session: session.id, owner: session.ownerId };
     }
@@ -167,7 +181,7 @@ export class GuriBridge {
       child.stdin.on('error', reject);
       child.stdin.end(
         JSON.stringify({
-          protocolVersion: '2.0.0',
+          protocolVersion: BRIDGE_VERSION,
           workerHash: this.workerHash,
           runtimeFingerprint: this.runtimeFingerprint,
           mode: this.controls.mode,

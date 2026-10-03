@@ -53,59 +53,136 @@
       "additionalProperties": false
     },
     "staleVersion": {
-      "type": "object",
-      "properties": {
-        "schemaVersion": {
-          "type": "string",
-          "const": "1.0.0"
-        },
-        "injectionId": {
-          "type": "string",
-          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
-        },
-        "projectId": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 100
-        },
-        "afterReadCallId": {
-          "type": "string",
-          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
-        },
-        "beforeWriteCallId": {
-          "type": "string",
-          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
-        },
-        "clock": {
-          "type": "string",
-          "format": "date-time",
-          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
-        },
-        "patch": {
+      "anyOf": [
+        {
           "type": "object",
           "properties": {
-            "summary": {
+            "schemaVersion": {
+              "type": "string",
+              "const": "1.0.0"
+            },
+            "injectionId": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+            },
+            "projectId": {
               "type": "string",
               "minLength": 1,
-              "maxLength": 2000
+              "maxLength": 100
+            },
+            "afterReadCallId": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+            },
+            "beforeWriteCallId": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+            },
+            "clock": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+            },
+            "patch": {
+              "type": "object",
+              "properties": {
+                "summary": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "summary"
+              ],
+              "additionalProperties": false
             }
           },
           "required": [
-            "summary"
+            "schemaVersion",
+            "injectionId",
+            "projectId",
+            "afterReadCallId",
+            "beforeWriteCallId",
+            "clock",
+            "patch"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "schemaVersion": {
+              "type": "string",
+              "const": "1.1.0"
+            },
+            "target": {
+              "type": "string",
+              "const": "offer-details"
+            },
+            "injectionId": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+            },
+            "offerId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "afterReadCallId": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+            },
+            "beforeWriteCallId": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+            },
+            "clock": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+            },
+            "patch": {
+              "type": "object",
+              "properties": {
+                "draft": {
+                  "type": "object",
+                  "properties": {
+                    "headline": {
+                      "type": "string",
+                      "maxLength": 2000
+                    },
+                    "introText": {
+                      "type": "string",
+                      "maxLength": 4000
+                    },
+                    "termsSummary": {
+                      "type": "string",
+                      "maxLength": 4000
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "draft"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "schemaVersion",
+            "target",
+            "injectionId",
+            "offerId",
+            "afterReadCallId",
+            "beforeWriteCallId",
+            "clock",
+            "patch"
           ],
           "additionalProperties": false
         }
-      },
-      "required": [
-        "schemaVersion",
-        "injectionId",
-        "projectId",
-        "afterReadCallId",
-        "beforeWriteCallId",
-        "clock",
-        "patch"
-      ],
-      "additionalProperties": false
+      ]
     },
     "fault": {
       "type": "object",

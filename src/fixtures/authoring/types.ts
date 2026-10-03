@@ -90,12 +90,20 @@ export interface EnvironmentSpec {
   controller?: {
     readFailure?: { tool: string; occurrence: number; kind: 'timeout' | 'specialist-error' };
     acknowledgementLoss?: { tool: string; occurrence: number };
-    staleVersion?: {
-      injectionId: string;
-      projectId: string;
-      clock: string;
-      patch: { summary: string };
-    };
+    staleVersion?:
+      | { injectionId: string; projectId: string; clock: string; patch: { summary: string } }
+      | {
+          injectionId: string;
+          offerId: string;
+          clock: string;
+          patch: {
+            draft: {
+              headline?: string | undefined;
+              introText?: string | undefined;
+              termsSummary?: string | undefined;
+            };
+          };
+        };
   };
 }
 interface CaseSpecBase {

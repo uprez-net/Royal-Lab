@@ -8,6 +8,10 @@ import { isDomainError } from '@guri/lib/domain/errors.ts';
 import * as requirements from '@guri/lib/domain/projects/requirements.ts';
 // @ts-expect-error private canonical access helper
 import { authorizeProject } from '@guri/lib/domain/access/projects.ts';
+// @ts-expect-error private canonical offer query
+import * as offerQueries from '@guri/lib/domain/offers/queries.ts';
+// @ts-expect-error private canonical versioned offer workspace save
+import * as offerWorkspace from '@guri/lib/domain/offers/workspace-save.ts';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { GURI_EFFECTS, guriTool, parseGuriArguments } from '#src/environments/guri/tools';
 import { stableJson } from '#src/environments/session';
@@ -28,6 +32,8 @@ import {
 
 const OWNED = new Set(['send_compliance_outreach', 'recall_offer_envelope', 'update_team_role']);
 const { getProjectRequirements, updateProjectRequirements } = requirements;
+const { getOfferWorkspaceDetails } = offerQueries;
+const { applyOfferWorkspacePatch } = offerWorkspace;
 async function main() {
   let bytes = '';
   for await (const chunk of process.stdin) {
@@ -35,7 +41,7 @@ async function main() {
     if (bytes.length > 50_000) throw new Error('RPC_LIMIT');
   }
   const request = JSON.parse(bytes);
-  if (request.protocolVersion !== '2.0.0') throw new Error('RPC_VERSION');
+  if (request.protocolVersion !== '2.1.0') throw new Error('RPC_VERSION');
   const controls = BridgeControlsSchema.parse({
     schemaVersion: '1.0.0',
     mode: request.mode,
@@ -102,18 +108,39 @@ async function main() {
             if (previous[0].binding !== binding) throw new Error('CONTROL_BINDING_CONFLICT');
             return { status: 'control-replayed', result: null };
           }
-          await authorizeProject(principal, control.projectId, tx);
-          const before = await getProjectRequirements(control.projectId, tx);
-          await updateProjectRequirements(
-            {
-              projectId: control.projectId,
-              expectedUpdatedAt: before.updatedAt,
-              patch: control.patch,
-            },
-            tx,
-          );
-          const after = await getProjectRequirements(control.projectId, tx);
-          if (after.updatedAt === before.updatedAt) throw new Error('CONTROL_VERSION_UNCHANGED');
+          let before: any;
+          let after: any;
+          if ('offerId' in control) {
+            // Canonical versioned save of the current editable revision; the
+            // product decides the new state version and refusal semantics.
+            before = await getOfferWorkspaceDetails(principal, control.offerId, tx);
+            const saved = await applyOfferWorkspacePatch(
+              principal,
+              {
+                offerId: control.offerId,
+                expectedStateVersion: before.offer.stateVersion,
+                patch: control.patch,
+              },
+              tx,
+            );
+            if (!saved.ok) throw new Error(`CONTROL_OFFER_SAVE_REFUSED: ${saved.reason}`);
+            after = await getOfferWorkspaceDetails(principal, control.offerId, tx);
+            if (after.offer.stateVersion === before.offer.stateVersion)
+              throw new Error('CONTROL_VERSION_UNCHANGED');
+          } else {
+            await authorizeProject(principal, control.projectId, tx);
+            before = await getProjectRequirements(control.projectId, tx);
+            await updateProjectRequirements(
+              {
+                projectId: control.projectId,
+                expectedUpdatedAt: before.updatedAt,
+                patch: control.patch,
+              },
+              tx,
+            );
+            after = await getProjectRequirements(control.projectId, tx);
+            if (after.updatedAt === before.updatedAt) throw new Error('CONTROL_VERSION_UNCHANGED');
+          }
           await tx.$executeRawUnsafe(
             'INSERT INTO "RoyalLabControlInjection" ("key","binding","kind","before","after") VALUES ($1,$2,$3,$4::jsonb,$5::jsonb)',
             key,
