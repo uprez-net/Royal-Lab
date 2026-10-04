@@ -445,8 +445,9 @@ function summarize(
     },
     spend: {
       candidateUsd: sum(executed.map((row) => row.usage.candidateCostUsd)),
-      judgeUsd: graded.some((row) => row.judging)
-        ? sum(graded.map((row) => row.usage.judgeCostUsd))
+      // Judge spend is real whatever the grading outcome (judge errors included).
+      judgeUsd: executed.some((row) => row.judging)
+        ? sum(executed.map((row) => row.usage.judgeCostUsd))
         : 0,
       unknownCostTrials: executed.filter((row) => row.usage.candidateCostUsd === null).length,
     },

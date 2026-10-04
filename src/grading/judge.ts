@@ -420,12 +420,22 @@ export async function gradeSemantic(
         )
           throw new Error('JUDGE_PROVIDER_BUDGET_EXCEEDED');
         if (rawResponse !== response.text) throw new Error('JUDGE_RESPONSE_SENSITIVE_DATA');
-        if (
-          response.finishReason !== 'stop' ||
-          response.toolCalls.length ||
-          response.warnings?.length
-        )
-          throw new Error('JUDGE_INCOMPLETE_OR_UNSUPPORTED_RESPONSE');
+        // Fail closed, but name the cause: a truncated reasoning response, an
+        // unexpected finish, a tool call, or a provider warning (a setting the
+        // provider dropped) are different fixes.
+        const code = (value: string) => value.toUpperCase().replace(/[^A-Z]+/g, '_');
+        if (response.finishReason === 'length') throw new Error('JUDGE_RESPONSE_TRUNCATED');
+        if (response.finishReason !== 'stop')
+          throw new Error(`JUDGE_FINISH_${code(String(response.finishReason))}`);
+        if (response.toolCalls.length) throw new Error('JUDGE_TOOL_CALL_REFUSED');
+        if (response.warnings?.length)
+          throw new Error(
+            `JUDGE_PROVIDER_WARNING_${code(
+              response.warnings
+                .map((warning) => ('feature' in warning ? warning.feature : warning.type))
+                .join('_'),
+            )}`,
+          );
       } catch (error) {
         // Never retain provider error bodies: they may contain credentials or unrelated metadata.
         const message = error instanceof Error ? error.message : '';

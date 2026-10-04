@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "id": "minimax-exploratory",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "purpose": "exploratory",
   "scorePolicy": "all-mandatory-1.0.0",
   "promptVersion": "criterion-1.0.0",
@@ -9,17 +9,17 @@
     "status": "draft",
     "reviewer": null,
     "reviewedAt": null,
-    "notes": "Owner-selected exploratory judge (2026-10-04): minimax/minimax-m3 through the AI Gateway, pricing frozen from the gateway published standard tier on 2026-10-04. Single judge, uncalibrated: exploratory only."
+    "notes": "Owner-selected exploratory judge (2026-10-04): minimax/minimax-m3 through the AI Gateway, pricing frozen from the gateway published standard tier on 2026-10-04. Single judge, uncalibrated: exploratory only. 1.1.0 raises the per-request output limit from 2,000 to 6,000 tokens and the per-request timeout from 30 s to 60 s for reasoning (never used at 1.0.0)."
   },
   "calibrationHash": null,
   "limits": {
     "maxRequests": 28,
     "maxRequestBytes": 24000,
-    "maxOutputTokensPerRequest": 2000,
+    "maxOutputTokensPerRequest": 6000,
     "maxInputTokens": 100000,
-    "maxOutputTokens": 16000,
+    "maxOutputTokens": 24000,
     "maxCostUsd": 0.25,
-    "timeoutMs": 30000,
+    "timeoutMs": 60000,
     "maxDurationMs": 300000
   },
   "judges": [
