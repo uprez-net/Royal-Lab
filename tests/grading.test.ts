@@ -228,6 +228,43 @@ test('prose corruption and fabricated locators are distinct from exact companion
     false,
   );
 });
+test('prose 1.2.0: citations, thousands separators and list separators are not contradictions', () => {
+  // Formats observed in the first live D14 sweep; every value is correct.
+  const margin = {
+    labels: ['projected margin (basis points):'],
+    expected: 1776,
+    semantics: 'integer' as const,
+    required: true,
+  };
+  for (const line of [
+    'Projected margin (basis points): 1776',
+    'Projected margin (basis points): 1,776',
+    'Projected margin (basis points): 1776 [policy line:176] [policy line:196]',
+  ])
+    assert.equal(inspectProse(line, margin).verdict, 'pass', line);
+  for (const line of [
+    'Projected margin (basis points): 1,777',
+    'Projected margin (basis points): 1776, previously 1800',
+    'Projected margin (basis points): 1 776',
+  ])
+    assert.equal(inspectProse(line, margin).verdict, 'fail', line);
+  const overruns = {
+    labels: ['overrun categories:'],
+    expected: 'Preliminaries, Slab, Frame, Brickwork, Services',
+    semantics: 'identifier' as const,
+    required: true,
+  };
+  for (const line of [
+    'Overrun categories: Preliminaries, Slab, Frame, Brickwork, Services',
+    'Overrun categories: Preliminaries; Slab; Frame; Brickwork; Services [costs row:2] [policy line:177]',
+  ])
+    assert.equal(inspectProse(line, overruns).verdict, 'pass', line);
+  for (const line of [
+    'Overrun categories: Preliminaries, Slab, Frame, Brickwork',
+    'Overrun categories: Slab, Preliminaries, Frame, Brickwork, Services',
+  ])
+    assert.equal(inspectProse(line, overruns).verdict, 'fail', line);
+});
 const temporary: string[] = [];
 afterEach(async () => {
   for (const file of temporary.splice(0)) await rm(file, { recursive: true, force: true });

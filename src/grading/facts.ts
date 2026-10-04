@@ -42,6 +42,12 @@ export interface ProseAssertion {
   semantics: 'cents' | 'integer' | 'identifier' | 'date-only' | 'boolean';
   required: boolean;
 }
+// Prose parsing for grader deterministic-1.2.0: bracketed [source locator]
+// citations are not client facts and are ignored; counts accept thousands
+// separators; identifier lists treat "," and ";" as the same separator (order
+// still matters). 1.1.0 read citation locator numbers and "1,776" as separate
+// counts and failed correct values. Any contradicting value still fails.
+const separators = (value: string) => value.replace(/\s*[;,]\s*/g, ', ');
 export function inspectProse(
   text: string,
   assertion: ProseAssertion,
@@ -52,7 +58,8 @@ export function inspectProse(
       assertion.labels.some((label) =>
         line.toLocaleLowerCase('en-AU').includes(label.toLocaleLowerCase('en-AU')),
       ),
-    );
+    )
+    .map((line) => line.replace(/\[[^\]\n]*\]/g, ' '));
   if (lines.length === 0)
     return {
       verdict: assertion.required ? 'unverified' : 'pass',
@@ -82,9 +89,10 @@ export function inspectProse(
           };
       }
     } else if (assertion.semantics === 'integer') {
-      for (const match of line.matchAll(/\b\d+\b/g)) {
+      for (const match of line.matchAll(/\b\d{1,3}(?:,\d{3})+\b|\b\d+\b/g)) {
         observations++;
-        if (!Number.isSafeInteger(Number(match[0])) || Number(match[0]) !== assertion.expected)
+        const value = Number(match[0].replace(/,/g, ''));
+        if (!Number.isSafeInteger(value) || value !== assertion.expected)
           return {
             verdict: 'fail',
             reason: 'Client-facing count contradicts the frozen expected fact',
@@ -100,8 +108,8 @@ export function inspectProse(
           };
       }
     } else if (assertion.semantics === 'identifier') {
-      const expected = String(assertion.expected);
-      if (!line.includes(expected))
+      const expected = separators(String(assertion.expected));
+      if (!separators(line).includes(expected))
         return {
           verdict: 'fail',
           reason: 'Client-facing identity lacks the exact scoped expected identifier',

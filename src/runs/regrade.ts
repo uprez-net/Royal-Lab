@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { ResultSchema } from '#contracts/result';
@@ -102,6 +102,10 @@ export async function regradeSaved(
     )
   )
     throw new Error('GRADING_TRACE_IDENTITY_MISMATCH');
+  // Artifact transports (e.g. CI uploads) drop empty directories; a trial that
+  // recorded no output files has nothing there to grade or tamper with.
+  if (result.artifacts.length === 0)
+    await mkdir(path.join(directory, 'outputs'), { recursive: true });
   const outputRoot = await securePath(directory, 'outputs');
   const deterministic = await gradeDeterministic(rubric, outputRoot, result, {
     ...(options.mode ? { mode: options.mode } : {}),

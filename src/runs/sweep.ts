@@ -15,6 +15,7 @@ import { runCandidate } from '#src/harness/loop';
 import { jsonText, readScoped, sha256 } from '#src/io';
 import { stableJson } from '#src/environments/session';
 import { regradeSaved } from '#runs/regrade';
+import { DETERMINISTIC_GRADER_VERSION } from '#src/grading/deterministic';
 import { ExperimentLedger, sealBundle, verifyBundle } from '#runs/artifacts';
 import { SpendLedger, trialCandidateCeiling } from '#runs/budget';
 import { prepareResume, trialStates } from '#runs/resume';
@@ -292,7 +293,7 @@ export async function gradeTrial(
     trialId,
     gradeFile: `trials/${trialId}/${graded.file}`,
     gradeHash: sha256(await readFile(path.join(directory, graded.file))),
-    graderVersion: 'deterministic-1.1.0',
+    graderVersion: DETERMINISTIC_GRADER_VERSION,
     strictSuccess: graded.result.strictSuccess,
     gradingStatus: graded.result.gradingStatus,
   })) as Extract<LedgerEvent, { type: 'trial-graded' }>;

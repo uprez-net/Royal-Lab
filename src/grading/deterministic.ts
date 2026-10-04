@@ -16,6 +16,9 @@ import type { TraceEvent } from '#contracts/trace';
 import { VerificationPlanSchema, type VerificationPlan } from '#src/grading/verification';
 import type { RecordedEffect } from '#src/environments/guri/ports';
 
+// Recorded on every experiment grade event. 1.2.0 changes prose parsing only
+// (see inspectProse); saved grades are never rewritten, regrades append.
+export const DETERMINISTIC_GRADER_VERSION = 'deterministic-1.2.0';
 export async function gradeDeterministic(
   rubric: Rubric,
   outputRoot: string,

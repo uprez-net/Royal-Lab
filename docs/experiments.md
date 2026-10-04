@@ -125,3 +125,18 @@ temporary roots, and makes no paid request:
 
 These controls are not a model result. Draft packs remain blocked; the packs
 covered by the recorded owner review are execution-ready.
+
+## Grader versions
+
+Every `trial-graded` ledger event records its grader version; regrades append and
+never rewrite earlier grades.
+
+- `deterministic-1.1.0`: the original prose parser.
+- `deterministic-1.2.0` (2026-10-04): prose checks ignore bracketed
+  `[source locator]` citations, read counts with thousands separators (`1,776`)
+  as one number, and treat `,` and `;` as the same list separator (order still
+  matters). The first live sweep showed 1.1.0 failing correct values written in
+  those forms; every document grader control still produces its declared
+  verdicts under 1.2.0. Compare results only within one grader version.
+- A regrade recreates an empty `outputs/` directory for a trial that recorded no
+  output files, because artifact transports drop empty directories.
