@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "glm-exploratory",
+  "version": "1.0.0",
+  "purpose": "exploratory",
+  "scorePolicy": "all-mandatory-1.0.0",
+  "promptVersion": "criterion-1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Owner-selected exploratory judge (2026-10-04): zai/glm-5.3-flash through the AI Gateway, pricing frozen from the gateway published standard tier on 2026-10-04. Single judge, uncalibrated: scores are exploratory and cannot support a release ranking. zai/glm-5.3-flash is also the Royal Eve product model, so do not use it to judge Royal Eve outputs."
+  },
+  "calibrationHash": null,
+  "limits": {
+    "maxRequests": 28,
+    "maxRequestBytes": 24000,
+    "maxOutputTokensPerRequest": 2000,
+    "maxInputTokens": 100000,
+    "maxOutputTokens": 16000,
+    "maxCostUsd": 2,
+    "timeoutMs": 30000,
+    "maxDurationMs": 300000
+  },
+  "judges": [
+    {
+      "id": "glm",
+      "transport": "gateway",
+      "model": "zai/glm-5.3-flash",
+      "parameters": {
+        "temperature": 0
+      },
+      "pricing": {
+        "version": "2026.10.04",
+        "asOf": "2026-10-04T00:00:00Z",
+        "inputUsdPerMillion": 0.15,
+        "outputUsdPerMillion": 0.5
+      }
+    }
+  ]
+}
