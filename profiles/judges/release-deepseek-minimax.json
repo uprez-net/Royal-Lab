@@ -1,15 +1,15 @@
 {
   "schemaVersion": "1.0.0",
   "id": "release-deepseek-minimax",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "purpose": "release",
   "scorePolicy": "all-mandatory-1.0.0",
-  "promptVersion": "criterion-1.0.0",
+  "promptVersion": "criterion-1.1.0",
   "review": {
     "status": "draft",
     "reviewer": null,
     "reviewedAt": null,
-    "notes": "Alternative release judge pair (2026-10-04): deepseek/deepseek-v4.1-flash and minimax/minimax-m3 through the AI Gateway, both owner-selected judge models from independent families, neither the Royal Eve product model. Created because qwen cited the criterion text as a source in the first calibration run. Pricing frozen 2026-10-04. Release use stays blocked until reviewer-labelled calibration succeeds and this profile is approved with its calibration hash."
+    "notes": "Alternative release judge pair (2026-10-04): deepseek/deepseek-v4.1-flash and minimax/minimax-m3 through the AI Gateway, both owner-selected judge models from independent families, neither the Royal Eve product model. Created because qwen cited the criterion text as a source in the first calibration run. Pricing frozen 2026-10-04. Release use stays blocked until reviewer-labelled calibration succeeds and this profile is approved with its calibration hash. 1.1.0 uses judge prompt criterion-1.1.0, which states that criterion text is never evidence and that a deliverable locator is unchecked, after judges cited the criterion as a source in calibration runs (no labels existed yet)."
   },
   "calibrationHash": null,
   "limits": {

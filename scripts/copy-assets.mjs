@@ -6,7 +6,8 @@ for (const profile of ['documents', 'fixed-tools'])
     new URL(`../dist/harness/prompts/${profile}.txt`, import.meta.url),
   );
 await mkdir(new URL('../dist/grading/prompts/', import.meta.url), { recursive: true });
-await copyFile(
-  new URL('../src/grading/prompts/criterion.txt', import.meta.url),
-  new URL('../dist/grading/prompts/criterion.txt', import.meta.url),
-);
+for (const prompt of ['criterion.txt', 'criterion-1.1.0.txt'])
+  await copyFile(
+    new URL(`../src/grading/prompts/${prompt}`, import.meta.url),
+    new URL(`../dist/grading/prompts/${prompt}`, import.meta.url),
+  );

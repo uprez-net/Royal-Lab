@@ -292,7 +292,15 @@ export async function gradeSemantic(
   const credentials = options.credentials ?? {};
   if (Object.keys(credentials).some((key) => !profile.judges.some((judge) => judge.id === key)))
     throw new Error('JUDGE_UNRELATED_CREDENTIAL');
-  const prompt = await readFile(new URL('./prompts/criterion.txt', import.meta.url), 'utf8');
+  const prompt = await readFile(
+    new URL(
+      profile.promptVersion === 'criterion-1.0.0'
+        ? './prompts/criterion.txt'
+        : `./prompts/${profile.promptVersion}.txt`,
+      import.meta.url,
+    ),
+    'utf8',
+  );
   const fingerprint = {
     profileHash: hashObject(profile),
     promptHash: sha256(prompt),

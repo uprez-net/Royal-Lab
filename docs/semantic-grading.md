@@ -204,3 +204,15 @@ label as an approved reviewer review, and prints `inspectCalibration`: each
 example's label against both judges, mismatches, judge errors and
 disagreements. The pack's own review stays draft until the owner approves the
 inspected result, and only then can the release profile carry its hash.
+
+## Judge prompt versions
+
+- `criterion-1.0.0` (`src/grading/prompts/criterion.txt`): the original prompt.
+- `criterion-1.1.0` (`src/grading/prompts/criterion-1.1.0.txt`): it adds that the
+  criterion and its passIf/failIf text are the standard and never evidence, that
+  a deliverable locator is an unchecked description, and that quotes must be
+  copied exactly. It was introduced after both calibration pairs cited the
+  criterion text as a source in their first runs; no reviewer label existed yet.
+
+A profile pins one version. Each receipt stores the exact prompt text and hash,
+so receipts under either version keep verifying.

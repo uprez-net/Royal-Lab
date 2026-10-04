@@ -27,7 +27,8 @@ export const JudgeProfileSchema = z
     version: Version,
     purpose: z.enum(['exploratory', 'release']),
     scorePolicy: z.literal('all-mandatory-1.0.0'),
-    promptVersion: z.literal('criterion-1.0.0'),
+    // Each version is a frozen prompt file; receipts keep the exact prompt text.
+    promptVersion: z.enum(['criterion-1.0.0', 'criterion-1.1.0']),
     review: Review,
     calibrationHash: Hash.nullable(),
     limits: z.strictObject({

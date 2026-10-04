@@ -1,15 +1,15 @@
 {
   "schemaVersion": "1.0.0",
   "id": "release-deepseek-qwen",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "purpose": "release",
   "scorePolicy": "all-mandatory-1.0.0",
-  "promptVersion": "criterion-1.0.0",
+  "promptVersion": "criterion-1.1.0",
   "review": {
     "status": "draft",
     "reviewer": null,
     "reviewedAt": null,
-    "notes": "Owner-selected release judge pair (2026-10-04): deepseek/deepseek-v4.1-flash and alibaba/qwen3.7-flash through the AI Gateway, from independent model families, neither the Royal Eve product model. Pricing frozen from the gateway published standard tier on 2026-10-04. Release use stays blocked until reviewer-labelled calibration succeeds and this profile is approved with its calibration hash. 1.1.0 raises the per-request output limit from 2,000 to 6,000 tokens and the per-request timeout from 30 s to 60 s for reasoning (never used at 1.0.0). 1.2.0 lowers the per-call cost ceiling from $4 to $0.25 for calibration runs (never used at 1.1.0)."
+    "notes": "Owner-selected release judge pair (2026-10-04): deepseek/deepseek-v4.1-flash and alibaba/qwen3.7-flash through the AI Gateway, from independent model families, neither the Royal Eve product model. Pricing frozen from the gateway published standard tier on 2026-10-04. Release use stays blocked until reviewer-labelled calibration succeeds and this profile is approved with its calibration hash. 1.1.0 raises the per-request output limit from 2,000 to 6,000 tokens and the per-request timeout from 30 s to 60 s for reasoning (never used at 1.0.0). 1.2.0 lowers the per-call cost ceiling from $4 to $0.25 for calibration runs (never used at 1.1.0). 1.3.0 uses judge prompt criterion-1.1.0, which states that criterion text is never evidence and that a deliverable locator is unchecked, after judges cited the criterion as a source in calibration runs (no labels existed yet)."
   },
   "calibrationHash": null,
   "limits": {

@@ -27,7 +27,10 @@
     },
     "promptVersion": {
       "type": "string",
-      "const": "criterion-1.0.0"
+      "enum": [
+        "criterion-1.0.0",
+        "criterion-1.1.0"
+      ]
     },
     "review": {
       "type": "object",
