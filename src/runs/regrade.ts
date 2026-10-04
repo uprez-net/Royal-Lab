@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { ResultSchema } from '#contracts/result';
+import { CanonicalStateEvidenceSchema } from '#contracts/operational';
 import { RubricSchema } from '#contracts/rubric';
 import { TaskSchema } from '#contracts/task';
 import { TraceEventSchema } from '#contracts/trace';
@@ -107,8 +108,18 @@ export async function regradeSaved(
   if (result.artifacts.length === 0)
     await mkdir(path.join(directory, 'outputs'), { recursive: true });
   const outputRoot = await securePath(directory, 'outputs');
+  // Fixed-tools bundles carry independent before/after database state taken by a
+  // separate connection; documents bundles have none.
+  const stateBytes = await readScoped(directory, 'state.json').catch((error) => {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null;
+    throw error;
+  });
+  const state = stateBytes
+    ? CanonicalStateEvidenceSchema.parse(JSON.parse(stateBytes.toString('utf8')))
+    : null;
   const deterministic = await gradeDeterministic(rubric, outputRoot, result, {
     ...(options.mode ? { mode: options.mode } : {}),
+    ...(state ? { state: { source: state.source, before: state.before, after: state.after } } : {}),
     plan,
     trace,
     sources: documents.map((document) => ({

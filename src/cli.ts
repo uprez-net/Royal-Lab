@@ -30,7 +30,8 @@ Usage: pnpm lab <command> [arguments] [options]
   run <task> --suite <path>       One reviewed document trial (--allow-paid required)
   plan --experiment <file>       Dry run: full suite x configuration x repeat matrix and bounded spend
   sweep --experiment <file> --allow-paid
-                                Freeze the plan, then run every trial (reviewed cases only)
+                                Freeze the plan, then run every trial (reviewed cases only);
+                                fixed-tools suites add --control-url-env NAME (disposable DB)
   resume <experiment-id> --allow-paid
                                 Resume unstarted trials; interrupted ones stay recorded
   grade --experiment <experiment-id>
@@ -79,6 +80,7 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       calibration: { type: 'string' },
       experiment: { type: 'string' },
       'lock-file': { type: 'string' },
+      'control-url-env': { type: 'string' },
       format: { type: 'string' },
       'eve-config': { type: 'string' },
       'verify-output': { type: 'string' },
@@ -313,25 +315,19 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
         'PAID_EXECUTION_DISABLED: use --allow-paid only for intentional candidate requests',
       );
     const { ExperimentLedger, experimentDirectory } = await import('#runs/artifacts');
-    const { runExperiment, documentTrialExecutor, paidAdapterFactory } =
-      await import('#runs/sweep');
+    const { runExperiment } = await import('#runs/sweep');
     const plan = await planExperiment(root, spec);
     // The frozen plan and ledger are kept even when preflight blocks execution.
     const ledger = await ExperimentLedger.create(
       experimentDirectory(root, plan.experimentId),
       plan,
     );
-    if (plan.suite.profile !== 'documents')
-      throw new Error('SWEEP_PROFILE_UNSUPPORTED: CLI sweeps execute the documents profile');
     try {
       const judge = await sweepJudge(root, plan);
       const outcome = await runExperiment(root, ledger, {
         allowPaid: true,
         ...(judge ? { judge } : {}),
-        executor: documentTrialExecutor(
-          paidAdapterFactory,
-          (await loadConfig(options.config)).binaryParser,
-        ),
+        executor: await sweepExecutor(plan.suite.profile, options),
         ...(options['lock-file'] ? { externalLockFile: options['lock-file'] } : {}),
       });
       output(summarizeOutcome(outcome));
@@ -352,18 +348,14 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
         'PAID_EXECUTION_DISABLED: use --allow-paid only for intentional candidate requests',
       );
     const { ExperimentLedger, experimentDirectory } = await import('#runs/artifacts');
-    const { runExperiment, documentTrialExecutor, paidAdapterFactory } =
-      await import('#runs/sweep');
+    const { runExperiment } = await import('#runs/sweep');
     const { Id } = await import('#contracts/common');
     const ledger = await ExperimentLedger.open(experimentDirectory(root, Id.parse(arguments_[0])));
     const judge = await sweepJudge(root, ledger.plan);
     const outcome = await runExperiment(root, ledger, {
       allowPaid: true,
       ...(judge ? { judge } : {}),
-      executor: documentTrialExecutor(
-        paidAdapterFactory,
-        (await loadConfig(options.config)).binaryParser,
-      ),
+      executor: await sweepExecutor(ledger.plan.suite.profile, options),
       ...(options['lock-file'] ? { externalLockFile: options['lock-file'] } : {}),
     });
     output(summarizeOutcome(outcome));
@@ -649,6 +641,32 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
     return 0;
   }
   throw new Error(`Unknown command: ${command}; see --help.`);
+}
+// Documents trials need only the configured binary parser. Fixed-tools trials
+// each create a disposable database from the control connection named by
+// --control-url-env (never an ambient DATABASE_URL). Royal Eve uses `eve run`.
+async function sweepExecutor(
+  profile: string,
+  options: { config?: string; 'control-url-env'?: string },
+) {
+  const { documentTrialExecutor, paidAdapterFactory } = await import('#runs/sweep');
+  if (profile === 'documents')
+    return documentTrialExecutor(
+      paidAdapterFactory,
+      (await loadConfig(options.config)).binaryParser,
+    );
+  if (profile === 'fixed-tools') {
+    const name = options['control-url-env'];
+    if (!name || !/^[A-Z][A-Z0-9_]*$/.test(name) || name === 'DATABASE_URL')
+      throw new Error(
+        'FIXED_TOOLS_CONTROL_DATABASE_REQUIRED: pass --control-url-env NAME for a disposable control database',
+      );
+    const controlUrl = process.env[name];
+    if (!controlUrl) throw new Error(`FIXED_TOOLS_CONTROL_DATABASE_REQUIRED: ${name} is not set`);
+    const { fixedToolsTrialExecutor } = await import('#runs/fixed-tools-trial');
+    return fixedToolsTrialExecutor(paidAdapterFactory, { controlUrl });
+  }
+  throw new Error('SWEEP_PROFILE_UNSUPPORTED: Royal Eve cases run through eve run');
 }
 // Resolve the frozen plan's judge only for a benchmark sweep: the profile file
 // plus the single named key variable. A missing key blocks before any request.

@@ -152,3 +152,19 @@ never rewrite earlier grades.
   verdicts under 1.2.0. Compare results only within one grader version.
 - A regrade recreates an empty `outputs/` directory for a trial that recorded no
   output files, because artifact transports drop empty directories.
+
+## Fixed-tools sweeps
+
+`pnpm lab sweep --experiment <file> --allow-paid --control-url-env NAME` runs a
+fixed-tools suite. `NAME` names a variable holding a disposable PostgreSQL control
+connection (never `DATABASE_URL`). Each trial creates and seeds its own database,
+document workspace and bridge session through the pinned canonical bridge, saves
+independent before/after state, port effects and controller events into its
+sealed bundle, and drops the database afterwards. Fixed-tools trials share the
+`guri-bridge-provisioning` resource, so they run one at a time. Regrading reads the
+saved `state.json`, so durable-state assertions grade offline.
+`integration/fixed-tools-sweep.test.ts` runs 2 configurations × 3 repeats of T02
+with the reference trajectory and shows every trial on its own database, the same
+seeded starting state, passing state checks and no database left behind. The paid
+CI workflow still runs documents only, because it has no private bridge checkout
+or database.
