@@ -136,8 +136,9 @@ Do not copy Harvey's fractional dual-average into our strict-success field.
 
 World-separated development/held-out splits prevent paraphrase leakage. Do not tune
 prompts/rubrics against held-out outputs. Named business review is required before
-execution. All generated policy/case reviews start draft; no approval is inferred
-from agreeing to the overall scope. Draft integrity validation remains useful offline.
+execution. All generated policy/case reviews start draft; an approval comes only from a
+review recorded for exact IDs in `src/fixtures/reviews.ts`, never from agreeing
+to the overall scope. Draft integrity validation remains useful offline.
 
 ## Private boundary and delivery
 

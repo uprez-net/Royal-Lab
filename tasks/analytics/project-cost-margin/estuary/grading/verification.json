@@ -4,10 +4,10 @@
   "taskId": "analytics/project-cost-margin/estuary",
   "rubricVersion": "1.0.0",
   "review": {
-    "status": "draft",
-    "reviewer": null,
-    "reviewedAt": null,
-    "notes": "Original synthetic material. Named human business review required before execution."
+    "status": "approved",
+    "reviewer": "Gurpinder Uppal (business owner, Royal Construction Pty Ltd)",
+    "reviewedAt": "2026-10-04T03:28:59Z",
+    "notes": "Reported by the repository owner on 2026-10-04: all Royal-Lab fixtures were reviewed by the named business owner. Recorded scope: the 52 case packs (sources, candidate-visible policies 1.0.0/1.1.0/1.2.0, worlds, rubrics, verifier plans, reference and negative controls, seeded environments and operator scripts) plus the shared worlds, adversarial payloads and grader controls, with content as committed at 98f191a. Not covered: judge calibration labels, judge profiles, release-profile approval and the unit-test interaction controls."
   },
   "assertions": [
     {

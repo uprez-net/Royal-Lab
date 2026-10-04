@@ -11,6 +11,7 @@ import {
 } from '#fixtures/authoring/policy';
 import type { CaseSpec, CriterionSpec, Json, Ref, SourceSpec } from '#fixtures/authoring/types';
 import type { VerificationPlan } from '#src/grading/verification';
+import { caseReview } from '#fixtures/reviews';
 
 // Authoring lane for explicitly written draft cases. Output is deterministic and
 // frozen by `fixtures generate --check`; nothing here supplies human review.
@@ -202,7 +203,7 @@ export async function buildCase(spec: CaseSpec): Promise<Map<string, string>> {
     version: '1.0.0',
     taskId: spec.id,
     rubricVersion: '1.0.0',
-    review: AUTHORED_DRAFT,
+    review: caseReview(spec.id, AUTHORED_DRAFT),
     assertions,
   });
   const fixture = jsonText({
@@ -271,7 +272,7 @@ export async function buildCase(spec: CaseSpec): Promise<Map<string, string>> {
     version: '1.0.0',
     taskId: spec.id,
     rubricVersion: '1.0.0',
-    review: AUTHORED_DRAFT,
+    review: caseReview(spec.id, AUTHORED_DRAFT),
     provenance:
       'Original synthetic reference and consequential negative outputs authored to validate graders; not model outputs or reviewed gold labels.',
     controls: controlEntries,
@@ -290,7 +291,7 @@ export async function buildCase(spec: CaseSpec): Promise<Map<string, string>> {
                 ? '1.1.0'
                 : '1.0.0',
           taskId: spec.id,
-          review: AUTHORED_DRAFT,
+          review: caseReview(spec.id, AUTHORED_DRAFT),
           session: spec.environment.session ?? {
             sessionId: 'case-session',
             ownerId: 'builder-owner',
@@ -299,7 +300,7 @@ export async function buildCase(spec: CaseSpec): Promise<Map<string, string>> {
           operator: {
             schemaVersion: '1.0.0',
             version: '1.0.0',
-            review: AUTHORED_DRAFT,
+            review: caseReview(spec.id, AUTHORED_DRAFT),
             ...spec.environment.operator,
           },
           bridge: {
@@ -340,7 +341,7 @@ export async function buildCase(spec: CaseSpec): Promise<Map<string, string>> {
         copiedMaterial: false,
       },
     ],
-    review: AUTHORED_DRAFT,
+    review: caseReview(spec.id, AUTHORED_DRAFT),
   });
   for (const source of sources) files.set(`${prefix}/${source.path}`, source.content);
   files.set(`${prefix}/grading/fixture.json`, fixture);

@@ -65,7 +65,7 @@ pnpm lab run offers/reconcile-quote-build-up/estuary --suite suites/held-out.jso
 pnpm lab grade <saved-run-id>
 ```
 
-The current draft packs deliberately block that run command. Every selected case
+A draft pack deliberately blocks that run command; the reviewed packs pass the gate. Every selected case
 is retained in its saved preflight record. After approval, a single trial manifest
 marks other suite cases explicitly excluded; it is not a full-suite result.
 Regrading appends a new receipt and keeps execution evidence intact. Missing semantic

@@ -16,6 +16,7 @@ import { preflight, validateTask, validateArtifact } from '#tasks/validate';
 import { visibleInput } from '#tasks/visible-input';
 import { accountResults } from '#runs/accounting';
 import { jsonText, sha256, securePath, readJson } from '#src/io';
+import { caseReview, fixtureReview, OWNER_REVIEW_2026_10_04 } from '#fixtures/reviews';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const temporary: string[] = [];
@@ -50,7 +51,7 @@ async function edit(root: string, relative: string, mutate: (value: any) => void
 const TASK = 'offers/reconcile-quote-build-up/cedar';
 const SUITE = 'suites/development-variants.json';
 describe('suite integrity and candidate isolation', () => {
-  test('every generated suite validates offline but execution preflight rejects drafts', async () => {
+  test('every generated suite validates offline and passes the review gates with the recorded review', async () => {
     const root = await workspace();
     const suites = [...(await generatedFiles()).keys()].filter((file) =>
       file.startsWith('suites/'),
@@ -62,12 +63,11 @@ describe('suite integrity and candidate isolation', () => {
       const report = await preflight(root, file);
       assert.equal(report.valid, true, `${file}: ${JSON.stringify(report.errors)}`);
       assert.ok(report.cases.length > 0);
+      // Every committed pack carries the recorded owner review, so no case is
+      // blocked on review; the draft gate is exercised in execution-gates.test.ts.
       const run = await preflight(root, file, true);
-      assert.equal(run.valid, false);
-      assert.ok(
-        run.cases.every((item) => item.reason?.includes('Human review')),
-        file,
-      );
+      for (const item of run.cases)
+        assert.doesNotMatch(item.reason ?? '', /review/i, `${file}: ${item.taskId}`);
     }
   });
   test('candidate projection cannot serialize hidden fixtures, rubric or provenance', async () => {
@@ -219,12 +219,15 @@ describe('paths, provenance and fixtures', () => {
     );
     await assert.rejects(securePath(root, 'escape/worlds/cedar-world.json'), /Symlink forbidden/);
   });
-  test('human approval requires reviewer/time and is never generated', () => {
+  test('human approval requires reviewer/time and is generated only from a recorded review', () => {
     assert.equal(
       Review.safeParse({ status: 'approved', reviewer: null, reviewedAt: null, notes: '' }).success,
       false,
     );
-    assert.equal(makeWorld('development').review.status, 'draft');
+    assert.deepEqual(makeWorld('development').review, OWNER_REVIEW_2026_10_04);
+    const draft = { status: 'draft' as const, reviewer: null, reviewedAt: null, notes: '' };
+    assert.equal(fixtureReview('world:unrecorded', draft), draft);
+    assert.equal(caseReview('offers/unrecorded-case/cedar', draft), draft);
   });
   test('two worlds are deterministic and structurally different with coherent references', () => {
     assert.deepEqual(makeWorld('development'), makeWorld('development'));

@@ -63,13 +63,13 @@
     }
   ],
   "fixturePath": "grading/fixture.json",
-  "fixtureHash": "adf0c402dd59020914e86b05460ff365c5a1d54c43faa3c8e3fd4db3746e0d1b",
+  "fixtureHash": "fa26f1f23fff48e4b363680e2a5db339abd1921ad674029f7220dda980a83c9c",
   "rubricPath": "grading/rubric.json",
   "rubricHash": "7ee80a689c2caec19e2cc2e1a10dc7172cb4a9d73d77259c64c440a4ca9eb53f",
   "provenancePath": "provenance.json",
-  "provenanceHash": "993d536b744a1689e8f1e8a11f48b3f5d8e8dad6ef156584f8f8c94fd32acbaa",
+  "provenanceHash": "7a47af91ce97a5d1a30f338c395da6ec4eaa1e27f6dd6f73720850320cc03c53",
   "verificationPath": "grading/verification.json",
-  "verificationHash": "7b37b19388b97ef483c52dd08878043de47dc40ef6c03de9768e5b29d529f0e2",
+  "verificationHash": "7af43bf5b2d62d6445394f8765569f3ee52f50c57cf6460c2687d0df090a8d9b",
   "operatorBranches": [],
   "allowedOutcomes": [
     {

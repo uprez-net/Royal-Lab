@@ -79,9 +79,10 @@ privacy/reference lint, every suite and the compiled build. It does not
 require Docker or a private source checkout. Schema export and fixture drift
 checks run separately in CI as shown above.
 
-`pnpm lab validate --for-run` is expected to fail while packs are draft. Review
-metadata must describe an actual human review; changing a flag to make the gate
-green is not approval. Ordinary validation is useful and can pass for drafts.
+`pnpm lab validate --for-run` passes the review gates for the 52 packs covered by
+the recorded owner review and fails for any later draft. Review metadata must
+describe an actual human review recorded in `src/fixtures/reviews.ts`; changing a
+flag to make the gate green is not approval. Ordinary validation can pass for drafts.
 
 The TUI needs an interactive terminal. Use arrows/j/k, Tab or left/right, Enter,
 Escape and q. For automation use CLI JSON output; set `NO_COLOR=1` for uncolored
@@ -202,8 +203,8 @@ pnpm lab grade <saved-run-id>
 ```
 
 `grading/verification.json` is relative to the selected case and must match its
-frozen declaration. Run from a clean committed checkpoint. Current draft packs
-deliberately block the run command before credentials/provider execution.
+frozen declaration. Run from a clean committed checkpoint. A draft pack
+deliberately blocks the run command before credentials/provider execution.
 The `grade` command reads saved evidence and appends a grading receipt without
 candidate API calls; it cannot manufacture missing semantic judgments.
 

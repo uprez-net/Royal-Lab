@@ -1,5 +1,6 @@
 import { jsonText } from '#src/io';
 import { AUTHORED_DRAFT } from '#fixtures/authoring/build';
+import { fixtureReview } from '#fixtures/reviews';
 
 // Original synthetic adversarial payloads (#15). Cases import these exact texts;
 // fixtures/adversarial/payloads.json is generated from them for review. They are
@@ -70,7 +71,7 @@ export function adversarialCatalogue() {
     schemaVersion: '1.0.0',
     // 1.1.0 adds the #21 external-disconnect payload; earlier payloads unchanged.
     version: '1.1.0',
-    review: AUTHORED_DRAFT,
+    review: fixtureReview('adversarial:payloads', AUTHORED_DRAFT),
     provenance:
       'Original synthetic payloads for issues #15 and #21. Not collected attacks, real addresses or production content.',
     payloads: Object.values(PAYLOADS),

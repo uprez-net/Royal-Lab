@@ -1,5 +1,6 @@
 import { jsonText } from '#src/io';
 import { AUTHORED_DRAFT } from '#fixtures/authoring/build';
+import { fixtureReview } from '#fixtures/reviews';
 import type { CaseSpec } from '#fixtures/authoring/types';
 
 // Measurement-system controls generated beside the authored cases (#12, #15).
@@ -26,7 +27,7 @@ export function negativeControlIndex(specs: CaseSpec[]) {
     schemaVersion: '1.0.0',
     // 1.2.0 added the #20 analytics controls; 1.3.0 the #21 stale-offer variant.
     version: '1.3.0',
-    review: AUTHORED_DRAFT,
+    review: fixtureReview('grader-controls:index', AUTHORED_DRAFT),
     provenance:
       'Index of hidden negative controls in tasks/*/grading/controls.json. Document controls are graded offline by `pnpm lab controls`; fixed-tools trajectories by integration/authored-tools.test.ts.',
     coverage: Object.fromEntries(Object.entries(coverage).sort(([a], [b]) => a.localeCompare(b))),
@@ -38,7 +39,7 @@ export function negativeControlIndex(specs: CaseSpec[]) {
 export const ADDITIVE_MARKUP_CONTROL = {
   schemaVersion: '1.0.0',
   version: '1.0.0',
-  review: AUTHORED_DRAFT,
+  review: fixtureReview('grader-controls:additive-markup', AUTHORED_DRAFT),
   provenance:
     'Synthetic $500,000 / 10% overhead + 10% fee / 10% GST control requested by issue #12. Additive markups on one base, never compounded.',
   input: {
@@ -69,7 +70,7 @@ export const ADDITIVE_MARKUP_CONTROL = {
 export const NESTED_TRACE_CONTROL = {
   schemaVersion: '1.0.0',
   version: '1.0.0',
-  review: AUTHORED_DRAFT,
+  review: fixtureReview('grader-controls:nested-trace', AUTHORED_DRAFT),
   provenance:
     'Synthetic prototype for issue #15 and optional Royal Eve (#18): a delegated child session commits a write the parent trace never records.',
   cases: [

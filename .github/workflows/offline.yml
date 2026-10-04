@@ -23,11 +23,9 @@ jobs:
       - run: pnpm fixtures:generate --check
       # Known-positive and known-negative grader controls for every authored document pack.
       - run: pnpm lab controls
-      # The experiment dry run works without credentials; draft packs stay blocked (exit 1).
-      - name: Experiment dry run is offline and blocked for drafts
-        run: |
-          set +e
-          pnpm -s lab plan --experiment templates/experiment.example.json
-          test $? -eq 1
+      # The experiment dry run needs no credentials and makes no request; the
+      # reviewed template case is execution-ready (exit 0).
+      - name: Experiment dry run is offline
+        run: pnpm -s lab plan --experiment templates/experiment.example.json
       - run: pnpm schemas:export
       - run: git diff --exit-code -- schemas

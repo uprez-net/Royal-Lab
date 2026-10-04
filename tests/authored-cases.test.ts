@@ -17,6 +17,7 @@ import { exactFact } from '#src/grading/facts';
 import { unobservedCommits } from '#src/grading/trace';
 import { TraceEventSchema } from '#contracts/trace';
 import { ADDITIVE_MARKUP_CONTROL, NESTED_TRACE_CONTROL } from '#fixtures/authoring/grader-controls';
+import { OWNER_REVIEW_2026_10_04, OWNER_REVIEWED_CASES } from '#fixtures/reviews';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const specs = AUTHORED_CASES.map((make) => make());
@@ -43,16 +44,21 @@ async function workspace() {
 }
 
 describe('authored case library (#12-#15)', () => {
-  test('every authored case validates with draft review, exact locators and hidden controls', async () => {
+  test('every authored case validates with its recorded review, exact locators and hidden controls', async () => {
     const discovered = await discover(ROOT);
     for (const spec of specs) {
       const entry = discovered.find((item) => item.task.id === spec.id);
       assert.ok(entry, `${spec.id} is generated`);
       assert.equal(entry.task.schemaVersion, '1.2.0');
       const validated = await validateTask(ROOT, entry.task);
-      assert.equal(validated.provenance.review.status, 'draft');
-      assert.equal(validated.verification?.review.status, 'draft');
-      assert.equal(validated.controls?.review.status, 'draft');
+      // Only the exact IDs in the recorded owner review are approved.
+      const expected = OWNER_REVIEWED_CASES.has(spec.id) ? OWNER_REVIEW_2026_10_04 : null;
+      for (const review of [
+        validated.provenance.review,
+        validated.verification?.review,
+        validated.controls?.review,
+      ])
+        assert.deepEqual(review, expected ?? { ...review!, status: 'draft' });
       // #12 asks for 6-12 necessary criteria on its document cases; other core
       // cases need at least four and narrow diagnostics/variants at least two.
       const minimum =
@@ -172,75 +178,106 @@ describe('authored case library (#12-#15)', () => {
     );
   });
   test('run preflight independently requires authored controls, environment and operator review', async () => {
-    const root = await workspace();
-    // Synthetic completed-review metadata exists only inside this disposable test.
-    const review = {
-      status: 'approved',
-      reviewer: 'Synthetic gate-test reviewer',
-      reviewedAt: '2026-10-02T00:00:00Z',
-      notes: 'Test-only gate exercise; no actual human approval.',
-    };
+    // Packs carry the recorded owner review; revoking any single layer to draft
+    // inside this disposable copy must block execution on that layer alone.
+    const draft = { status: 'draft', reviewer: null, reviewedAt: null, notes: 'Gate test.' };
     for (const spec of [
       specs.find((item) => item.profile === 'documents')!,
       specs.find((item) => item.profile === 'fixed-tools')!,
     ]) {
-      const taskFile = path.join(root, `tasks/${spec.id}/task.json`);
-      const task = TaskSchema.parse(await readJson(taskFile));
-      const patchHidden = async (
-        relative: string,
-        hash: 'provenanceHash' | 'verificationHash' | 'controlsHash' | 'environmentHash',
-        change: (value: any) => void,
-      ) => {
-        const file = path.join(root, `tasks/${spec.id}`, relative);
-        const value = await readJson(file);
-        change(value);
-        const text = jsonText(value);
-        await writeFile(file, text);
-        task[hash] = sha256(text);
-        await writeFile(taskFile, jsonText(task));
-      };
-      const worldFile = path.join(root, `fixtures/worlds/${task.worldId}.json`);
-      const world = (await readJson(worldFile)) as Record<string, unknown>;
-      world.review = review;
-      await writeFile(worldFile, jsonText(world));
-      const fixtureFile = path.join(root, `tasks/${spec.id}`, task.fixturePath);
-      const fixture = (await readJson(fixtureFile)) as Record<string, unknown>;
-      fixture.worldHash = sha256(jsonText(world));
-      await writeFile(fixtureFile, jsonText(fixture));
-      task.fixtureHash = sha256(jsonText(fixture));
-      await patchHidden(task.provenancePath, 'provenanceHash', (value) => {
-        value.review = review;
-      });
-      await patchHidden(task.verificationPath!, 'verificationHash', (value) => {
-        value.review = review;
-      });
-      // Select exactly this case; other suite entries/worlds still undergo isolation.
+      const layers: [string, RegExp, (task: any) => Promise<void>][] = [];
+      const hidden =
+        (
+          field: 'provenancePath' | 'verificationPath' | 'controlsPath' | 'environmentPath',
+          change: (value: any) => void,
+        ) =>
+        async (task: any) => {
+          const hash = field.replace('Path', 'Hash');
+          const file = path.join(task.root, `tasks/${spec.id}`, task[field]);
+          const value = await readJson(file);
+          change(value);
+          await writeFile(file, jsonText(value));
+          task[hash] = sha256(jsonText(value));
+        };
+      layers.push([
+        'world',
+        /Human review is pending/,
+        async (task) => {
+          const worldFile = path.join(task.root, `fixtures/worlds/${task.worldId}.json`);
+          const world = (await readJson(worldFile)) as Record<string, unknown>;
+          world.review = draft;
+          await writeFile(worldFile, jsonText(world));
+          const fixtureFile = path.join(task.root, `tasks/${spec.id}`, task.fixturePath);
+          const fixture = (await readJson(fixtureFile)) as Record<string, unknown>;
+          fixture.worldHash = sha256(jsonText(world));
+          await writeFile(fixtureFile, jsonText(fixture));
+          task.fixtureHash = sha256(jsonText(fixture));
+        },
+      ]);
+      layers.push([
+        'provenance',
+        /Human review is pending/,
+        hidden('provenancePath', (v) => (v.review = draft)),
+      ]);
+      layers.push([
+        'verifier',
+        /Human verifier review/,
+        hidden('verificationPath', (v) => (v.review = draft)),
+      ]);
+      layers.push([
+        'controls',
+        /Human control review/,
+        hidden('controlsPath', (v) => (v.review = draft)),
+      ]);
+      if (spec.profile === 'fixed-tools') {
+        layers.push([
+          'environment',
+          /Human environment\/operator review/,
+          hidden('environmentPath', (v) => (v.review = draft)),
+        ]);
+        layers.push([
+          'operator',
+          /Human environment\/operator review/,
+          hidden('environmentPath', (v) => (v.operator.review = draft)),
+        ]);
+      }
       const suite =
         spec.profile === 'documents'
           ? 'suites/development.json'
           : 'suites/fixed-tools-development.json';
+      // One disposable copy per case; every file a layer can touch is restored
+      // before the next layer so each revocation is checked on its own.
+      const root = await workspace();
+      const taskFile = path.join(root, `tasks/${spec.id}/task.json`);
+      const original = TaskSchema.parse(await readJson(taskFile));
+      const touched = [
+        taskFile,
+        path.join(root, `fixtures/worlds/${original.worldId}.json`),
+        ...(
+          [
+            original.fixturePath,
+            original.provenancePath,
+            original.verificationPath,
+            original.controlsPath,
+            original.environmentPath,
+          ].filter(Boolean) as string[]
+        ).map((relative) => path.join(root, `tasks/${spec.id}`, relative)),
+      ];
+      const snapshot = await Promise.all(touched.map((file) => readFile(file)));
+      // Select exactly this case; other suite entries/worlds still undergo isolation.
       const selection = SuiteSchema.parse(await readJson(path.join(root, suite)));
       selection.split = spec.split;
-      selection.cases = [task.id];
+      selection.cases = [spec.id];
       await writeFile(path.join(root, suite), jsonText(selection));
-      assert.match((await preflight(root, suite, true)).cases[0]!.reason!, /Human control review/);
-      await patchHidden(task.controlsPath!, 'controlsHash', (value) => {
-        value.review = review;
-      });
-      if (spec.profile === 'fixed-tools') {
-        assert.match(
-          (await preflight(root, suite, true)).cases[0]!.reason!,
-          /Human environment\/operator review/,
-        );
-        await patchHidden(task.environmentPath!, 'environmentHash', (value) => {
-          value.review = review;
-        });
-        assert.match(
-          (await preflight(root, suite, true)).cases[0]!.reason!,
-          /Human environment\/operator review/,
-        );
-      } else {
-        assert.equal((await preflight(root, suite, true)).cases[0]!.status, 'ready');
+      for (const [name, expected, revoke] of [['none', null, async () => {}] as const, ...layers]) {
+        await Promise.all(touched.map((file, index) => writeFile(file, snapshot[index]!)));
+        const task: any = { ...TaskSchema.parse(await readJson(taskFile)), root };
+        await revoke(task);
+        const { root: _root, ...saved } = task;
+        await writeFile(taskFile, jsonText(TaskSchema.parse(saved)));
+        const reason = (await preflight(root, suite, true)).cases[0]!.reason;
+        if (expected) assert.match(reason ?? '', expected, `${spec.id}: ${name}`);
+        else assert.doesNotMatch(reason ?? '', /review/i, `${spec.id}: fully reviewed`);
       }
     }
   });

@@ -1,4 +1,4 @@
-import { describe, test } from 'vitest';
+import { describe, test, vi } from 'vitest';
 import assert from 'node:assert/strict';
 import { appendFile, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -20,6 +20,13 @@ import { documentTrialExecutor, regradeExperiment, runExperiment } from '#runs/s
 import { planTrials, seededPermutation, ResourceLocks, externalLock } from '#runs/scheduler';
 import { readJson } from '#src/io';
 import { main } from '#src/cli';
+// Recorded reviews approve the committed packs; these gate tests generate an
+// all-draft copy so the review gate itself stays exercised.
+vi.mock('#fixtures/reviews', async (original) => ({
+  ...(await original<typeof import('#fixtures/reviews')>()),
+  caseReview: (_id: string, draft: unknown) => draft,
+  fixtureReview: (_id: string, draft: unknown) => draft,
+}));
 
 describe('repeat-run orchestration (#16)', () => {
   test('seeded paired order is reproducible and every block holds every configuration', () => {

@@ -1,10 +1,17 @@
-import { test, afterEach } from 'vitest';
+import { test, afterEach, vi } from 'vitest';
 import assert from 'node:assert/strict';
 import { mkdir, mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
 import path from 'node:path';
 import { ConfigSchema } from '#src/config';
 import { generatedFiles } from '#fixtures/generate';
 import { executeDocumentTrial } from '#runs/execute';
+// Recorded reviews approve the committed packs; these gate tests generate an
+// all-draft copy so the review gate itself stays exercised.
+vi.mock('#fixtures/reviews', async (original) => ({
+  ...(await original<typeof import('#fixtures/reviews')>()),
+  caseReview: (_id: string, draft: unknown) => draft,
+  fixtureReview: (_id: string, draft: unknown) => draft,
+}));
 const temporary: string[] = [];
 afterEach(async () => {
   for (const directory of temporary.splice(0))

@@ -77,17 +77,17 @@
     }
   ],
   "fixturePath": "grading/fixture.json",
-  "fixtureHash": "919330d07c6e75180affe64cd71ebb4b1e8f1ed116638db9625e33e63ffa17b6",
+  "fixtureHash": "a52ef0662f3895aee062e06742f0f2aad86b5b9a90a8ed1c47c5c7ea91f824a0",
   "rubricPath": "grading/rubric.json",
   "rubricHash": "ee83d057d1b9d25f13760a61b55db6d78be6ba2f6453670f36dfe8af70730380",
   "provenancePath": "provenance.json",
-  "provenanceHash": "38a77a8aea1bcfc7082a09067adcaf24154d4edb3d86b2013fe8752f482192a7",
+  "provenanceHash": "d301142ec4d3306f1b2bd00ab0290061bde16aeb3b07538babc7366b549d6bc6",
   "verificationPath": "grading/verification.json",
-  "verificationHash": "a3343713e7b2404d6031f69cdfea5fab70c016a0150513e059f72d60bf520242",
+  "verificationHash": "f7135e033c7caf0244da9768674ccdee8a7ec1691283451368139fb5ec8dbfd0",
   "controlsPath": "grading/controls.json",
-  "controlsHash": "7c85e57bc5e6fc408eeb738d9e7b80ce307d89917619ba1c230f835d4e108618",
+  "controlsHash": "0b694760eb430d45a917b2098dbcc78ffc4d0995f8f28cc0c4084b73d81ce2f3",
   "environmentPath": "grading/environment.json",
-  "environmentHash": "4b5d774dd32a8cf674abdcd3c14eb268df16645b01900f8801ca5ef1d627bdc3",
+  "environmentHash": "e4920525ba1a3518d0537fa18e19dcaa973e861c18ab3a2144e94ae399c046a2",
   "operatorBranches": [],
   "allowedOutcomes": [
     {

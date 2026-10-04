@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "worldId": "estuary-world",
   "worldPath": "fixtures/worlds/estuary-world.json",
-  "worldHash": "9d7bcd1f4e2bfc90133d76ecec1433f9ee45ae5073ec984912b1abbb0d6607b8",
+  "worldHash": "01a844663c7e5b79ed657444b5f33aff032da8c13e1d6cffab9c2a4a3251bf0e",
   "entityIds": [
     "builder-fe9b57a5bffe"
   ],

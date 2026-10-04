@@ -3,6 +3,7 @@ import path from 'node:path';
 import { DEFAULT_LIMITS } from '#src/config';
 import { jsonText, sha256, inside } from '#src/io';
 import { WorldSchema, type World } from '#fixtures/world';
+import { caseReview, fixtureReview } from '#fixtures/reviews';
 
 export const GURI_REVISION = '460895235f94e917bd855855cd6e106f93a4c7c1';
 const draft = {
@@ -121,7 +122,7 @@ export function makeWorld(split: 'development' | 'held-out'): World {
     ],
     ambiguity: [{ query: dev ? 'Amelia' : 'Coastal', entityIds: [id('lead-a'), id('lead-b')] }],
     versionConflicts: [{ entityId: id('offer-a'), readVersion: 2, currentVersion: dev ? 3 : 4 }],
-    review: draft,
+    review: fixtureReview(dev ? 'world:development' : 'world:held-out', draft),
   });
 }
 export const POLICY = `# NSW residential builder benchmark policy — draft v1.0.0
@@ -420,7 +421,7 @@ export async function generatedFiles(): Promise<Map<string, string>> {
           copiedMaterial: false,
         },
       ],
-      review: draft,
+      review: caseReview(spec.id, draft),
     });
     files.set(`${prefix}/documents/source.json`, document);
     files.set(`${prefix}/policies/business.md`, POLICY);
@@ -448,7 +449,7 @@ export async function generatedFiles(): Promise<Map<string, string>> {
       version: '1.0.0',
       taskId: spec.id,
       rubricVersion: '1.0.0',
-      review: draft,
+      review: caseReview(spec.id, draft),
       assertions: Object.entries(expected).map(([key, value], index) => ({
         kind: 'prose',
         criterionId: `C${index + 1}`,

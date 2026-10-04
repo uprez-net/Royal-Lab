@@ -123,5 +123,5 @@ temporary roots, and makes no paid request:
 - Budget-stopped and unknown-usage bounds, the wall-clock ceiling, locks, and the
   CLI dry run.
 
-These controls are not a model result. No live sweep has been run, and draft packs
-remain blocked.
+These controls are not a model result. Draft packs remain blocked; the packs
+covered by the recorded owner review are execution-ready.

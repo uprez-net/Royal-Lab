@@ -108,8 +108,8 @@ wins/losses/ties and unpaired cases are listed.
 - `.github/workflows/offline.yml` runs on push and pull requests with no secrets:
   `pnpm check` (formatting, types, tests including grader/harness contracts,
   privacy/reference lint, suite integrity and build), fixture drift, all document
-  grader controls, a credential-free experiment dry run that must stay blocked for
-  draft packs, and schema drift. It cannot spend model credits.
+  grader controls, a credential-free experiment dry run (no request) and schema
+  drift. It cannot spend model credits.
 - `.github/workflows/benchmark.yml` is `workflow_dispatch` only. It requires:
   - the typed confirmation `RUN-PAID` and the `paid-benchmark` environment, which
     accepts deployments from `main` only. The organization's current GitHub plan
@@ -124,10 +124,9 @@ wins/losses/ties and unpaired cases are listed.
 
   Credentials come only from environment secrets for the sweep step. Experiment
   evidence and reports upload as a private artifact kept for seven days.
-  `experiments/preflight-smoke.json` is a wiring check with placeholder models,
-  zero pricing and no judge profile: while packs are draft its dispatch must stop
-  at the dry run with no model request. It is not a benchmark experiment. No paid
-  sweep has run.
+  The dry-run step also refuses any configuration with zero (placeholder)
+  pricing. The first dispatch (run 37173553940) stopped at that step while the
+  packs were draft, with no request.
 
 Verified offline by `tests/reporting.test.ts`: critical-fact evidence, missing
 coverage without a headline, escaped/secret-free exports and CLI files, and formal,

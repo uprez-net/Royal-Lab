@@ -3,9 +3,10 @@
 The library contains **28 authored core cases** for D01–D16 and T01–T12,
 **seven document variants**, **two fixed-tools variants** and **eleven fixed-tools
 diagnostics**. Together with the four preserved specimens (now all labelled
-variants), discovery returns **52 case packs**. All source,
-world, policy, verifier, environment, operator and control reviews remain draft.
-No expert review, measured model score or release approval has been recorded.
+variants), discovery returns **52 case packs**. All of them
+carry the recorded owner review (Gurpinder Uppal, business owner, Royal Construction Pty Ltd; recorded 2026-10-04 in `src/fixtures/reviews.ts`), covering sources, worlds, policies, verifiers, environments,
+operator scripts and controls. No measured model score, judge calibration or
+release approval has been recorded.
 
 ## Coverage and denominators
 
@@ -66,7 +67,7 @@ promised scope/dates and a reply claimed sent. Boolean prose facts are expected
 
 Case specs were drafted with Codex helper agents from fixed numeric briefs and
 then corrected and verified locally; all expected values are pinned by in-module
-arithmetic guards. Nothing here is human-reviewed: all four remain draft.
+arithmetic guards. All four are covered by the recorded owner review.
 
 ## Authoring and hidden controls
 

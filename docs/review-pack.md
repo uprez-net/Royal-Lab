@@ -1,6 +1,6 @@
 # Foundation business review pack
 
-Status: **draft; no human approval recorded**. The target is NSW residential
+Status: **owner review recorded 2026-10-04** (see "Recorded review" below). The target is NSW residential
 construction for any builder. These are original fictional operating assumptions,
 not a statement of current law. The sources, grading expectations and policy are
 private. Inspect both splits as a reviewer; candidate models receive only the
@@ -69,3 +69,24 @@ requires a separate explicit paid-execution flag.
 
 Configuration for later models, judges and environments is listed in
 [configuration inputs](configuration.md). No credential is needed for this review.
+
+## Recorded review
+
+On 2026-10-04 the repository owner reported that **Gurpinder Uppal, business owner
+of Royal Construction Pty Ltd**, reviewed all Royal-Lab fixtures. The review is
+recorded exactly as reported in `src/fixtures/reviews.ts`, and the generators
+apply it only to the IDs listed there:
+
+- **Scope:** the 52 case packs (sources, candidate-visible policies 1.0.0/1.1.0/1.2.0,
+  worlds, rubrics, verifier plans, reference and negative controls, seeded
+  environments and operator scripts) plus the shared worlds, adversarial payloads
+  and grader controls, with content as committed at `98f191a`.
+- **Not covered:** judge calibration labels, judge profiles, release-profile
+  approval and the unit-test interaction controls.
+- **Timestamp:** the reviewer's own review date was not stated; `reviewedAt` is
+  the recording time.
+
+A case authored after this record stays draft until a new review is recorded.
+Changing a reviewed pack's content needs a new version and a new review; this
+record does not approve future edits. The review does not calibrate judges,
+establish model quality or approve a release.

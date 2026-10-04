@@ -286,7 +286,12 @@ test('saved output regrades offline, preserves semantic coverage and detects tam
   assert.equal(graded.result.criteria.find((item) => item.id === 'C4')!.verdict, 'pass');
   assert.equal(graded.result.criteria.find((item) => item.id === 'S1')!.verdict, 'ungraded');
   assert.equal(graded.result.strictSuccess, false);
-  await assert.rejects(regradeSaved(saveDirectory), /VERIFIER_REVIEW_PENDING/);
+  // The D01 specimen's verifier carries the recorded owner review, so a
+  // benchmark-mode regrade is allowed (the draft gate is covered in disclosure.test.ts).
+  assert.equal(
+    (await regradeSaved(saveDirectory)).result.criteria.find((item) => item.id === 'C4')!.verdict,
+    'pass',
+  );
   await writeFile(path.join(saveDirectory, 'trace.jsonl'), '');
   await assert.rejects(
     regradeSaved(saveDirectory, { mode: 'offline-control' }),

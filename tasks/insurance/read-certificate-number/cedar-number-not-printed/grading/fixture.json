@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "worldId": "cedar-world",
   "worldPath": "fixtures/worlds/cedar-world.json",
-  "worldHash": "c855ee2914134b034496b68506a03828d0562f697e9051b53ebf355475287a45",
+  "worldHash": "6b66717e99f0be0b812c5968034a8a4f5272c1eb6c163d97681300bc505358fb",
   "entityIds": [
     "builder-0a4d851f8c7d",
     "project-a-db84b324c017",

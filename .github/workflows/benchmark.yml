@@ -58,6 +58,9 @@ jobs:
             if (plan.estimate.boundedCandidateUsd > cap || plan.spec.budget.totalCandidateUsd > cap)
               throw new Error("Bounded spend exceeds the dispatch cap");
             if (plan.estimate.expectedJudgeUsd === null) throw new Error("Judge pricing is not pinned");
+            for (const c of plan.spec.configurations)
+              if (!(c.pricing.inputUsdPerMillion > 0 && c.pricing.outputUsdPerMillion > 0))
+                throw new Error(`Placeholder (zero) pricing for ${c.id}`);
             console.log(`Planned ${plan.trials.length} trials; bounded $${plan.estimate.boundedCandidateUsd}`);
           '
       - name: Sweep (paid, bounded)
