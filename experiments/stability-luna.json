@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "stability-luna",
+  "version": "1.0.0",
+  "description": "First stability exercise: openai/gpt-6-luna vs openai/gpt-5.6-luna through the AI Gateway, three repeats of one development document case, deterministic grading. Pricing is the gateway published standard tier (USD per million tokens) as of 2026-10-04.",
+  "suite": "suites/development.json",
+  "cases": ["analytics/project-cost-margin/cedar"],
+  "repeats": 3,
+  "seed": "stability-luna-2026-10",
+  "concurrency": 2,
+  "configurations": [
+    {
+      "id": "gpt-6-luna",
+      "provider": "gateway",
+      "model": "openai/gpt-6-luna",
+      "parameters": {
+        "reasoning": "medium"
+      },
+      "apiKeyEnv": "ROYAL_LAB_CANDIDATE_A_KEY",
+      "pricing": {
+        "version": "2026.10.04",
+        "asOf": "2026-10-04T00:00:00Z",
+        "inputUsdPerMillion": 0.1,
+        "outputUsdPerMillion": 0.5,
+        "cachedInputUsdPerMillion": 0.01
+      }
+    },
+    {
+      "id": "gpt-5.6-luna",
+      "provider": "gateway",
+      "model": "openai/gpt-5.6-luna",
+      "parameters": {
+        "reasoning": "medium"
+      },
+      "apiKeyEnv": "ROYAL_LAB_CANDIDATE_B_KEY",
+      "pricing": {
+        "version": "2026.10.04",
+        "asOf": "2026-10-04T00:00:00Z",
+        "inputUsdPerMillion": 0.2,
+        "outputUsdPerMillion": 1.2,
+        "cachedInputUsdPerMillion": 0.02
+      }
+    }
+  ],
+  "judgeProfile": null,
+  "budget": {
+    "perTrialCandidateUsd": 0.5,
+    "perTrialJudgeUsd": 0,
+    "totalCandidateUsd": 3,
+    "totalJudgeUsd": 0,
+    "maxWallClockMs": 3600000
+  },
+  "usageAssumptions": {
+    "candidateInputTokensPerTrial": 60000,
+    "candidateCachedInputTokensPerTrial": 0,
+    "candidateOutputTokensPerTrial": 16000,
+    "judgeInputTokensPerCall": 6000,
+    "judgeOutputTokensPerCall": 600
+  },
+  "transportRetries": 0,
+  "retention": {
+    "traceDays": 30
+  }
+}
