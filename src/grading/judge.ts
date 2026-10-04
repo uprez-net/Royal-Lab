@@ -116,9 +116,12 @@ export async function scopeCriterion(
 
 export function checkEvidence(scope: JudgeScope, evidence: JudgeRecord['evidence']) {
   for (const item of evidence) {
+    // A deliverable is scoped as one whole text, so its locator carries no
+    // information (live judges describe a section there); the quote must still
+    // be an exact substring. Source evidence keeps its exact locator.
     const text =
       item.kind === 'deliverable'
-        ? scope.deliverables.find((file) => file.path === item.ref && item.locator === 'text')?.text
+        ? scope.deliverables.find((file) => file.path === item.ref)?.text
         : scope.sources.find(
             (source) => source.sourceId === item.ref && source.locator === item.locator,
           )?.text;

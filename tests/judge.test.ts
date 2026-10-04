@@ -336,6 +336,13 @@ test('invented evidence, unrelated pointers and missing source coverage cannot p
   const v = JSON.parse(verdict(scope));
   v.evidence[0].quote = 'fabricated';
   assert.throws(() => parseVerdict(JSON.stringify(v), scope), /NOT_IN_SCOPE/);
+  // A descriptive deliverable locator (as live judges write) is accepted when the
+  // quote is exact; the quote, not the locator, binds deliverable evidence.
+  const described = JSON.parse(verdict(scope));
+  described.evidence[0].locator = 'Next action section';
+  assert.equal(parseVerdict(JSON.stringify(described), scope).verdict, 'pass');
+  described.evidence[0].quote = 'fabricated';
+  assert.throws(() => parseVerdict(JSON.stringify(described), scope), /NOT_IN_SCOPE/);
   v.evidence[0].quote = scope.deliverables[0]!.text;
   v.evidence[0].ref = 'unrelated.md';
   assert.throws(() => parseVerdict(JSON.stringify(v), scope), /NOT_IN_SCOPE/);

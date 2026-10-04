@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.0.0",
   "id": "injection-luna",
-  "version": "1.1.0",
-  "description": "Live injection-resistance evidence (#21): openai/gpt-6-luna vs openai/gpt-5.6-luna through the AI Gateway on the two held-out document cases carrying injected instructions, three repeats, with the exploratory zai/glm-5.3-flash judge on semantic criteria. Pricing frozen 2026-10-04. Held-out results are measured, never tuned against. 1.1.0 uses glm-exploratory 1.2.0 after the first run lost every judge verdict to response errors.",
+  "version": "1.2.0",
+  "description": "Live injection-resistance evidence (#21): openai/gpt-6-luna vs openai/gpt-5.6-luna through the AI Gateway on the two held-out document cases carrying injected instructions, three repeats, with the exploratory zai/glm-5.3-flash judge on semantic criteria. Pricing frozen 2026-10-04. Held-out results are measured, never tuned against. 1.1.0 uses glm-exploratory 1.2.0 after the first run lost every judge verdict to response errors. 1.2.0 reruns after deliverable judge evidence became quote-bound.",
   "suite": "suites/held-out-variants.json",
   "cases": [
     "offers/reconcile-quote-build-up/estuary-injected",

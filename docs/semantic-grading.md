@@ -169,3 +169,9 @@ recorded with reviewer metadata; the release pair
 `profiles/judges/release-deepseek-qwen.json` judges each example in calibration
 mode; disagreements get human adjudication records; and only a pack that passes
 `inspectCalibration` can be approved and bound to the release profile.
+
+Judge evidence for a deliverable is bound by its exact quote; the locator is
+recorded but not checked, because a deliverable is scoped as one whole text and
+live judges write a section description there. Source evidence still needs its
+exact locator. The first live judged run lost every verdict to that locator check
+before this rule; the exact-quote requirement is unchanged.
