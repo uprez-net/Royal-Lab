@@ -75,9 +75,21 @@ differs from the plan fails before any request.
   reported separately as `unknownCandidateTrials` / `unknownCandidateBoundUsd`.
   If no positive bound exists, all further paid admission stops.
 - Judge calls are estimated from semantic criteria × judges. Unpinned judge pricing
-  makes the expected judge spend `null` (unknown). Sweeps grade deterministically;
-  semantic judging stays the separate opt-in `grade --judge-profile` path with its
-  own profile limits.
+  makes the expected judge spend `null` (unknown).
+- Semantic judging in a sweep: when the experiment names `judgeProfile` and
+  `judgeApiKeyEnv`, every completed trial is judged right after its deterministic
+  grade, in one appended grade record whose `graderVersion` names the judge
+  profile (`deterministic-1.2.0+<profile>@<version>`). The profile must match the
+  hash frozen in the plan, and its per-call `maxCostUsd` must not exceed
+  `perTrialJudgeUsd`. Each judged trial reserves that ceiling against
+  `totalJudgeUsd` and settles to the recorded judge cost (unknown cost keeps the
+  full reservation). When the next reservation would exceed the total, the trial
+  keeps its deterministic grade, the semantic criteria stay ungraded and a
+  `JUDGE_BUDGET_EXHAUSTED` grading error is reported. Release profiles still need
+  an approved calibration; sweeps use exploratory profiles until then.
+- The paid workflow takes a separate `max_judge_usd` cap (default `0`, which
+  refuses any experiment with a judge profile) and the `ROYAL_LAB_JUDGE_KEY`
+  environment secret.
 
 ## Terminal states and coverage
 

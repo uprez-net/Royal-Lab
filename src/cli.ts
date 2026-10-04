@@ -324,8 +324,10 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
     if (plan.suite.profile !== 'documents')
       throw new Error('SWEEP_PROFILE_UNSUPPORTED: CLI sweeps execute the documents profile');
     try {
+      const judge = await sweepJudge(root, plan);
       const outcome = await runExperiment(root, ledger, {
         allowPaid: true,
+        ...(judge ? { judge } : {}),
         executor: documentTrialExecutor(
           paidAdapterFactory,
           (await loadConfig(options.config)).binaryParser,
@@ -354,8 +356,10 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       await import('#runs/sweep');
     const { Id } = await import('#contracts/common');
     const ledger = await ExperimentLedger.open(experimentDirectory(root, Id.parse(arguments_[0])));
+    const judge = await sweepJudge(root, ledger.plan);
     const outcome = await runExperiment(root, ledger, {
       allowPaid: true,
+      ...(judge ? { judge } : {}),
       executor: documentTrialExecutor(
         paidAdapterFactory,
         (await loadConfig(options.config)).binaryParser,
@@ -646,6 +650,23 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
   }
   throw new Error(`Unknown command: ${command}; see --help.`);
 }
+// Resolve the frozen plan's judge only for a benchmark sweep: the profile file
+// plus the single named key variable. A missing key blocks before any request.
+async function sweepJudge(root: string, plan: import('#contracts/experiment').ExperimentPlan) {
+  if (!plan.spec.judgeProfile || plan.mode !== 'benchmark') return undefined;
+  const { JudgeProfileSchema } = await import('#contracts/judge');
+  const { securePath } = await import('#src/io');
+  const profile = JudgeProfileSchema.parse(
+    await readJson(await securePath(root, plan.spec.judgeProfile)),
+  );
+  const key = plan.spec.judgeApiKeyEnv ? process.env[plan.spec.judgeApiKeyEnv] : undefined;
+  if (!key)
+    throw new Error('JUDGE_CREDENTIAL_MISSING: set the experiment judgeApiKeyEnv variable locally');
+  return {
+    profile,
+    credentials: Object.fromEntries(profile.judges.map((judge) => [judge.id, key])),
+  };
+}
 function summarizeOutcome(
   outcome: Awaited<ReturnType<typeof import('#runs/sweep').runExperiment>>,
 ) {
@@ -661,6 +682,7 @@ function summarizeOutcome(
     trials: outcome.states.length,
     counts,
     gradingErrors: outcome.gradingErrors,
+    judgeSpentUsd: outcome.judgeSpentUsd,
     controllerErrors: outcome.controllerErrors,
     note: 'Completion is not correctness; see the report for graded coverage.',
   };

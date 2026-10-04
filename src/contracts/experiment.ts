@@ -55,6 +55,13 @@ export const ExperimentSpecSchema = z
     concurrency: z.number().int().min(1).max(16).default(1),
     configurations: z.array(ExperimentConfigurationSchema).min(1).max(8),
     judgeProfile: RelativePath.nullable().default(null),
+    // Only the name of the credential variable used for every judge in the
+    // profile (one gateway key); never the key. Required to judge a benchmark sweep.
+    judgeApiKeyEnv: z
+      .string()
+      .regex(/^[A-Z][A-Z0-9_]*$/)
+      .nullable()
+      .default(null),
     budget: ExperimentBudget,
     usageAssumptions: UsageAssumptions,
     // SDK transport retries stay disabled: a retried paid request has unknown cost.

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "id": "glm-exploratory",
-  "version": "1.1.0",
+  "id": "minimax-exploratory",
+  "version": "1.0.0",
   "purpose": "exploratory",
   "scorePolicy": "all-mandatory-1.0.0",
   "promptVersion": "criterion-1.0.0",
@@ -9,7 +9,7 @@
     "status": "draft",
     "reviewer": null,
     "reviewedAt": null,
-    "notes": "Owner-selected exploratory judge (2026-10-04): zai/glm-5.3-flash through the AI Gateway, pricing frozen from the gateway published standard tier on 2026-10-04. Single judge, uncalibrated: scores are exploratory and cannot support a release ranking. zai/glm-5.3-flash is also the Royal Eve product model, so do not use it to judge Royal Eve outputs. 1.1.0 lowers the per-trial judge cost ceiling from $2 to $0.25 (never used at 1.0.0)."
+    "notes": "Owner-selected exploratory judge (2026-10-04): minimax/minimax-m3 through the AI Gateway, pricing frozen from the gateway published standard tier on 2026-10-04. Single judge, uncalibrated: exploratory only."
   },
   "calibrationHash": null,
   "limits": {
@@ -24,17 +24,17 @@
   },
   "judges": [
     {
-      "id": "glm",
+      "id": "minimax",
       "transport": "gateway",
-      "model": "zai/glm-5.3-flash",
+      "model": "minimax/minimax-m3",
       "parameters": {
         "temperature": 0
       },
       "pricing": {
         "version": "2026.10.04",
         "asOf": "2026-10-04T00:00:00Z",
-        "inputUsdPerMillion": 0.15,
-        "outputUsdPerMillion": 0.5
+        "inputUsdPerMillion": 0.3,
+        "outputUsdPerMillion": 1.2
       }
     }
   ]

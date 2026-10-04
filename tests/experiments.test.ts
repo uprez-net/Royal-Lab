@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { appendFile, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { ExperimentSpecSchema } from '#contracts/experiment';
+import { JudgeProfileSchema } from '#contracts/judge';
 import {
   CASE,
   ROOT,
@@ -366,5 +367,89 @@ describe('repeat-run orchestration (#16)', () => {
     await (
       await externalLock(lockFile, 'run-3')
     )();
+  });
+  test('a sweep judges completed trials within the judge budget and records the judge', async () => {
+    const root = await workspace();
+    const profile = JudgeProfileSchema.parse(
+      await readJson(path.join(ROOT, 'profiles/judges/glm-exploratory.json')),
+    );
+    profile.limits.maxCostUsd = 0.4;
+    await writeFile(path.join(root, 'judge.json'), JSON.stringify(profile));
+    const judgedSpec = (totalJudgeUsd: number) =>
+      spec({
+        // Sequential: concurrent judge reservations would (correctly) exceed $0.5.
+        concurrency: 1,
+        judgeProfile: 'judge.json',
+        judgeApiKeyEnv: 'OFFLINE_JUDGE_KEY',
+        budget: {
+          perTrialCandidateUsd: 1,
+          perTrialJudgeUsd: 0.4,
+          totalCandidateUsd: 10,
+          totalJudgeUsd,
+          maxWallClockMs: 600_000,
+        },
+      });
+    let judgeRequests = 0;
+    // Mock judge: a "fail" verdict quoting the trial's own deliverable.
+    const fetch: typeof globalThis.fetch = async (_input, init) => {
+      judgeRequests++;
+      assert.ok(!String(init?.body).includes('HIDDEN'), 'only scoped evidence reaches the judge');
+      const content = JSON.stringify({
+        verdict: 'fail',
+        explanation: 'The review only states a marker.',
+        evidence: [{ kind: 'deliverable', ref: 'review.md', locator: 'text', quote: 'Marker' }],
+      });
+      return new Response(
+        JSON.stringify({
+          id: 'judge',
+          object: 'chat.completion',
+          created: 1,
+          model: 'mock',
+          choices: [{ index: 0, finish_reason: 'stop', message: { role: 'assistant', content } }],
+          usage: { prompt_tokens: 60, completion_tokens: 20, total_tokens: 80 },
+        }),
+        { headers: { 'content-type': 'application/json' } },
+      );
+    };
+    const sweep = async (totalJudgeUsd: number, judgeProfile = profile) => {
+      const plan = await planExperiment(root, judgedSpec(totalJudgeUsd), {
+        mode: 'offline-control',
+        runtime,
+      });
+      const ledger = await ExperimentLedger.create(
+        experimentDirectory(root, plan.experimentId),
+        plan,
+      );
+      const outcome = await runExperiment(root, ledger, {
+        allowPaid: false,
+        executor: documentTrialExecutor(mockFactory()),
+        judge: { profile: judgeProfile, credentials: { glm: 'offline-judge-key' }, fetch },
+      });
+      return { ledger, outcome };
+    };
+    // Within budget: every completed trial is judged and the judge is recorded.
+    const { ledger, outcome } = await sweep(0.5);
+    const graded = ledger.all.filter((event) => event.type === 'trial-graded');
+    assert.equal(graded.length, 6);
+    assert.ok(
+      graded.every((event) => event.graderVersion.endsWith(`+glm-exploratory@${profile.version}`)),
+    );
+    assert.deepEqual(outcome.gradingErrors, []);
+    assert.equal(judgeRequests, 6);
+    assert.ok(outcome.judgeSpentUsd > 0 && outcome.judgeSpentUsd < 0.01);
+    for (const event of graded) {
+      const grade = (await readJson(path.join(ledger.directory, event.gradeFile))) as {
+        criteria: { id: string; verdict: string; reason: string }[];
+      };
+      const s1 = grade.criteria.find((c) => c.id === 'S1')!;
+      assert.equal(s1.verdict, 'fail', s1.reason);
+    }
+    // A total below one call's ceiling judges nothing; semantic stays ungraded.
+    const starved = await sweep(0.3);
+    assert.equal(judgeRequests, 6);
+    assert.equal(starved.outcome.gradingErrors.length, 6);
+    assert.ok(starved.outcome.gradingErrors.every((e) => /JUDGE_BUDGET_EXHAUSTED/.test(e.reason)));
+    // A profile that differs from the frozen plan is refused before any trial.
+    await assert.rejects(sweep(0.5, { ...profile, version: '9.9.9' }), /JUDGE_PROFILE_CHANGED/);
   });
 });

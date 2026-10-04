@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "release-deepseek-qwen",
+  "version": "1.0.0",
+  "purpose": "release",
+  "scorePolicy": "all-mandatory-1.0.0",
+  "promptVersion": "criterion-1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Owner-selected release judge pair (2026-10-04): deepseek/deepseek-v4.1-flash and alibaba/qwen3.7-flash through the AI Gateway, from independent model families, neither the Royal Eve product model. Pricing frozen from the gateway published standard tier on 2026-10-04. Release use stays blocked until reviewer-labelled calibration succeeds and this profile is approved with its calibration hash."
+  },
+  "calibrationHash": null,
+  "limits": {
+    "maxRequests": 56,
+    "maxRequestBytes": 24000,
+    "maxOutputTokensPerRequest": 2000,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 32000,
+    "maxCostUsd": 4,
+    "timeoutMs": 30000,
+    "maxDurationMs": 300000
+  },
+  "judges": [
+    {
+      "id": "deepseek",
+      "transport": "gateway",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "parameters": {
+        "temperature": 0
+      },
+      "pricing": {
+        "version": "2026.10.04",
+        "asOf": "2026-10-04T00:00:00Z",
+        "inputUsdPerMillion": 0.3,
+        "outputUsdPerMillion": 1.2
+      }
+    },
+    {
+      "id": "qwen",
+      "transport": "gateway",
+      "model": "alibaba/qwen3.7-flash",
+      "parameters": {
+        "temperature": 0
+      },
+      "pricing": {
+        "version": "2026.10.04",
+        "asOf": "2026-10-04T00:00:00Z",
+        "inputUsdPerMillion": 0.03,
+        "outputUsdPerMillion": 0.13
+      }
+    }
+  ]
+}

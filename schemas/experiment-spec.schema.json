@@ -179,6 +179,18 @@
         }
       ]
     },
+    "judgeApiKeyEnv": {
+      "default": null,
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
     "budget": {
       "type": "object",
       "properties": {
@@ -293,6 +305,7 @@
     "concurrency",
     "configurations",
     "judgeProfile",
+    "judgeApiKeyEnv",
     "budget",
     "usageAssumptions",
     "transportRetries",

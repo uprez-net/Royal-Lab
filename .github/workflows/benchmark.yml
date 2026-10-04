@@ -1,7 +1,8 @@
 name: Paid benchmark (manual, bounded)
 # Explicit dispatch only. Never runs on push or pull_request. Requires the
 # `paid-benchmark` environment (main only; required reviewers are not available
-# on the current private plan), private credentials and a typed confirmation. Documents profile only: no
+# on the current private plan), private credentials, a typed confirmation and
+# separate candidate/judge spend caps. Documents profile only: no
 # production, staging or Royal Eve target is reachable from this workflow.
 on:
   workflow_dispatch:
@@ -13,6 +14,11 @@ on:
       max_candidate_usd:
         description: 'Hard cap; the frozen plan bounded candidate spend must not exceed it'
         required: true
+        type: string
+      max_judge_usd:
+        description: 'Hard cap for judge spend; 0 refuses any experiment with a judge profile'
+        required: false
+        default: '0'
         type: string
       confirm:
         description: 'Type RUN-PAID to confirm a paid candidate run'
@@ -32,6 +38,7 @@ jobs:
     env:
       EXPERIMENT: ${{ inputs.experiment }}
       MAX_CANDIDATE_USD: ${{ inputs.max_candidate_usd }}
+      MAX_JUDGE_USD: ${{ inputs.max_judge_usd }}
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: pnpm/action-setup@v6.1.0
@@ -47,6 +54,7 @@ jobs:
         run: |
           [[ "$EXPERIMENT" =~ ^experiments/[A-Za-z0-9._-]+\.json$ ]] || { echo "Invalid experiment path"; exit 1; }
           [[ "$MAX_CANDIDATE_USD" =~ ^[0-9]+(\.[0-9]+)?$ ]] || { echo "Invalid cap"; exit 1; }
+          [[ "$MAX_JUDGE_USD" =~ ^[0-9]+(\.[0-9]+)?$ ]] || { echo "Invalid judge cap"; exit 1; }
       - name: Dry run and spend bound check (no request)
         run: |
           node --conditions=development --import tsx src/cli.ts plan --experiment "$EXPERIMENT" --json > "$RUNNER_TEMP/plan.json"
@@ -58,6 +66,11 @@ jobs:
             if (plan.estimate.boundedCandidateUsd > cap || plan.spec.budget.totalCandidateUsd > cap)
               throw new Error("Bounded spend exceeds the dispatch cap");
             if (plan.estimate.expectedJudgeUsd === null) throw new Error("Judge pricing is not pinned");
+            if (plan.judge) {
+              if (plan.spec.budget.totalJudgeUsd > Number(process.env.MAX_JUDGE_USD))
+                throw new Error("Judge budget exceeds the dispatch judge cap");
+              if (!(plan.estimate.expectedJudgeUsd > 0)) throw new Error("Placeholder (zero) judge pricing");
+            }
             for (const c of plan.spec.configurations)
               if (!(c.pricing.inputUsdPerMillion > 0 && c.pricing.outputUsdPerMillion > 0))
                 throw new Error(`Placeholder (zero) pricing for ${c.id}`);
@@ -67,6 +80,7 @@ jobs:
         env:
           ROYAL_LAB_CANDIDATE_A_KEY: ${{ secrets.ROYAL_LAB_CANDIDATE_A_KEY }}
           ROYAL_LAB_CANDIDATE_B_KEY: ${{ secrets.ROYAL_LAB_CANDIDATE_B_KEY }}
+          ROYAL_LAB_JUDGE_KEY: ${{ secrets.ROYAL_LAB_JUDGE_KEY }}
         # The sweep refuses a dirty runner; keep every workflow file outside the
         # checkout and show any stray change before the paid step.
         run: |

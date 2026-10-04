@@ -5,6 +5,7 @@ import type { Task } from '#contracts/task';
 import type { CaseResult } from '#contracts/result';
 import type { ExperimentConfiguration, LedgerEvent, PlannedTrial } from '#contracts/experiment';
 import type { CandidateAdapter } from '#src/harness/adapters/base';
+import type { JudgeProfile } from '#contracts/judge';
 import type { Config } from '#src/config';
 import { redact } from '#src/config';
 import { discover } from '#tasks/discover';
@@ -105,9 +106,18 @@ export function documentTrialExecutor(
   };
 }
 
+// Semantic judging inside a sweep: the frozen plan's judge profile, credentials
+// resolved from the experiment's named variable, and (offline controls only) a
+// mock judge transport. Without it semantic criteria stay ungraded.
+export interface SweepJudge {
+  profile: JudgeProfile;
+  credentials: Record<string, string>;
+  fetch?: typeof globalThis.fetch;
+}
 export interface SweepOptions {
   allowPaid: boolean;
   executor: TrialExecutor;
+  judge?: SweepJudge;
   // Required when any trial touches the shared Royal Eve staging deployment.
   externalLockFile?: string;
   clock?: () => number;
@@ -124,6 +134,20 @@ export async function runExperiment(root: string, ledger: ExperimentLedger, opti
     if (plan.runtime.runnerDirty || !plan.runtime.runnerRevision)
       throw new Error('RUNNER_DIRTY: checkpoint implementation and datasets before a benchmark');
   }
+  const judge = options.judge ?? null;
+  if (judge) {
+    if (!plan.judge || !plan.spec.judgeProfile) throw new Error('JUDGE_NOT_IN_PLAN');
+    // The profile must be byte-identical to the one frozen at planning time.
+    if (
+      sha256(await readScoped(root, plan.spec.judgeProfile)) !== plan.judge.profileHash ||
+      judge.profile.id !== plan.judge.profileId ||
+      judge.profile.version !== plan.judge.profileVersion
+    )
+      throw new Error('JUDGE_PROFILE_CHANGED_SINCE_PLAN');
+    if (judge.profile.limits.maxCostUsd > plan.spec.budget.perTrialJudgeUsd)
+      throw new Error('JUDGE_CEILING_EXCEEDS_TRIAL_BUDGET');
+  }
+  let judgeSpentUsd = 0;
   const { interrupted, remaining } = await prepareResume(ledger);
   const spend = new SpendLedger(plan.spec.budget, options.clock);
   const tasks = new Map((await discover(root)).map((entry) => [entry.task.id, entry.task]));
@@ -227,7 +251,25 @@ export async function runExperiment(root: string, ledger: ExperimentLedger, opti
         });
         if (result && bundleHash)
           try {
-            await gradeTrial(ledger, trial.trialId, plan.mode);
+            // Judge only completed trials, within the experiment's total judge
+            // budget; each call is bounded by the profile's own cost ceiling.
+            let semantic: (SweepJudge & { root: string }) | undefined;
+            if (judge && result.status === 'completed') {
+              if (judgeSpentUsd + judge.profile.limits.maxCostUsd > plan.spec.budget.totalJudgeUsd)
+                gradingErrors.push({
+                  trialId: trial.trialId,
+                  reason: 'JUDGE_BUDGET_EXHAUSTED: semantic criteria left ungraded',
+                });
+              else {
+                judgeSpentUsd += judge.profile.limits.maxCostUsd;
+                semantic = { ...judge, root };
+              }
+            }
+            const graded = await gradeTrial(ledger, trial.trialId, plan.mode, semantic);
+            if (semantic)
+              judgeSpentUsd +=
+                (graded.judgeCostUsd ?? semantic.profile.limits.maxCostUsd) -
+                semantic.profile.limits.maxCostUsd;
           } catch (error) {
             gradingErrors.push({
               trialId: trial.trialId,
@@ -272,6 +314,7 @@ export async function runExperiment(root: string, ledger: ExperimentLedger, opti
       unknownCandidateBoundUsd: spend.unknownCandidateBoundUsd,
     },
     gradingErrors,
+    judgeSpentUsd,
     controllerErrors: scheduled.errors.map((error) =>
       String(redact(error instanceof Error ? error.message : error)),
     ),
@@ -285,18 +328,38 @@ export async function gradeTrial(
   ledger: ExperimentLedger,
   trialId: string,
   mode: 'benchmark' | 'offline-control',
+  semantic?: SweepJudge & { root: string },
 ) {
   const directory = ledger.trialDirectory(trialId);
-  const graded = await regradeSaved(directory, mode === 'offline-control' ? { mode } : {});
-  return (await ledger.append({
+  const graded = await regradeSaved(directory, {
+    ...(mode === 'offline-control' ? { mode } : {}),
+    ...(semantic
+      ? {
+          semantic: {
+            profile: semantic.profile,
+            credentials: semantic.credentials,
+            allowPaid: mode === 'benchmark',
+            ...(mode === 'offline-control'
+              ? { mode: 'offline-control' as const, fetch: semantic.fetch! }
+              : {}),
+          },
+          readiness: { root: semantic.root, suite: ledger.plan.spec.suite },
+        }
+      : {}),
+  });
+  const event = (await ledger.append({
     type: 'trial-graded',
     trialId,
     gradeFile: `trials/${trialId}/${graded.file}`,
     gradeHash: sha256(await readFile(path.join(directory, graded.file))),
-    graderVersion: DETERMINISTIC_GRADER_VERSION,
+    // A judged grade names both the deterministic grader and the judge profile.
+    graderVersion: semantic
+      ? `${DETERMINISTIC_GRADER_VERSION}+${semantic.profile.id}@${semantic.profile.version}`
+      : DETERMINISTIC_GRADER_VERSION,
     strictSuccess: graded.result.strictSuccess,
     gradingStatus: graded.result.gradingStatus,
   })) as Extract<LedgerEvent, { type: 'trial-graded' }>;
+  return { ...event, judgeCostUsd: semantic ? graded.result.usage.judgeCostUsd : 0 };
 }
 export async function regradeExperiment(ledger: ExperimentLedger) {
   const graded = [];
