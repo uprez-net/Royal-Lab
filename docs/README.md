@@ -25,6 +25,7 @@ authored later stays draft until a new review is recorded.
 | [Execution](execution.md)                       | Candidate loop, budgets, current CLI/API support and saved evidence                                            |
 | [Experiments](experiments.md)                   | Repeat matrices, paired order, spend ceilings, immutable trial bundles, resume and regrading                   |
 | [Reporting](reporting.md)                       | Reports, denominators, compatible paired comparisons, safe exports and offline/paid CI                         |
+| [Reading reports](reading-reports.md)           | How to read the HTML report: tiles, charts, configuration cards, trial cards and safe interpretation           |
 | [Royal Eve staging](eve-staging.md)             | Composed-agent staging profile, credentials, nested traces, durable evidence import and limits                 |
 | [Semantic grading](semantic-grading.md)         | Scoped judges, preserved disagreements, offline replay and pending real calibration                            |
 | [Issue closeout](issue-closeout.md)             | Completed checkpoints and outstanding work consolidated into issue #21                                         |
