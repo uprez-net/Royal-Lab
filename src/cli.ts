@@ -36,6 +36,8 @@ Usage: pnpm lab <command> [arguments] [options]
                                 Resume unstarted trials; interrupted ones stay recorded
   calibrate --pack <file> --judge-profile <file> --judge-key-env NAME --max-judge-usd <n> --allow-paid
                                 Release judge pair grades the unlabelled calibration examples
+  calibration-record --labels <file> --receipts <dir> --judge-profile <file>
+                                Bind reviewer labels to a calibration run and inspect it
   grade --experiment <experiment-id>
                                 Regrade every sealed trial bundle as new grade records
   grade <run-id>                 Regrade saved artifacts offline (--replay-judge <receipt>)
@@ -84,6 +86,8 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       'lock-file': { type: 'string' },
       'control-url-env': { type: 'string' },
       pack: { type: 'string' },
+      labels: { type: 'string' },
+      receipts: { type: 'string' },
       'judge-key-env': { type: 'string' },
       'max-judge-usd': { type: 'string' },
       format: { type: 'string' },
@@ -428,6 +432,26 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       );
     }
     return 0;
+  }
+  if (command === 'calibration-record') {
+    required(0);
+    if (!options.labels || !options.receipts || !options['judge-profile'])
+      throw new Error('calibration-record requires --labels, --receipts and --judge-profile');
+    const { JudgeProfileSchema } = await import('#contracts/judge');
+    const { securePath } = await import('#src/io');
+    const { recordCalibration } = await import('#src/grading/calibration-record');
+    const profile = JudgeProfileSchema.parse(
+      await readJson(await securePath(root, options['judge-profile'])),
+    );
+    const result = await recordCalibration(root, {
+      packPath: 'fixtures/judge-calibration/labelling-pack.json',
+      labelsPath: options.labels,
+      receiptsDir: await securePath(root, options.receipts),
+      profile,
+      outPath: `fixtures/judge-calibration/calibration-${profile.id}.json`,
+    });
+    output(result);
+    return result.ready ? 0 : 1;
   }
   if (command === 'calibrate') {
     required(0);

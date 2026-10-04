@@ -1,12 +1,13 @@
 import { afterEach, test } from 'vitest';
 import assert from 'node:assert/strict';
-import { mkdir, mkdtemp, readFile, rm } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { JudgeProfileSchema, JudgeCalibrationSchema } from '#contracts/judge';
 import { runCalibration } from '#src/grading/calibration-run';
 import { calibrationProfileHash } from '#src/grading/judge';
 import { inspectCalibration } from '#src/grading/adjudicate';
+import { recordCalibration } from '#src/grading/calibration-record';
 import { readJson, sha256 } from '#src/io';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
@@ -101,4 +102,41 @@ test('a calibration run binds every unlabelled example to a two-judge receipt', 
     fetch,
   });
   assert.ok(capped.results.every((item) => item.skipped === 'CALIBRATION_BUDGET_EXHAUSTED'));
+  // Recording binds every reviewer label to a copied receipt; a missing label
+  // is refused, and mock evidence never makes the pack ready.
+  const relative = (file: string) => path.relative(ROOT, file).replace(/\\/g, '/');
+  const labelsFile = path.join(outDir, 'labels.json');
+  const labels = {
+    schemaVersion: '1.0.0',
+    pack: 'calibration-labelling-2026-10@1.0.0',
+    reviewer: 'Synthetic test reviewer',
+    reviewedAt: '2026-10-04T00:00:00Z',
+    timestampNote: 'Test only; no human review.',
+    labels: Object.fromEntries(pack.examples.map((example) => [example.id, 'fail'])),
+  };
+  await writeFile(labelsFile, JSON.stringify(labels));
+  const recorded = await recordCalibration(ROOT, {
+    packPath: 'fixtures/judge-calibration/labelling-pack.json',
+    labelsPath: relative(labelsFile),
+    receiptsDir: outDir,
+    profile,
+    outPath: relative(path.join(outDir, 'calibration.json')),
+    receiptRoot: relative(path.join(outDir, 'bound')),
+  });
+  assert.equal(recorded.ready, false);
+  assert.equal(recorded.examples.length, 16);
+  assert.ok(recorded.pending.some((item) => /Mock judge evidence/.test(item)));
+  const { [pack.examples[0]!.id]: _dropped, ...partial } = labels.labels;
+  await writeFile(labelsFile, JSON.stringify({ ...labels, labels: partial }));
+  await assert.rejects(
+    recordCalibration(ROOT, {
+      packPath: 'fixtures/judge-calibration/labelling-pack.json',
+      labelsPath: relative(labelsFile),
+      receiptsDir: outDir,
+      profile,
+      outPath: relative(path.join(outDir, 'calibration-2.json')),
+      receiptRoot: relative(path.join(outDir, 'bound-2')),
+    }),
+    /CALIBRATION_LABELS_MISSING/,
+  );
 }, 120_000);

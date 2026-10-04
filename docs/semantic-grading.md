@@ -190,3 +190,17 @@ cap and settles to the recorded cost. Receipts and a raw-verdict summary go to
 with the `ROYAL_LAB_JUDGE_KEY` secret. `tests/calibration-run.test.ts` checks the
 bindings offline with mock judges; `inspectCalibration` refuses mock evidence as
 calibration.
+
+## Recording reviewer labels
+
+The reviewer's labels go in a labels file (`CalibrationLabelsSchema`): the pack
+ID and version, the reviewer, `reviewedAt` with a note on how the time was
+established, and a `pass` or `fail` for **every** example (a missing or unknown
+ID is refused). `pnpm lab calibration-record --labels <file> --receipts <run dir>
+--judge-profile <file>` copies that run's receipts into
+`fixtures/judge-calibration/receipts/`, writes
+`fixtures/judge-calibration/calibration-<profile>.json` with each example's
+label as an approved reviewer review, and prints `inspectCalibration`: each
+example's label against both judges, mismatches, judge errors and
+disagreements. The pack's own review stays draft until the owner approves the
+inspected result, and only then can the release profile carry its hash.
