@@ -111,16 +111,23 @@ wins/losses/ties and unpaired cases are listed.
   grader controls, a credential-free experiment dry run that must stay blocked for
   draft packs, and schema drift. It cannot spend model credits.
 - `.github/workflows/benchmark.yml` is `workflow_dispatch` only. It requires:
-  - the typed confirmation `RUN-PAID` and the protected `paid-benchmark`
-    environment (configure required reviewers there);
+  - the typed confirmation `RUN-PAID` and the `paid-benchmark` environment, which
+    accepts deployments from `main` only. The organization's current GitHub plan
+    does not offer required reviewers on private repositories, so dispatch is
+    gated by repository write access, the typed confirmation and the cap below;
+  - environment secrets `ROYAL_LAB_CANDIDATE_A_KEY` / `ROYAL_LAB_CANDIDATE_B_KEY`
+    (set privately by the owner; never in the repository);
   - an experiment file under `experiments/` and a dollar cap the plan's bounded
     and total candidate spend must not exceed;
   - pinned judge pricing and a passing preflight;
   - the documents profile only, so no staging/production target is reachable.
 
   Credentials come only from environment secrets for the sweep step. Experiment
-  evidence and reports upload as a private artifact kept for seven days. The paid
-  workflow has never been dispatched.
+  evidence and reports upload as a private artifact kept for seven days.
+  `experiments/preflight-smoke.json` is a wiring check with placeholder models,
+  zero pricing and no judge profile: while packs are draft its dispatch must stop
+  at the dry run with no model request. It is not a benchmark experiment. No paid
+  sweep has run.
 
 Verified offline by `tests/reporting.test.ts`: critical-fact evidence, missing
 coverage without a headline, escaped/secret-free exports and CLI files, and formal,

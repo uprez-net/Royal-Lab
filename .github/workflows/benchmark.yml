@@ -1,7 +1,7 @@
 name: Paid benchmark (manual, bounded)
 # Explicit dispatch only. Never runs on push or pull_request. Requires the
-# protected `paid-benchmark` environment (configure required reviewers there),
-# private credentials and a typed confirmation. Documents profile only: no
+# `paid-benchmark` environment (main only; required reviewers are not available
+# on the current private plan), private credentials and a typed confirmation. Documents profile only: no
 # production, staging or Royal Eve target is reachable from this workflow.
 on:
   workflow_dispatch:
