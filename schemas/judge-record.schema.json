@@ -108,8 +108,7 @@
             "minLength": 1
           },
           "locator": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "quote": {
             "type": "string",

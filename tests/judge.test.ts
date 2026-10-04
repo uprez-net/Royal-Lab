@@ -341,6 +341,12 @@ test('invented evidence, unrelated pointers and missing source coverage cannot p
   const described = JSON.parse(verdict(scope));
   described.evidence[0].locator = 'Next action section';
   assert.equal(parseVerdict(JSON.stringify(described), scope).verdict, 'pass');
+  described.evidence[0].locator = '';
+  assert.equal(parseVerdict(JSON.stringify(described), scope).verdict, 'pass');
+  // A blank source locator is still malformed.
+  const blankSource = JSON.parse(verdict(scope));
+  blankSource.evidence.find((item: { kind: string }) => item.kind === 'source').locator = '';
+  assert.throws(() => parseVerdict(JSON.stringify(blankSource), scope));
   described.evidence[0].quote = 'fabricated';
   assert.throws(() => parseVerdict(JSON.stringify(described), scope), /NOT_IN_SCOPE/);
   v.evidence[0].quote = scope.deliverables[0]!.text;

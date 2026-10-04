@@ -68,12 +68,19 @@ export const JudgeScopeSchema = z.strictObject({
   deliverables: z.array(z.strictObject({ path: RelativePath, text: z.string() })).min(1),
   sources: z.array(z.strictObject({ sourceId: Id, locator: Text, text: Text })).min(1),
 });
-export const JudgeEvidenceSchema = z.strictObject({
-  kind: z.enum(['deliverable', 'source']),
-  ref: Text,
-  locator: Text,
-  quote: Text,
-});
+// A deliverable is scoped as one whole text, so its locator is informational and
+// may be blank; the exact quote binds it. Source evidence needs its locator.
+export const JudgeEvidenceSchema = z
+  .strictObject({
+    kind: z.enum(['deliverable', 'source']),
+    ref: Text,
+    locator: z.string(),
+    quote: Text,
+  })
+  .superRefine((evidence, ctx) => {
+    if (evidence.kind === 'source' && evidence.locator.trim().length === 0)
+      ctx.addIssue({ code: 'custom', message: 'Source evidence requires its exact locator' });
+  });
 export const JudgeResponseSchema = z.strictObject({
   verdict: z.enum(['pass', 'fail', 'error']),
   explanation: Text,

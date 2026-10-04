@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "release-deepseek-minimax",
+  "version": "1.0.0",
+  "purpose": "release",
+  "scorePolicy": "all-mandatory-1.0.0",
+  "promptVersion": "criterion-1.0.0",
+  "review": {
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "notes": "Alternative release judge pair (2026-10-04): deepseek/deepseek-v4.1-flash and minimax/minimax-m3 through the AI Gateway, both owner-selected judge models from independent families, neither the Royal Eve product model. Created because qwen cited the criterion text as a source in the first calibration run. Pricing frozen 2026-10-04. Release use stays blocked until reviewer-labelled calibration succeeds and this profile is approved with its calibration hash."
+  },
+  "calibrationHash": null,
+  "limits": {
+    "maxRequests": 56,
+    "maxRequestBytes": 24000,
+    "maxOutputTokensPerRequest": 6000,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 32000,
+    "maxCostUsd": 0.25,
+    "timeoutMs": 60000,
+    "maxDurationMs": 300000
+  },
+  "judges": [
+    {
+      "id": "deepseek",
+      "transport": "gateway",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "parameters": {
+        "temperature": 0
+      },
+      "pricing": {
+        "version": "2026.10.04",
+        "asOf": "2026-10-04T00:00:00Z",
+        "inputUsdPerMillion": 0.3,
+        "outputUsdPerMillion": 1.2
+      }
+    },
+    {
+      "id": "minimax",
+      "transport": "gateway",
+      "model": "minimax/minimax-m3",
+      "parameters": {
+        "temperature": 0
+      },
+      "pricing": {
+        "version": "2026.10.04",
+        "asOf": "2026-10-04T00:00:00Z",
+        "inputUsdPerMillion": 0.3,
+        "outputUsdPerMillion": 1.2
+      }
+    }
+  ]
+}
