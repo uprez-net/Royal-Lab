@@ -1,0 +1,63 @@
+name: Judge calibration run (manual, bounded)
+# Explicit dispatch only. The release judge pair grades the unlabelled
+# calibration examples in calibration mode. Reviewer labels are never read by
+# this workflow; receipts are matched to labels offline afterwards.
+on:
+  workflow_dispatch:
+    inputs:
+      judge_profile:
+        description: 'Release judge profile under profiles/judges/'
+        required: true
+        default: 'profiles/judges/release-deepseek-qwen.json'
+        type: string
+      max_judge_usd:
+        description: 'Hard cap for total judge spend in this run'
+        required: true
+        type: string
+      confirm:
+        description: 'Type RUN-PAID to confirm paid judge requests'
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: royal-lab-paid-benchmark
+  cancel-in-progress: false
+jobs:
+  calibrate:
+    if: ${{ inputs.confirm == 'RUN-PAID' }}
+    runs-on: ubuntu-latest
+    environment: paid-benchmark
+    timeout-minutes: 60
+    env:
+      JUDGE_PROFILE: ${{ inputs.judge_profile }}
+      MAX_JUDGE_USD: ${{ inputs.max_judge_usd }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: pnpm/action-setup@v6.1.0
+        with:
+          version: 11.1.2
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - name: Validate inputs
+        run: |
+          [[ "$JUDGE_PROFILE" =~ ^profiles/judges/[A-Za-z0-9._-]+\.json$ ]] || { echo "Invalid profile path"; exit 1; }
+          [[ "$MAX_JUDGE_USD" =~ ^[0-9]+(\.[0-9]+)?$ ]] || { echo "Invalid cap"; exit 1; }
+      - name: Calibration run (paid, bounded)
+        env:
+          ROYAL_LAB_JUDGE_KEY: ${{ secrets.ROYAL_LAB_JUDGE_KEY }}
+        run: >-
+          pnpm -s lab calibrate --pack fixtures/judge-calibration/labelling-pack.json
+          --judge-profile "$JUDGE_PROFILE" --judge-key-env ROYAL_LAB_JUDGE_KEY
+          --max-judge-usd "$MAX_JUDGE_USD" --allow-paid
+      - uses: actions/upload-artifact@v7.0.1
+        if: always()
+        with:
+          name: royal-lab-calibration-${{ github.run_id }}
+          path: results/calibration/
+          retention-days: 7
+          if-no-files-found: warn

@@ -155,8 +155,8 @@ No paid candidate or judge request, real reviewer label, or human approval was p
 
 ## Calibration labelling set (2026-10-04)
 
-`fixtures/judge-calibration/labelling-pack.json` holds 14 unlabelled synthetic
-answers, two per calibration scenario, written against the semantic criteria of
+`fixtures/judge-calibration/labelling-pack.json` holds 16 unlabelled synthetic
+answers, two per calibration scenario (four for prompt injection: two candidate-level, two aimed at the judge), written against the semantic criteria of
 reviewed packs (D01, D07, D11 and its injected variant, D14, D15 and T08). Each
 example carries the exact judge scope built from the real task documents and its
 evidence hash. `docs/calibration-labelling.md` is the reviewer sheet: criterion
@@ -175,3 +175,18 @@ recorded but not checked, because a deliverable is scoped as one whole text and
 live judges write a section description there. Source evidence still needs its
 exact locator. The first live judged run lost every verdict to that locator check
 before this rule; the exact-quote requirement is unchanged.
+
+## Calibration run
+
+`pnpm lab calibrate --pack fixtures/judge-calibration/labelling-pack.json
+--judge-profile profiles/judges/release-deepseek-qwen.json --judge-key-env NAME
+--max-judge-usd <n> --allow-paid` has the release pair grade every unlabelled
+example in `calibration` mode, which is allowed before the release profile is
+approved. Each example's scope is rebuilt from the real documents and must hash
+to the pack's evidence hash before any request. Labels are never read and never
+reach a judge. Each example reserves the profile's per-call ceiling against the
+cap and settles to the recorded cost. Receipts and a raw-verdict summary go to
+`results/calibration/`. The manual `.github/workflows/calibration.yml` runs it
+with the `ROYAL_LAB_JUDGE_KEY` secret. `tests/calibration-run.test.ts` checks the
+bindings offline with mock judges; `inspectCalibration` refuses mock evidence as
+calibration.

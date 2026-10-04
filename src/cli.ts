@@ -34,6 +34,8 @@ Usage: pnpm lab <command> [arguments] [options]
                                 fixed-tools suites add --control-url-env NAME (disposable DB)
   resume <experiment-id> --allow-paid
                                 Resume unstarted trials; interrupted ones stay recorded
+  calibrate --pack <file> --judge-profile <file> --judge-key-env NAME --max-judge-usd <n> --allow-paid
+                                Release judge pair grades the unlabelled calibration examples
   grade --experiment <experiment-id>
                                 Regrade every sealed trial bundle as new grade records
   grade <run-id>                 Regrade saved artifacts offline (--replay-judge <receipt>)
@@ -81,6 +83,9 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       experiment: { type: 'string' },
       'lock-file': { type: 'string' },
       'control-url-env': { type: 'string' },
+      pack: { type: 'string' },
+      'judge-key-env': { type: 'string' },
+      'max-judge-usd': { type: 'string' },
       format: { type: 'string' },
       'eve-config': { type: 'string' },
       'verify-output': { type: 'string' },
@@ -423,6 +428,38 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       );
     }
     return 0;
+  }
+  if (command === 'calibrate') {
+    required(0);
+    if (!options['allow-paid'])
+      throw new Error('PAID_JUDGING_DISABLED: --allow-paid is required for a calibration run');
+    if (!options.pack || !options['judge-profile'] || !options['judge-key-env'])
+      throw new Error('calibrate requires --pack, --judge-profile and --judge-key-env NAME');
+    const maxUsd = Number(options['max-judge-usd']);
+    if (!(maxUsd > 0)) throw new Error('calibrate requires a positive --max-judge-usd cap');
+    const { JudgeProfileSchema } = await import('#contracts/judge');
+    const { securePath } = await import('#src/io');
+    const { runCalibration } = await import('#src/grading/calibration-run');
+    const profile = JudgeProfileSchema.parse(
+      await readJson(await securePath(root, options['judge-profile'])),
+    );
+    const name = options['judge-key-env'];
+    const key = /^[A-Z][A-Z0-9_]*$/.test(name) ? process.env[name] : undefined;
+    if (!key) throw new Error(`JUDGE_CREDENTIAL_MISSING: ${name} is not set`);
+    const summary = await runCalibration(root, {
+      packPath: options.pack,
+      profile,
+      credentials: Object.fromEntries(profile.judges.map((judge) => [judge.id, key])),
+      outDir: path.join(
+        root,
+        'results/calibration',
+        `${profile.id}-${new Date().toISOString().replace(/[:.]/g, '')}`,
+      ),
+      maxUsd,
+      allowPaid: true,
+    });
+    output(summary);
+    return summary.results.some((item) => item.skipped) ? 1 : 0;
   }
   if (command === 'eve') {
     if (!options['eve-config']) throw new Error('eve requires --eve-config <file>');

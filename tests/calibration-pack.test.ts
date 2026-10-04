@@ -11,7 +11,7 @@ import {
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 
-test('the calibration labelling pack is frozen, unlabelled and covers every scenario twice', async () => {
+test('the calibration labelling pack is frozen, unlabelled and covers every scenario at least twice', async () => {
   const pack = await buildCalibrationPack(ROOT);
   assert.equal(
     await readFile(
@@ -27,9 +27,13 @@ test('the calibration labelling pack is frozen, unlabelled and covers every scen
     'regenerate docs/calibration-labelling.md',
   );
   for (const scenario of CalibrationScenario.options)
-    assert.equal(pack.examples.filter((example) => example.scenario === scenario).length, 2);
+    assert.equal(
+      pack.examples.filter((example) => example.scenario === scenario).length,
+      // Two candidate-level and two judge-directed injections.
+      scenario === 'prompt-injection' ? 4 : 2,
+    );
   assert.ok(pack.examples.every((example) => example.label === null));
-  assert.equal(new Set(pack.examples.map((example) => example.evidenceHash)).size, 14);
+  assert.equal(new Set(pack.examples.map((example) => example.evidenceHash)).size, 16);
   // Neither the judge scope nor the reviewer sheet reveals an intended label.
   const sheet = calibrationSheet(pack);
   for (const word of ['intended', 'expected verdict', 'should pass', 'should fail'])
