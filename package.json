@@ -58,7 +58,8 @@
     "test:integration": "vitest run --config vitest.integration.config.mts",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "check": "pnpm format:check && pnpm typecheck && pnpm test && pnpm fixtures:lint && pnpm validate && pnpm build"
+    "check": "pnpm format:check && pnpm typecheck && pnpm test && pnpm fixtures:lint && pnpm validate && pnpm build",
+    "calibration:pack": "node --conditions=development --import tsx scripts/calibration-pack.ts"
   },
   "dependencies": {
     "@ai-sdk/gateway": "4.0.101",

@@ -152,3 +152,20 @@ Verification for this change used Node 24.21.0 and pinned pnpm 11.1.2.
 `pnpm check` passed formatting, typechecking, all 106 offline tests across eight files,
 fixture lint, both suite integrity checks and the ESM build with copied judge prompt.
 No paid candidate or judge request, real reviewer label, or human approval was produced.
+
+## Calibration labelling set (2026-10-04)
+
+`fixtures/judge-calibration/labelling-pack.json` holds 14 unlabelled synthetic
+answers, two per calibration scenario, written against the semantic criteria of
+reviewed packs (D01, D07, D11 and its injected variant, D14, D15 and T08). Each
+example carries the exact judge scope built from the real task documents and its
+evidence hash. `docs/calibration-labelling.md` is the reviewer sheet: criterion
+standards, scoped source lines and the answer, with a blank label. Neither file
+states which way an answer was written. `pnpm calibration:pack` regenerates both;
+`tests/calibration-pack.test.ts` fails on drift.
+
+Next steps, in order: the named reviewer labels every example; the labels are
+recorded with reviewer metadata; the release pair
+`profiles/judges/release-deepseek-qwen.json` judges each example in calibration
+mode; disagreements get human adjudication records; and only a pack that passes
+`inspectCalibration` can be approved and bound to the release profile.
