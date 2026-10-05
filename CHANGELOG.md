@@ -29,8 +29,12 @@ First private release. The frozen scope is [`releases/v0.1.json`](releases/v0.1.
 
 ### Profiles and tools
 
-- `documents` 1.1.0: closed document workspace with `list`, `read`, `search` and
-  `write`.
+- `documents` 1.2.0: closed document workspace with `list`, `read` 1.1.0, `search`
+  and `write`.
+  - `read` 1.1.0 accepts every 1.0.0 call, and allows up to 1000 lines per call (still
+    12,000 characters per response, with a cursor).
+  - 1.1.0 used `read` 1.0.0; its first-pass results are kept separately.
+- Preflight accepts a later minor version of a task's declared tool from the profile.
 - `fixed-tools` 2.1.0: canonical bridge 2.1.0 at Royal-Construction
   `460895235f94e917bd855855cd6e106f93a4c7c1`, disposable PostgreSQL per trial.
 - `royal-eve` 1.1.0: optional staging profile, scored separately.

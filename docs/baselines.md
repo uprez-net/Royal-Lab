@@ -6,6 +6,9 @@ separate useful work from deliberately weakened work.
 
 ## Candidate configurations
 
+Documents experiments 1.1.0 run on documents profile 1.2.0 (`read` 1.1.0). Experiments 1.0.0 ran on
+profile 1.1.0; see [results](results-v0.1.md#first-pass-on-documents-profile-110).
+
 Both configurations are reached through the AI Gateway with zero transport retries.
 Their settings and pricing are pinned in each experiment spec.
 

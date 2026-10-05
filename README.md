@@ -16,21 +16,26 @@ calibrated two-judge pair for semantic criteria. v0.1 is frozen in
 
 ## v0.1 results
 
-The first baselines ran on 2026-10-05: `gpt-6-luna` vs `gpt-5.6-luna`, three repeats
-of every core case. The documents profile is done (96 trials). The fixed-tools
-profile (72 trials) is still to run.
+The baselines ran on 2026-10-05: `gpt-6-luna` vs `gpt-5.6-luna`, three repeats of
+every core case, on documents profile 1.2.0. All 96 document trials completed. The
+fixed-tools profile (72 trials) is tracked in the v0.1 follow-up.
 
 ![How every v0.1 trial ended](docs/images/v0.1-outcomes.svg)
 
-There is **no headline rate yet**: many completed trials still have unsettled judge
-disagreements or unverifiable prose figures, and the report does not estimate around
-them. The [v0.1 results](docs/results-v0.1.md) cover:
+| Configuration (both splits) | Strict pass | Failed | Not fully graded |
+| --------------------------- | ----------: | -----: | ---------------: |
+| `gpt-6-luna`                |           7 |      8 |               33 |
+| `gpt-5.6-luna`              |           4 |      5 |               39 |
 
-- per-case outcomes;
+There is **no headline rate yet**. Most completed trials have an unsettled judge
+disagreement, or a prose figure the checker could not find, and the report does not
+estimate around them. A new judge version is the planned fix. The
+[v0.1 results](docs/results-v0.1.md) cover:
+
+- per-case outcomes and the per-case chart;
 - cost and speed;
-- the measurement-quality findings: live judge disagreement, unverifiable
-  `Key figures`, and `gpt-5.6-luna` ending on rejected `read` calls;
-- what remains.
+- the first pass on profile 1.1.0;
+- the measurement-quality findings.
 
 This is an initial comparison on a small private suite, not a model ranking.
 

@@ -1,107 +1,108 @@
 [
   {
     "partition": "Documents · development",
-    "experimentId": "v0.1-documents-development-20261005031457-9409cfa1",
-    "report": "results/experiments/v0.1-documents-development-20261005031457-9409cfa1/reports/report-20261005033907.json",
+    "experimentId": "v0.1-documents-development-20261005042252-8557ec30",
+    "report": "results/experiments/v0.1-documents-development-20261005042252-8557ec30/reports/report-20261005045309.json",
     "configurations": [
       {
         "id": "gpt-6-luna",
         "planned": 24,
-        "graded": 8,
-        "passed": 3,
+        "graded": 9,
+        "passed": 4,
         "complete": false,
         "strictSuccessRate": null,
-        "criticalGatePassRate": 0.625,
-        "candidateUsd": 0.046712149999999994,
-        "judgeUsd": null,
-        "latencyP50Ms": 17002,
+        "criticalGatePassRate": 0.5555555555555556,
+        "candidateUsd": 0.04867866,
+        "judgeUsd": 0.12328257999999996,
+        "latencyP50Ms": 17528,
         "failureCategories": {
           "completed": 15,
-          "critical:evidence": 1,
-          "candidate-failure": 1,
-          "substantive:evidence": 1,
           "critical:party": 2,
+          "critical:money": 3,
+          "substantive:evidence": 1,
           "substantive:decision": 1
         },
         "outcomes": {
-          "pass": 3,
+          "pass": 4,
           "fail": 5,
           "ungraded": 15,
-          "candidate": 1
+          "candidate": 0
         }
       },
       {
         "id": "gpt-5.6-luna",
         "planned": 24,
-        "graded": 1,
-        "passed": 1,
+        "graded": 5,
+        "passed": 3,
         "complete": false,
         "strictSuccessRate": null,
         "criticalGatePassRate": 1,
-        "candidateUsd": 0.04248426,
-        "judgeUsd": 0.032483870000000005,
-        "latencyP50Ms": 4532,
+        "candidateUsd": 0.10644264,
+        "judgeUsd": null,
+        "latencyP50Ms": 21820,
         "failureCategories": {
-          "candidate-failure": 16,
-          "completed": 7
+          "completed": 19,
+          "substantive:decision": 2
         },
         "outcomes": {
-          "pass": 1,
-          "fail": 0,
-          "ungraded": 7,
-          "candidate": 16
+          "pass": 3,
+          "fail": 2,
+          "ungraded": 19,
+          "candidate": 0
         }
       }
     ]
   },
   {
     "partition": "Documents · held-out",
-    "experimentId": "v0.1-documents-held-out-20261005033354-f5ef461c",
-    "report": "results/experiments/v0.1-documents-held-out-20261005033354-f5ef461c/reports/report-20261005035802.json",
+    "experimentId": "v0.1-documents-held-out-20261005044945-f8d97cd8",
+    "report": "results/experiments/v0.1-documents-held-out-20261005044945-f8d97cd8/reports/report-20261005052044.json",
     "configurations": [
       {
         "id": "gpt-6-luna",
         "planned": 24,
-        "graded": 4,
+        "graded": 6,
         "passed": 3,
         "complete": false,
         "strictSuccessRate": null,
-        "criticalGatePassRate": 1,
-        "candidateUsd": 0.053592320000000006,
-        "judgeUsd": null,
-        "latencyP50Ms": 18840,
+        "criticalGatePassRate": 0.8333333333333334,
+        "candidateUsd": 0.056303749999999986,
+        "judgeUsd": 0.15152388,
+        "latencyP50Ms": 21791,
         "failureCategories": {
-          "completed": 17,
-          "substantive:evidence": 1,
-          "candidate-failure": 3
+          "completed": 18,
+          "substantive:evidence": 2,
+          "substantive:decision": 1,
+          "critical:evidence": 1
         },
         "outcomes": {
           "pass": 3,
-          "fail": 1,
-          "ungraded": 17,
-          "candidate": 3
+          "fail": 3,
+          "ungraded": 18,
+          "candidate": 0
         }
       },
       {
         "id": "gpt-5.6-luna",
         "planned": 24,
-        "graded": 1,
+        "graded": 4,
         "passed": 1,
         "complete": false,
         "strictSuccessRate": null,
-        "criticalGatePassRate": 1,
-        "candidateUsd": 0.05234647999999999,
-        "judgeUsd": 0.05899248,
-        "latencyP50Ms": 4594,
+        "criticalGatePassRate": 0.75,
+        "candidateUsd": 0.11091009999999998,
+        "judgeUsd": 0.14566347,
+        "latencyP50Ms": 26543,
         "failureCategories": {
-          "candidate-failure": 15,
-          "completed": 8
+          "completed": 20,
+          "substantive:evidence": 3,
+          "critical:evidence": 1
         },
         "outcomes": {
           "pass": 1,
-          "fail": 0,
-          "ungraded": 8,
-          "candidate": 15
+          "fail": 3,
+          "ungraded": 20,
+          "candidate": 0
         }
       }
     ]
