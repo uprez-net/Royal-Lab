@@ -18,7 +18,7 @@ calibrated two-judge pair for semantic criteria. v0.1 is frozen in
 
 The baselines ran on 2026-10-05: `gpt-6-luna` vs `gpt-5.6-luna`, three repeats of
 every core case, on documents profile 1.2.0. All 96 document trials completed. The
-fixed-tools profile (72 trials) is tracked in the v0.1 follow-up.
+fixed-tools profile (72 trials) is tracked in [#22](https://github.com/uprez-net/Royal-Lab/issues/22).
 
 ![How every v0.1 trial ended](docs/images/v0.1-outcomes.svg)
 

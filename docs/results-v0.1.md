@@ -7,7 +7,7 @@ of every core case, judged by the calibrated `release-deepseek-qwen` pair.
 - **Done:** the documents profile, 16 cases and 96 trials, on documents profile 1.2.0
   (`read` 1.1.0).
 - **Not yet run:** the fixed-tools profile (12 cases, 72 trials). Its CI run needs read
-  access to the pinned bridge source. It is tracked in the v0.1 follow-up issue.
+  access to the pinned bridge source. It is tracked in [#22](https://github.com/uprez-net/Royal-Lab/issues/22).
 
 **This is an initial comparison on a small private suite, not a ranking of
 construction models.** No trial was dropped. Failed, errored and ungraded trials stay
@@ -89,7 +89,7 @@ existing grades are kept.
      recorded as an error, so it disagrees with DeepSeek.
    - DeepSeek's errors are timeouts and truncated responses.
    - Per the owner's decision, these stay "not fully graded" in v0.1. The fix is a new
-     judge version, tracked in the follow-up issue.
+     judge version, tracked in [#22](https://github.com/uprez-net/Royal-Lab/issues/22).
 2. **Prose figures often cannot be verified.** 109 deterministic prose checks found no
    scoped `Key figures` line in `review.md` in the requested `Label: value` form. Such
    checks stay unverified, not failed, by design.
