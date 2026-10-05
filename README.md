@@ -32,6 +32,22 @@ loaded by `scripts/review-desk-seed.mjs`; re-run it and re-load the data when pa
 change. A submission is input, not a recorded review. Labels still go through
 `pnpm lab calibration-record`, and pack reviews go through `src/fixtures/reviews.ts`.
 
+To sync submissions to Vercel Blob, ask Claude to "sync reviewer submissions".
+It exports the page database's `subs` tree, then runs
+`pnpm review-desk:sync <export-dir>`. The sync uploads private blobs at
+`{builder-name}/{type}/{file}`:
+
+- `profile/profile.json`
+- `labels/labels.json`, plus `labels/calibration-labels.json` once a reviewer
+  submits all 16 labels (ready for `calibration-record --labels`)
+- `reviews/<task>.json`
+- `proposals/<id>.json`
+
+The script reads only `BLOB_READ_WRITE_TOKEN` from `.env`, never the rest of the
+file. The token never goes to the page. Unchanged files are skipped using
+`tmp/review-desk-sync/manifest.json`. Add `--dry-run` to list the planned
+uploads first.
+
 ## Start
 
 Read the [documentation guide](docs/README.md),

@@ -59,7 +59,8 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "check": "pnpm format:check && pnpm typecheck && pnpm test && pnpm fixtures:lint && pnpm validate && pnpm build",
-    "calibration:pack": "node --conditions=development --import tsx scripts/calibration-pack.ts"
+    "calibration:pack": "node --conditions=development --import tsx scripts/calibration-pack.ts",
+    "review-desk:sync": "node scripts/review-desk-sync.mjs"
   },
   "dependencies": {
     "@ai-sdk/gateway": "4.0.101",
@@ -84,6 +85,7 @@
     "@types/node": "24.19.0",
     "@types/pg": "8.23.1",
     "@types/react": "19.3.0",
+    "@vercel/blob": "2.4.0",
     "prettier": "3.9.9",
     "tsx": "4.23.15",
     "typescript": "7.0.2",
