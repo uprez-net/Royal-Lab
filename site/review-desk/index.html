@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="referrer" content="no-referrer" />
+    <title>Builder Review Desk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <div class="stack" style="gap: 4px">
+          <span class="eyebrow">For NSW home builders</span>
+          <h1>Builder Review Desk</h1>
+        </div>
+        <div class="who" id="who">Loading…</div>
+      </header>
+
+      <div id="banner" class="notice" style="margin-top: 16px" hidden></div>
+
+      <section id="gate" class="gate stack" hidden>
+        <h2>Please open your personal link</h2>
+        <p class="muted">
+          You should have been sent a link by email or text message. Click or tap that link and this
+          page will open with your forms ready. If the link has stopped working, ask the person who
+          sent it for a new one.
+        </p>
+      </section>
+
+      <div id="app" hidden>
+        <nav class="tabs" role="tablist" aria-label="Sections">
+          <button role="tab" id="tab-you" aria-selected="true" data-tab="you">Start here</button>
+          <button role="tab" id="tab-label" aria-selected="false" data-tab="label">
+            Check answers<span class="count" id="count-label"></span>
+          </button>
+          <button role="tab" id="tab-review" aria-selected="false" data-tab="review">
+            Review jobs<span class="count" id="count-review"></span>
+          </button>
+          <button role="tab" id="tab-propose" aria-selected="false" data-tab="propose">
+            Suggest a job<span class="count" id="count-propose"></span>
+          </button>
+        </nav>
+
+        <section id="panel-you" class="stack-lg">
+          <div class="stack">
+            <h2>Thanks for helping</h2>
+            <p class="lead">
+              We are testing whether a computer assistant can handle everyday office work for a home
+              builder: quotes, payment claims, insurance, approvals and bookings. You know this
+              work. We need you to tell us when the assistant gets it right, and when it doesn't.
+            </p>
+            <p class="muted">
+              There is nothing to install and no wrong answers. Everything saves as you go, so you
+              can stop and come back any time using the same link. Only the team who invited you can
+              see your answers.
+            </p>
+          </div>
+          <div class="panel stack">
+            <h3>About you</h3>
+            <div class="grid2">
+              <label class="field" for="p-name"
+                >Your name<input type="text" id="p-name" autocomplete="name"
+              /></label>
+              <label class="field" for="p-business"
+                >Your business<input
+                  type="text"
+                  id="p-business"
+                  placeholder="e.g. Smith Homes Pty Ltd"
+              /></label>
+              <label class="field" for="p-role"
+                >Your role
+                <select id="p-role">
+                  <option value="">Choose…</option>
+                  <option>Owner / director</option>
+                  <option>Estimator</option>
+                  <option>Project manager</option>
+                  <option>Site supervisor</option>
+                  <option>Contracts administrator</option>
+                  <option>Office / accounts</option>
+                  <option>Other</option>
+                </select>
+              </label>
+              <label class="field" for="p-years"
+                >Years in home building<input
+                  type="number"
+                  id="p-years"
+                  min="0"
+                  max="70"
+                  inputmode="numeric"
+              /></label>
+            </div>
+            <label class="check" for="p-independent"
+              ><input type="checkbox" id="p-independent" />
+              <span
+                >I'll give my own opinion, and I won't compare answers with anyone else before I
+                send mine.</span
+              ></label
+            >
+            <p class="status" id="status-profile" role="status"></p>
+          </div>
+          <div class="stack">
+            <h3>There are three things you can do</h3>
+            <div class="grid2">
+              <div class="panel stack">
+                <span class="eyebrow">About 20 minutes</span>
+                <h3>Check answers</h3>
+                <p class="muted">
+                  Read 16 short answers the assistant wrote, and say whether each one is good or
+                  not.
+                </p>
+              </div>
+              <div class="panel stack">
+                <span class="eyebrow">10 to 20 minutes each</span>
+                <h3>Review jobs</h3>
+                <p class="muted">
+                  Look at a made-up office job and the answer we expect. Tell us if it's realistic
+                  and right.
+                </p>
+              </div>
+              <div class="panel stack">
+                <span class="eyebrow">Whenever you like</span>
+                <h3>Suggest a job</h3>
+                <p class="muted">
+                  Describe a job from your own office that an assistant should get right. Make up
+                  the names and amounts.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="panel stack">
+            <h3>Keep a copy</h3>
+            <p class="muted small">
+              Your answers save automatically. If you want your own copy, or saving isn't working,
+              download them and email the file to the person who invited you.
+            </p>
+            <div class="row">
+              <button class="btn" id="dl-btn" type="button">Download my answers</button>
+              <button class="btn ghost" id="forget-btn" type="button">
+                Sign out on this computer
+              </button>
+              <span class="status" id="status-dl"></span>
+            </div>
+          </div>
+        </section>
+
+        <section id="panel-label" hidden>
+          <div class="stack" style="margin-bottom: 18px">
+            <div class="row between">
+              <h2>Check answers</h2>
+              <span class="muted" id="label-progress-text"></span>
+            </div>
+            <div class="progress" aria-hidden="true"><i id="label-progress"></i></div>
+            <p class="muted">
+              For each one, read what a good answer needs, what the paperwork says, and what the
+              assistant wrote. Then say whether it's good. Some answers are wrong on purpose. Some
+              answers include a note telling you how to mark them; ignore those notes and judge the
+              answer yourself.
+            </p>
+          </div>
+          <div class="split">
+            <div class="side" id="label-index" aria-label="Answers"></div>
+            <div id="label-main" class="stack-lg"></div>
+          </div>
+        </section>
+
+        <section id="panel-review" hidden>
+          <div class="stack" style="margin-bottom: 18px">
+            <h2>Review jobs</h2>
+            <p class="muted">
+              Pick any job in an area you know. Read about the job and its paperwork, then check the
+              answer we expect. Everything is made up; tell us whether it's realistic and right for
+              a NSW home builder.
+            </p>
+            <div class="toolbar">
+              <label class="field" for="r-filter"
+                >Kind of work<select id="r-filter">
+                  <option value="">All kinds</option>
+                </select></label
+              >
+              <label class="field" for="r-search"
+                >Search<input type="text" id="r-search" placeholder="e.g. quote, insurance, claim"
+              /></label>
+            </div>
+          </div>
+          <div class="split">
+            <div class="side" id="review-index" aria-label="Jobs"></div>
+            <div id="review-main" class="stack-lg">
+              <div class="empty">Choose a job from the list to start.</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="panel-propose" hidden>
+          <div class="stack" style="margin-bottom: 18px">
+            <div class="row between">
+              <h2>Suggest a job</h2>
+              <button class="btn primary" id="new-proposal" type="button">+ New idea</button>
+            </div>
+            <p class="muted">
+              Think of a job in your office where a careless assistant could cost you money, upset a
+              client or cause a problem with approvals. Describe it using <b>made-up</b> names,
+              addresses and amounts.
+            </p>
+          </div>
+          <div class="split">
+            <div class="side" id="proposal-index" aria-label="Your ideas"></div>
+            <div id="proposal-main" class="stack-lg">
+              <div class="empty">
+                Your ideas will appear here. Press <b>+ New idea</b> to start one.
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"
+      integrity="sha384-/TQbtLCAerC3jgaim+N78RZSDYV7ryeoBCVqTuzRrFec2akfBkHS7ACQ3PQhvMVi"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"
+      integrity="sha384-+VfUPEb0PdtChMwmBcBmykRMDd+v6D/oFmB3rZM/puCMDYcIvF968OimRh4KQY9a"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="app.js"></script>
+  </body>
+</html>

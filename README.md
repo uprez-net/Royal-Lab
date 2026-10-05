@@ -16,37 +16,42 @@ analytics cases (#20) use visible policy 1.2.0.
 
 ## Reviewer forms
 
-**[Builder Review Desk](https://claude.ai/artifact/HDZsjZJYsxRkkUf9y5iPXt)** is a
-private page on claude.ai where other builders and reviewers:
+The **Builder Review Desk** (`site/review-desk/`) is a static page for builders
+with little technical background. Reviewers use it to:
 
-- label the 16 calibration answers blind,
+- check the 16 calibration answers, blind,
 - review any of the 52 task packs, and
-- propose new tasks with made-up details.
+- suggest new jobs using made-up details.
 
-Share it from the page's Share menu. Invite people in your organization as
-Contributor. Invite people outside it as Editor, or they can't save.
+Everything is written in plain language. Spreadsheets show as tables, emails as
+emails, and markdown as formatted text. Evidence reads like "the estimate
+workbook, row 8". Technical detail sits in optional sections.
 
-Each reviewer's answers sit under `subs/<their id>`, which only the page owner can
-read. Other reviewers and editors never see them. The pack and example content is
-loaded by `scripts/review-desk-seed.mjs`; re-run it and re-load the data when packs
-change. A submission is input, not a recorded review. Labels still go through
-`pnpm lab calibration-record`, and pack reviews go through `src/fixtures/reviews.ts`.
+The site is published to GitHub Pages by `.github/workflows/review-desk-pages.yml`,
+which uploads only `site/review-desk`. It goes to
+`https://uprez-net.github.io/Royal-Lab/` once Pages is enabled for this
+repository. The page holds no content, answers or credentials. Task content and
+answers live in private Vercel Blob:
 
-To sync submissions to Vercel Blob, ask Claude to "sync reviewer submissions".
-It exports the page database's `subs` tree, then runs
-`pnpm review-desk:sync <export-dir>`. The sync uploads private blobs at
-`{builder-name}/{type}/{file}`:
+1. `pnpm review-desk:content` builds the reviewer-visible content from the
+   repository and uploads it to `content/desk.json`. Re-run it after packs change.
+2. `pnpm review-desk:invite --name "Jane Citizen" --business "Citizen Homes"`
+   prints a personal link. Send it privately.
+   - The link can read the content, and read or overwrite only that reviewer's
+     four files at `{builder-name}/{type}/{type}.json`. The types are
+     `profile`, `labels`, `reviews` and `proposals`.
+   - Vercel caps links at 7 days. Running the command again for the same name
+     issues a fresh link to the same folder, so answers carry over.
+   - `review-desk/invites.json` records who was invited (it holds no links).
+3. `pnpm review-desk:sync` pulls every reviewer's files into
+   `review-desk/submissions/{builder-name}/{type}/`. Once a reviewer sends all 16
+   labels, it also writes `labels/calibration-labels.json`, ready for
+   `pnpm lab calibration-record --labels`. Add `--dry-run` to preview.
 
-- `profile/profile.json`
-- `labels/labels.json`, plus `labels/calibration-labels.json` once a reviewer
-  submits all 16 labels (ready for `calibration-record --labels`)
-- `reviews/<task>.json`
-- `proposals/<id>.json`
-
-The script reads only `BLOB_READ_WRITE_TOKEN` from `.env`, never the rest of the
-file. The token never goes to the page. Unchanged files are skipped using
-`tmp/review-desk-sync/manifest.json`. Add `--dry-run` to list the planned
-uploads first.
+The scripts read only `BLOB_READ_WRITE_TOKEN` from `.env`, never the rest of the
+file, and the token never reaches the browser. A submission is input, not a
+recorded review: labels still go through `calibration-record`, and pack reviews
+through `src/fixtures/reviews.ts`.
 
 ## Start
 

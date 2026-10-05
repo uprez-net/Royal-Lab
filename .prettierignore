@@ -16,3 +16,6 @@ pnpm-lock.yaml
 /tasks/
 /suites/
 /docs/calibration-labelling.md
+
+# Builder Review Desk: invite registry and synced reviewer answers are written by scripts.
+/review-desk/
