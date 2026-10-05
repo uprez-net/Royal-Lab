@@ -4,15 +4,35 @@ Private benchmark for NSW residential builder office work: evidence-backed
 commercial analysis, decisions, document understanding and approved operations.
 Designed for any residential builder using an explicit, versioned business policy.
 
-The roadmap has **28 definitions** (16 document/analytical, 12 operational).
-The [draft case library](docs/authored-cases.md) now has **52 packs**: 28 authored
-core cases for D01–D16/T01–T12, seven document variants, two tool variants, eleven
-tool diagnostics and four preserved specimens. Two independent fictional worlds keep
-development and held-out evidence separate. Closed readers, two candidate
-transports, deterministic graders, scoped semantic judging and minimum canonical
-T01–T12 adapters are implemented. Human business review, actual judge calibration
-and paid baseline runs remain pending; there are no model scores. The D13–D16
-analytics cases (#20) use visible policy 1.2.0.
+The benchmark has **28 definitions** (16 document/analytical, 12 operational) and
+**52 case packs**: 28 core cases for D01–D16/T01–T12, plus variants, diagnostics and
+specimens. They are set in two independent fictional worlds, which keep development
+and held-out evidence separate. An owner business review is recorded for every
+pack.
+
+Grading combines deterministic gates (money, dates, parties, effects) with a
+calibrated two-judge pair for semantic criteria. v0.1 is frozen in
+[`releases/v0.1.json`](releases/v0.1.json); see the [changelog](CHANGELOG.md).
+
+## v0.1 results
+
+The first baselines ran on 2026-10-05: `gpt-6-luna` vs `gpt-5.6-luna`, three repeats
+of every core case. The documents profile is done (96 trials). The fixed-tools
+profile (72 trials) is still to run.
+
+![How every v0.1 trial ended](docs/images/v0.1-outcomes.svg)
+
+There is **no headline rate yet**: many completed trials still have unsettled judge
+disagreements or unverifiable prose figures, and the report does not estimate around
+them. The [v0.1 results](docs/results-v0.1.md) cover:
+
+- per-case outcomes;
+- cost and speed;
+- the measurement-quality findings: live judge disagreement, unverifiable
+  `Key figures`, and `gpt-5.6-luna` ending on rejected `read` calls;
+- what remains.
+
+This is an initial comparison on a small private suite, not a model ranking.
 
 ## Reviewer forms
 

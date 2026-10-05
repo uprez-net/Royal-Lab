@@ -1,0 +1,286 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "royal-lab-v0.1",
+  "frozenAt": "2026-10-05",
+  "description": "Frozen v0.1 core manifest: 28 definitions (D01-D16, T01-T12), one core case each, split into development and held-out worlds per profile. Held-out cases are never used to tune prompts, rubrics or graders.",
+  "definitions": [
+    "D01",
+    "D02",
+    "D03",
+    "D04",
+    "D05",
+    "D06",
+    "D07",
+    "D08",
+    "D09",
+    "D10",
+    "D11",
+    "D12",
+    "D13",
+    "D14",
+    "D15",
+    "D16",
+    "T01",
+    "T02",
+    "T03",
+    "T04",
+    "T05",
+    "T06",
+    "T07",
+    "T08",
+    "T09",
+    "T10",
+    "T11",
+    "T12"
+  ],
+  "suites": [
+    {
+      "id": "development",
+      "version": "2.1.0",
+      "split": "development",
+      "profile": "documents",
+      "file": "suites/development.json",
+      "sha256": "9592b957a3cff3427313306de597d97a87a3a88862fb5bb1890160eee81c46bd",
+      "cases": [
+        {
+          "id": "offers/explain-revision-price/cedar",
+          "definitionId": "D02",
+          "version": "1.0.0",
+          "taskSha256": "239c73b4301ffaf23bd00b150e11143c337317b108fa655b6cf8a9b4e1d41dff"
+        },
+        {
+          "id": "offers/check-inclusion-consistency/cedar",
+          "definitionId": "D04",
+          "version": "1.0.0",
+          "taskSha256": "aabd267a0185121cc6850060d0e2eb9ce36ec4d39a8714b812f36cdb89b4b343"
+        },
+        {
+          "id": "projects/extract-contract-particulars/cedar",
+          "definitionId": "D05",
+          "version": "1.0.0",
+          "taskSha256": "039af63664ee7208ae906cec9d1d51bcfa7c2a86a497a4305a779afeb7e84934"
+        },
+        {
+          "id": "insurance/read-certificate-number/cedar",
+          "definitionId": "D07",
+          "version": "1.0.0",
+          "taskSha256": "22843ddd4b589cdf66187014aa17ed01899280e69ff580d5b23aa9351566eaeb"
+        },
+        {
+          "id": "compliance/classify-certifier-document/cedar",
+          "definitionId": "D10",
+          "version": "1.0.0",
+          "taskSha256": "29f6cccea0afddc442c0f341d27d607db846039cb0605b4fb894aee3f6bab979"
+        },
+        {
+          "id": "compliance/check-title-owners/cedar",
+          "definitionId": "D12",
+          "version": "1.0.0",
+          "taskSha256": "c978f00a7e4240f36d05d74bbceb20f6b0e6c38b33e53b453cc0c0db114fdbf7"
+        },
+        {
+          "id": "analytics/project-cost-margin/cedar",
+          "definitionId": "D14",
+          "version": "1.0.0",
+          "taskSha256": "37dbd7b07c5b3f4aeaf7e33fc76d6c96437b3b4382a7d7e76483641972812989"
+        },
+        {
+          "id": "analytics/summarize-cash-flow/cedar",
+          "definitionId": "D15",
+          "version": "1.0.0",
+          "taskSha256": "0fd12994df86af0d9d346fd146173b62b3a9917a424a8175cb1c221b42cc2662"
+        }
+      ]
+    },
+    {
+      "id": "held-out",
+      "version": "2.1.0",
+      "split": "held-out",
+      "profile": "documents",
+      "file": "suites/held-out.json",
+      "sha256": "a99ed77d8ad1091c35d03bbffa80fe9e3d3c25ebfca70865c5631875a14d7998",
+      "cases": [
+        {
+          "id": "offers/reconcile-quote-build-up/estuary",
+          "definitionId": "D01",
+          "version": "1.0.0",
+          "taskSha256": "6cb73e11c4067103efccf4299d8a0960335dfbccc8a1c9f4c1267346dee1bbdd"
+        },
+        {
+          "id": "offers/reconcile-payment-schedule/estuary",
+          "definitionId": "D03",
+          "version": "1.0.0",
+          "taskSha256": "a70308f985c89dedd5dbaa39151940eacfc20129d50ffdb0752c3b07bc575bff"
+        },
+        {
+          "id": "projects/handle-missing-owner-evidence/estuary",
+          "definitionId": "D06",
+          "version": "1.0.0",
+          "taskSha256": "4e6c46c71387b5e18d99a6a02290fc2b43d91d387c161e035865204791604263"
+        },
+        {
+          "id": "finance/reconcile-stage-claim/estuary",
+          "definitionId": "D08",
+          "version": "1.0.0",
+          "taskSha256": "5cc611c9f9140bad6481968427c7bed874cbd1a860c1208587290dea48bd2209"
+        },
+        {
+          "id": "compliance/extract-nested-checklist/estuary",
+          "definitionId": "D09",
+          "version": "1.0.0",
+          "taskSha256": "750589d7880474d6ba45b73d792b427ae90daf58f42a95831e53810624bc8c5f"
+        },
+        {
+          "id": "compliance/read-developer-verdict/estuary",
+          "definitionId": "D11",
+          "version": "1.0.0",
+          "taskSha256": "7c2c2e311cf1a3f7762474a41bc500ead0a849cbf5a9413734956e8054164040"
+        },
+        {
+          "id": "analytics/explain-pipeline-forecast/estuary",
+          "definitionId": "D13",
+          "version": "1.0.0",
+          "taskSha256": "ae333c2d7e6112651761704f5c229a893f160fb084b950c4c77c7662a9e827a1"
+        },
+        {
+          "id": "analytics/recommend-negotiation/estuary",
+          "definitionId": "D16",
+          "version": "1.0.0",
+          "taskSha256": "f727fff8abbfce38348a1056012e571d2979e14fe724e34e41207c5f9f3335b3"
+        }
+      ]
+    },
+    {
+      "id": "fixed-tools-development",
+      "version": "2.0.0",
+      "split": "development",
+      "profile": "fixed-tools",
+      "file": "suites/fixed-tools-development.json",
+      "sha256": "7fd7eb9868474840602ac496581a7a7ada3edf1e3bceaf295ae4a4d502e635ac",
+      "cases": [
+        {
+          "id": "leads/resolve-ambiguous-lead/cedar",
+          "definitionId": "T01",
+          "version": "1.0.0",
+          "taskSha256": "3c17ee67df61083829731717327a07da33757d76f7132056cec9c4e7a0599d45"
+        },
+        {
+          "id": "leads/create-approved-follow-up/cedar",
+          "definitionId": "T02",
+          "version": "1.0.0",
+          "taskSha256": "fc8e23a093223b47c4a574823d851c40882dbaf7f94e0f47e25bbff7a43a5700"
+        },
+        {
+          "id": "offers/update-current-revision/cedar",
+          "definitionId": "T03",
+          "version": "1.0.0",
+          "taskSha256": "31622ea96741fb6275abe0994e8ab04303d28798317c380307d57b0f2d294eaa"
+        },
+        {
+          "id": "projects/complete-milestone-with-evidence/cedar",
+          "definitionId": "T05",
+          "version": "1.0.0",
+          "taskSha256": "726d4e034146d476cf92a8cf92980466be9c60867daebd326125602aed6ab23a"
+        },
+        {
+          "id": "compliance/refuse-unsent-document-approval/cedar",
+          "definitionId": "T07",
+          "version": "1.0.0",
+          "taskSha256": "4f7d3d7b19144bad3ba4a3757fa6f6ba6377f9e36b5caf462bd4a27089a4e73d"
+        },
+        {
+          "id": "tradies/avoid-schedule-conflict/cedar",
+          "definitionId": "T09",
+          "version": "1.0.0",
+          "taskSha256": "86a44dd7eb9830c3d07937eb9ffa4d865e730b1e06df73e49533222569e8f63c"
+        }
+      ]
+    },
+    {
+      "id": "fixed-tools-held-out",
+      "version": "2.0.0",
+      "split": "held-out",
+      "profile": "fixed-tools",
+      "file": "suites/fixed-tools-held-out.json",
+      "sha256": "92bd2a0864ae2b657911c0ed45877dda3d6da7c6629c2af313a5efae592a84f6",
+      "cases": [
+        {
+          "id": "offers/refuse-unsupported-signing-transition/estuary",
+          "definitionId": "T04",
+          "version": "1.0.0",
+          "taskSha256": "76d2c718e82299b314bb14879fe34e5f5ca496751f444b10337258b0113d1761"
+        },
+        {
+          "id": "projects/refresh-stale-requirements/estuary",
+          "definitionId": "T06",
+          "version": "1.0.0",
+          "taskSha256": "bf937bdf0b0ec0b717c0deda5df4fa507a66daf456427b33e3bf2dd0aae45bc9"
+        },
+        {
+          "id": "compliance/prepare-outreach-and-respect-cancel/estuary",
+          "definitionId": "T08",
+          "version": "1.0.0",
+          "taskSha256": "d42526d3a425b9f8d2d9477288edd6431513875882357ff3154a9718b9ff4ce7"
+        },
+        {
+          "id": "tradies/request-price-change/estuary",
+          "definitionId": "T10",
+          "version": "1.0.0",
+          "taskSha256": "0557d3bcf6b1af8d51de47f02a01ca2c1ecde03199b6c8eeca945c7e69666791"
+        },
+        {
+          "id": "admin/protect-last-admin/estuary",
+          "definitionId": "T11",
+          "version": "1.0.0",
+          "taskSha256": "198e430d37f757c44237e06353cd857af840fa4770e326fa69dd4f9b81d74919"
+        },
+        {
+          "id": "safety/ignore-record-injection/estuary",
+          "definitionId": "T12",
+          "version": "1.0.0",
+          "taskSha256": "433c6b112d3a6c12b9674e75be022a8f9a004eb1d5d4b88ecb74f369f6d9f38a"
+        }
+      ]
+    }
+  ],
+  "grader": {
+    "deterministic": "deterministic-1.2.0",
+    "judgePrompt": "criterion-1.1.0"
+  },
+  "judgeProfile": {
+    "file": "profiles/judges/release-deepseek-qwen.json",
+    "id": "release-deepseek-qwen",
+    "version": "1.3.0",
+    "calibrationHash": "a92b9a651ae7750508afed79d9ffba611b244ff5a4b1bf221d345646f81eee43",
+    "calibrationLabels": "provisional AI-proxy labels (not a human review); see docs/calibration.md"
+  },
+  "profiles": {
+    "documents": {
+      "file": "profiles/documents.json",
+      "sha256": "bbd7ceabe1d937c36ca851a1b422e61e327aadeb1bf2e6dfdac0f0e685b45ac5"
+    },
+    "fixed-tools": {
+      "file": "profiles/fixed-tools.json",
+      "sha256": "0dfedade21184390ff5e00b95f1a029263109f7d478d9416a15fdc6c09630278",
+      "guriRevision": "460895235f94e917bd855855cd6e106f93a4c7c1"
+    }
+  },
+  "experiments": [
+    {
+      "file": "experiments/v0.1-documents-development.json",
+      "sha256": "b8150cded94067f67b99db928d7a34849f4002532514dc7d068870da870a95f5"
+    },
+    {
+      "file": "experiments/v0.1-documents-held-out.json",
+      "sha256": "cf2bd3269b4854b9b67d5c6cd3b6bef4d2ab7eb025e6bff21c4d40daa128f5d5"
+    },
+    {
+      "file": "experiments/v0.1-tools-development.json",
+      "sha256": "ab6cbc976bef0086022210030c0e69abd6a45da097c7adc0f103d94e3bab4fd0"
+    },
+    {
+      "file": "experiments/v0.1-tools-held-out.json",
+      "sha256": "1903f3b99b32f5f0e06b534bc087fec8ddad58b2c9e0382a3c3f870aaaee5528"
+    }
+  ]
+}

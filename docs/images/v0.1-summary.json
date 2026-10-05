@@ -1,0 +1,109 @@
+[
+  {
+    "partition": "Documents · development",
+    "experimentId": "v0.1-documents-development-20261005031457-9409cfa1",
+    "report": "results/experiments/v0.1-documents-development-20261005031457-9409cfa1/reports/report-20261005033907.json",
+    "configurations": [
+      {
+        "id": "gpt-6-luna",
+        "planned": 24,
+        "graded": 8,
+        "passed": 3,
+        "complete": false,
+        "strictSuccessRate": null,
+        "criticalGatePassRate": 0.625,
+        "candidateUsd": 0.046712149999999994,
+        "judgeUsd": null,
+        "latencyP50Ms": 17002,
+        "failureCategories": {
+          "completed": 15,
+          "critical:evidence": 1,
+          "candidate-failure": 1,
+          "substantive:evidence": 1,
+          "critical:party": 2,
+          "substantive:decision": 1
+        },
+        "outcomes": {
+          "pass": 3,
+          "fail": 5,
+          "ungraded": 15,
+          "candidate": 1
+        }
+      },
+      {
+        "id": "gpt-5.6-luna",
+        "planned": 24,
+        "graded": 1,
+        "passed": 1,
+        "complete": false,
+        "strictSuccessRate": null,
+        "criticalGatePassRate": 1,
+        "candidateUsd": 0.04248426,
+        "judgeUsd": 0.032483870000000005,
+        "latencyP50Ms": 4532,
+        "failureCategories": {
+          "candidate-failure": 16,
+          "completed": 7
+        },
+        "outcomes": {
+          "pass": 1,
+          "fail": 0,
+          "ungraded": 7,
+          "candidate": 16
+        }
+      }
+    ]
+  },
+  {
+    "partition": "Documents · held-out",
+    "experimentId": "v0.1-documents-held-out-20261005033354-f5ef461c",
+    "report": "results/experiments/v0.1-documents-held-out-20261005033354-f5ef461c/reports/report-20261005035802.json",
+    "configurations": [
+      {
+        "id": "gpt-6-luna",
+        "planned": 24,
+        "graded": 4,
+        "passed": 3,
+        "complete": false,
+        "strictSuccessRate": null,
+        "criticalGatePassRate": 1,
+        "candidateUsd": 0.053592320000000006,
+        "judgeUsd": null,
+        "latencyP50Ms": 18840,
+        "failureCategories": {
+          "completed": 17,
+          "substantive:evidence": 1,
+          "candidate-failure": 3
+        },
+        "outcomes": {
+          "pass": 3,
+          "fail": 1,
+          "ungraded": 17,
+          "candidate": 3
+        }
+      },
+      {
+        "id": "gpt-5.6-luna",
+        "planned": 24,
+        "graded": 1,
+        "passed": 1,
+        "complete": false,
+        "strictSuccessRate": null,
+        "criticalGatePassRate": 1,
+        "candidateUsd": 0.05234647999999999,
+        "judgeUsd": 0.05899248,
+        "latencyP50Ms": 4594,
+        "failureCategories": {
+          "candidate-failure": 15,
+          "completed": 8
+        },
+        "outcomes": {
+          "pass": 1,
+          "fail": 0,
+          "ungraded": 8,
+          "candidate": 15
+        }
+      }
+    ]
+  }
+]

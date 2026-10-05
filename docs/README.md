@@ -27,6 +27,11 @@ authored later stays draft until a new review is recorded.
 | [Reporting](reporting.md)                       | Reports, denominators, compatible paired comparisons, safe exports and offline/paid CI                         |
 | [Reading reports](reading-reports.md)           | How to read the HTML report: tiles, charts, configuration cards, trial cards and safe interpretation           |
 | [Royal Eve staging](eve-staging.md)             | Composed-agent staging profile, credentials, nested traces, durable evidence import and limits                 |
+| [v0.1 results](results-v0.1.md)                 | Baseline outcomes, charts, measurement-quality findings and limits                                             |
+| [Baselines](baselines.md)                       | The two v0.1 candidate configurations, experiments, budgets and weakened controls                              |
+| [Judge calibration](calibration.md)             | Labelling set, provisional labels, judge agreement and disagreement analysis                                   |
+| [Release checklist](release-checklist.md)       | Fresh checkout, frozen scope, profile prerequisites, regrading and privacy                                     |
+| [Roadmap](roadmap.md)                           | Deferred workflow families, OCR/vision, document authoring and public portability                              |
 | [Semantic grading](semantic-grading.md)         | Scoped judges, preserved disagreements, offline replay and pending real calibration                            |
 | [Issue closeout](issue-closeout.md)             | Completed checkpoints and outstanding work consolidated into issue #21                                         |
 | [Measurement specification](benchmark-spec.md)  | Domain, profiles, success definition, denominators, comparison rules and planned scope                         |
