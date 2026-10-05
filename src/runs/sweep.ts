@@ -10,7 +10,8 @@ import type { Config } from '#src/config';
 import { redact } from '#src/config';
 import { discover } from '#tasks/discover';
 import { validateTask } from '#tasks/validate';
-import { DocumentWorkspace } from '#src/environments/documents';
+import { DocumentWorkspace, toolVersions } from '#src/environments/documents';
+import { ProfileSchema } from '#contracts/profile';
 import { VerificationPlanSchema } from '#src/grading/verification';
 import { runCandidate } from '#src/harness/loop';
 import { jsonText, readScoped, sha256 } from '#src/io';
@@ -80,9 +81,14 @@ export function documentTrialExecutor(
     await writeFile(path.join(directory, 'grading-inputs.json'), jsonText(snapshot), {
       flag: 'wx',
     });
+    // Tool contracts come from the profile the frozen plan hashed.
+    const profile = ProfileSchema.parse(
+      JSON.parse((await readScoped(root, 'profiles/documents.json')).toString('utf8')),
+    );
     const workspace = await DocumentWorkspace.create(root, task, path.join(directory, 'outputs'), {
       ...(binaryParser ? { binaryParser } : {}),
       evidenceRoot: directory,
+      toolVersions: toolVersions(profile.tools),
     });
     const adapter = await adapters(configuration);
     if (mode === 'offline-control' && adapter.executionMode !== 'offline-control')

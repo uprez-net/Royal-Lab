@@ -7,7 +7,7 @@ import { ResultSchema, type CaseResult } from '#contracts/result';
 import { TraceEventSchema, type TraceEvent } from '#contracts/trace';
 import type { CandidateAdapter } from '#src/harness/adapters/base';
 import { Usage, BudgetError, knownTokens, type Pricing } from '#src/harness/usage';
-import { DOCUMENT_TOOL_SCHEMAS, type DocumentWorkspace } from '#src/environments/documents';
+import type { DocumentWorkspace } from '#src/environments/documents';
 import { sha256, jsonText } from '#src/io';
 import { stableJson } from '#src/environments/session';
 
@@ -62,7 +62,7 @@ export async function runCandidate(options: CandidateRunOptions): Promise<CaseRe
   const usage = new Usage(task.limits, options.pricing);
   const operationCallId = (raw: string) => callId(`${usage.turns}:${raw}`);
   options.attachTrace?.(emit);
-  const schemas: Record<string, z.ZodType> = options.schemas ?? DOCUMENT_TOOL_SCHEMAS;
+  const schemas: Record<string, z.ZodType> = options.schemas ?? options.workspace.schemas;
   const tools: ToolSet = Object.create(null);
   const attempted = new Set<string>();
   let executions = 0;

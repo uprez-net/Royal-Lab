@@ -11,7 +11,7 @@ import {
 import { JudgeProfileSchema } from '#contracts/judge';
 import { discover } from '#tasks/discover';
 import { preflight, validateTask } from '#tasks/validate';
-import { DOCUMENT_TOOL_SCHEMAS } from '#src/environments/documents';
+import { documentToolSchemas, toolVersions } from '#src/environments/documents';
 import { readJson, readScoped, securePath, sha256 } from '#src/io';
 import { stableJson } from '#src/environments/session';
 import { estimateSpend } from '#runs/budget';
@@ -160,7 +160,7 @@ export async function planExperiment(
   const toolSchemas =
     profile.id === 'documents'
       ? Object.fromEntries(
-          Object.entries(DOCUMENT_TOOL_SCHEMAS).map(([name, schema]) => [
+          Object.entries(documentToolSchemas(toolVersions(profile.tools))).map(([name, schema]) => [
             name,
             z.toJSONSchema(schema),
           ]),

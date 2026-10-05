@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.0.0",
   "id": "documents",
-  "version": "1.1.0",
-  "description": "Closed evidence and JSON/Markdown deliverables",
+  "version": "1.2.0",
+  "description": "Closed evidence and JSON/Markdown deliverables. 1.2.0 provides read 1.1.0 (up to 1000 units per call, still capped at 12,000 characters per response with a cursor), after read calls over 100 lines ended most gpt-5.6-luna trials in the first v0.1 run.",
   "tools": [
     {
       "name": "list",
@@ -10,7 +10,7 @@
     },
     {
       "name": "read",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "search",

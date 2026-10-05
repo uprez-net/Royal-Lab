@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { redact, type Config } from '#src/config';
 import { discover } from '#tasks/discover';
 import { preflight, validateTask } from '#tasks/validate';
-import { DocumentWorkspace, DOCUMENT_TOOL_SCHEMAS } from '#src/environments/documents';
+import { DocumentWorkspace, toolVersions } from '#src/environments/documents';
 import { VerificationPlanSchema } from '#src/grading/verification';
 import { runCandidate } from '#src/harness/loop';
 import { RunManifestSchema, type CaseResult } from '#contracts/result';
@@ -84,6 +84,7 @@ export async function executeDocumentTrial(
     const workspace = await DocumentWorkspace.create(root, task, path.join(directory, 'outputs'), {
       ...(config.binaryParser ? { binaryParser: config.binaryParser } : {}),
       evidenceRoot: directory,
+      toolVersions: toolVersions(readiness.profile.tools),
     });
     const systemPrompt = await readFile(
       fileURLToPath(new URL('../harness/prompts/documents.txt', import.meta.url)),
@@ -134,7 +135,7 @@ export async function executeDocumentTrial(
     const toolSchemas = Object.fromEntries(
       task.tools.map((tool) => [
         tool.name,
-        z.toJSONSchema(DOCUMENT_TOOL_SCHEMAS[tool.name as keyof typeof DOCUMENT_TOOL_SCHEMAS]),
+        z.toJSONSchema(workspace.schemas[tool.name as keyof typeof workspace.schemas]),
       ]),
     );
     const manifest = RunManifestSchema.parse({

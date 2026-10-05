@@ -14,38 +14,65 @@ import { readBinary, type BinaryParser } from '#src/documents/readers/binary';
 import { readScoped, securePath, sha256, jsonText } from '#src/io';
 import { writeOutput } from '#src/environments/path-policy';
 
-export const DOCUMENT_TOOL_SCHEMAS = {
-  list: z.strictObject({}),
-  read: z.strictObject({
-    path: RelativePath,
-    start: z.number().int().nonnegative().default(0),
-    offset: z.number().int().nonnegative().default(0),
-    count: z.number().int().min(1).max(100).default(30),
-  }),
-  search: z.strictObject({
-    query: z.string().min(1).max(200),
-    path: RelativePath.optional(),
-    limit: z.number().int().min(1).max(30).default(20),
-  }),
-  write: z.strictObject({ path: RelativePath, content: z.string() }),
+// Tool contracts by version. read 1.1.0 accepts every 1.0.0 call unchanged and
+// allows up to 1000 units per call; each response is still capped at
+// READER_LIMITS.readCharacters and returns a cursor for the rest.
+const READ_MAX_UNITS: Record<string, number> = { '1.0.0': 100, '1.1.0': 1000 };
+export const DOCUMENT_TOOL_VERSIONS: Record<string, string[]> = {
+  list: ['1.0.0'],
+  read: Object.keys(READ_MAX_UNITS),
+  search: ['1.0.0'],
+  write: ['1.0.0'],
 };
+export function documentToolSchemas(versions: Record<string, string> = {}) {
+  const read = versions.read ?? '1.0.0';
+  const maxUnits = READ_MAX_UNITS[read];
+  if (!maxUnits) throw new Error(`TOOL_VERSION_UNSUPPORTED: read@${read}`);
+  return {
+    list: z.strictObject({}),
+    read: z.strictObject({
+      path: RelativePath,
+      start: z.number().int().nonnegative().default(0),
+      offset: z.number().int().nonnegative().default(0),
+      count: z.number().int().min(1).max(maxUnits).default(30),
+    }),
+    search: z.strictObject({
+      query: z.string().min(1).max(200),
+      path: RelativePath.optional(),
+      limit: z.number().int().min(1).max(30).default(20),
+    }),
+    write: z.strictObject({ path: RelativePath, content: z.string() }),
+  };
+}
+export type DocumentToolSchemas = ReturnType<typeof documentToolSchemas>;
+// The 1.0.0 contracts, used wherever no profile selects another version.
+export const DOCUMENT_TOOL_SCHEMAS = documentToolSchemas();
+export const toolVersions = (tools: readonly { name: string; version: string }[]) =>
+  Object.fromEntries(tools.map((tool) => [tool.name, tool.version]));
 export class DocumentWorkspace {
   private documents = new Map<string, NormalizedDocument>();
   private outputSizes = new Map<string, number>();
   private constructor(
     readonly task: Task,
     readonly outputRoot: string,
+    readonly schemas: DocumentToolSchemas,
   ) {}
   static async create(
     root: string,
     task: Task,
     outputRoot: string,
-    options: { binaryParser?: BinaryParser; evidenceRoot?: string } = {},
+    options: {
+      binaryParser?: BinaryParser;
+      evidenceRoot?: string;
+      // The executing profile's tool versions; 1.0.0 contracts when omitted.
+      toolVersions?: Record<string, string>;
+    } = {},
   ) {
     await mkdir(outputRoot, { recursive: true });
     const workspace = new DocumentWorkspace(
       task,
       await securePath(path.dirname(outputRoot), path.basename(outputRoot)),
+      documentToolSchemas(options.toolVersions),
     );
     const directory = await securePath(root, `tasks/${task.id}`);
     for (const input of task.inputs) {
@@ -91,9 +118,9 @@ export class DocumentWorkspace {
     return [...this.documents.values()];
   }
   async execute(name: string, arguments_: unknown): Promise<unknown> {
-    if (!Object.hasOwn(DOCUMENT_TOOL_SCHEMAS, name)) throw new Error(`TOOL_UNKNOWN: ${name}`);
+    if (!Object.hasOwn(this.schemas, name)) throw new Error(`TOOL_UNKNOWN: ${name}`);
     if (name === 'list') {
-      DOCUMENT_TOOL_SCHEMAS.list.parse(arguments_);
+      this.schemas.list.parse(arguments_);
       return [...this.documents.values()].map((doc) => ({
         id: doc.id,
         path: doc.path,
@@ -103,7 +130,7 @@ export class DocumentWorkspace {
       }));
     }
     if (name === 'read') {
-      const args = DOCUMENT_TOOL_SCHEMAS.read.parse(arguments_);
+      const args = this.schemas.read.parse(arguments_);
       const doc = this.documents.get(args.path);
       if (!doc) throw new Error('INPUT_DENIED: source is not allowlisted');
       const units = [];
@@ -142,7 +169,7 @@ export class DocumentWorkspace {
       };
     }
     if (name === 'search') {
-      const args = DOCUMENT_TOOL_SCHEMAS.search.parse(arguments_);
+      const args = this.schemas.search.parse(arguments_);
       if (args.path && !this.documents.has(args.path))
         throw new Error('INPUT_DENIED: source is not allowlisted');
       const matches = [];
@@ -166,7 +193,7 @@ export class DocumentWorkspace {
       }
       return { matches, limited: false };
     }
-    const args = DOCUMENT_TOOL_SCHEMAS.write.parse(arguments_);
+    const args = this.schemas.write.parse(arguments_);
     const size = Buffer.byteLength(args.content);
     if (
       size > READER_LIMITS.outputBytes ||

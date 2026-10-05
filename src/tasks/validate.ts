@@ -120,6 +120,15 @@ async function validateAuthored(directory: string, task: Task, rubric: Rubric) {
         );
   return { controls, environment };
 }
+// A task declares the tool contract it was authored against. A profile may
+// provide that version or a later minor of the same major, which accepts every
+// call the declared version accepts; the profile's own toolSchemaHash records
+// exactly what ran.
+export function compatibleTool(provided: string, declared: string) {
+  const [pMajor, pMinor] = provided.split('.').map(Number);
+  const [dMajor, dMinor] = declared.split('.').map(Number);
+  return pMajor === dMajor && (pMinor! > dMinor! || provided === declared);
+}
 export async function validateTask(root: string, task: Task): Promise<ValidatedTask> {
   const directory = await securePath(root, `tasks/${task.id}`);
   unique(
@@ -305,7 +314,11 @@ export async function preflight(
       const world = WorldSchema.parse(await readJson(await securePath(root, fixture.worldPath)));
       if (world.split !== suite.split) throw new Error('Case world belongs to a different split');
       for (const tool of selected.task.tools) {
-        if (!profile.tools.some((t) => t.name === tool.name && t.version === tool.version))
+        if (
+          !profile.tools.some(
+            (t) => t.name === tool.name && compatibleTool(t.version, tool.version),
+          )
+        )
           throw new Error(`Unsupported tool/version: ${tool.name}@${tool.version}`);
       }
       if (

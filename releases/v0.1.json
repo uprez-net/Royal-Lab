@@ -257,7 +257,8 @@
   "profiles": {
     "documents": {
       "file": "profiles/documents.json",
-      "sha256": "bbd7ceabe1d937c36ca851a1b422e61e327aadeb1bf2e6dfdac0f0e685b45ac5"
+      "sha256": "6229d634353eba5c64e15bcaab606b38d0fe2bc1c66b17dca273c77e1608df1f",
+      "version": "1.2.0"
     },
     "fixed-tools": {
       "file": "profiles/fixed-tools.json",
@@ -268,11 +269,11 @@
   "experiments": [
     {
       "file": "experiments/v0.1-documents-development.json",
-      "sha256": "b8150cded94067f67b99db928d7a34849f4002532514dc7d068870da870a95f5"
+      "sha256": "b3051a8980f0c4bc8ef64cee1f9e52d8e34dca5331bbe6c8f183ebb17dac2133"
     },
     {
       "file": "experiments/v0.1-documents-held-out.json",
-      "sha256": "cf2bd3269b4854b9b67d5c6cd3b6bef4d2ab7eb025e6bff21c4d40daa128f5d5"
+      "sha256": "a7671bc3c0ccd180b03c9b697ec9377b37f4dc5cf35801cc6c620c252e269960"
     },
     {
       "file": "experiments/v0.1-tools-development.json",
@@ -282,5 +283,8 @@
       "file": "experiments/v0.1-tools-held-out.json",
       "sha256": "1903f3b99b32f5f0e06b534bc087fec8ddad58b2c9e0382a3c3f870aaaee5528"
     }
+  ],
+  "notes": [
+    "Documents profile 1.2.0 (read 1.1.0) replaced 1.1.0 after the first documents run, at the owner's decision; the 1.1.0 results are kept in docs/results-v0.1.md as the first pass."
   ]
 }
