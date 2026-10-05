@@ -2,8 +2,11 @@ name: Paid benchmark (manual, bounded)
 # Explicit dispatch only. Never runs on push or pull_request. Requires the
 # `paid-benchmark` environment (main only; required reviewers are not available
 # on the current private plan), private credentials, a typed confirmation and
-# separate candidate/judge spend caps. Documents profile only: no
-# production, staging or Royal Eve target is reachable from this workflow.
+# separate candidate/judge spend caps. Documents and fixed-tools profiles only:
+# no production, staging or Royal Eve target is reachable from this workflow.
+# Fixed-tools trials use the repository's disposable Compose PostgreSQL and a
+# read-only checkout of the pinned Royal-Construction source for the bridge
+# (ROYAL_CONSTRUCTION_READ_TOKEN, an environment secret with read access only).
 on:
   workflow_dispatch:
     inputs:
@@ -56,12 +59,14 @@ jobs:
           [[ "$MAX_CANDIDATE_USD" =~ ^[0-9]+(\.[0-9]+)?$ ]] || { echo "Invalid cap"; exit 1; }
           [[ "$MAX_JUDGE_USD" =~ ^[0-9]+(\.[0-9]+)?$ ]] || { echo "Invalid judge cap"; exit 1; }
       - name: Dry run and spend bound check (no request)
+        id: plan
         run: |
           node --conditions=development --import tsx src/cli.ts plan --experiment "$EXPERIMENT" --json > "$RUNNER_TEMP/plan.json"
           node -e '
             const plan = JSON.parse(require("fs").readFileSync(process.env.RUNNER_TEMP + "/plan.json", "utf8"));
             const cap = Number(process.env.MAX_CANDIDATE_USD);
-            if (plan.suite.profile !== "documents") throw new Error("Only the documents profile runs here");
+            if (!["documents", "fixed-tools"].includes(plan.suite.profile))
+              throw new Error("Only the documents and fixed-tools profiles run here");
             if (!plan.preflight.valid) throw new Error("Run preflight failed");
             if (plan.estimate.boundedCandidateUsd > cap || plan.spec.budget.totalCandidateUsd > cap)
               throw new Error("Bounded spend exceeds the dispatch cap");
@@ -75,7 +80,32 @@ jobs:
               if (!(c.pricing.inputUsdPerMillion > 0 && c.pricing.outputUsdPerMillion > 0))
                 throw new Error(`Placeholder (zero) pricing for ${c.id}`);
             console.log(`Planned ${plan.trials.length} trials; bounded $${plan.estimate.boundedCandidateUsd}`);
+            require("fs").appendFileSync(process.env.GITHUB_OUTPUT, "profile=" + plan.suite.profile + "\n");
           '
+      - name: Read the pinned bridge revision
+        if: steps.plan.outputs.profile == 'fixed-tools'
+        id: pin
+        run: echo "revision=$(node -p 'require("./profiles/fixed-tools.json").guriRevision')" >> "$GITHUB_OUTPUT"
+      - name: Check bridge source access
+        if: steps.plan.outputs.profile == 'fixed-tools'
+        env:
+          READ_TOKEN: ${{ secrets.ROYAL_CONSTRUCTION_READ_TOKEN }}
+        run: '[[ -n "$READ_TOKEN" ]] || { echo "ROYAL_CONSTRUCTION_READ_TOKEN is not set for the paid-benchmark environment"; exit 1; }'
+      # Read-only, detached at the pin; the bridge never changes product files.
+      - uses: actions/checkout@v7.0.1
+        if: steps.plan.outputs.profile == 'fixed-tools'
+        with:
+          repository: uprez-net/Royal-Construction
+          ref: ${{ steps.pin.outputs.revision }}
+          path: .guri
+          token: ${{ secrets.ROYAL_CONSTRUCTION_READ_TOKEN }}
+          persist-credentials: false
+      - name: Disposable database and bridge
+        if: steps.plan.outputs.profile == 'fixed-tools'
+        run: |
+          docker compose up -d --wait
+          pnpm -s lab bridge prepare --config config/bridge.example.json
+          pnpm -s lab bridge check --config config/bridge.example.json
       - name: Sweep (paid, bounded)
         env:
           ROYAL_LAB_CANDIDATE_A_KEY: ${{ secrets.ROYAL_LAB_CANDIDATE_A_KEY }}
@@ -85,7 +115,12 @@ jobs:
         # checkout and show any stray change before the paid step.
         run: |
           git status --porcelain --untracked-files=all
-          pnpm -s lab sweep --experiment "$EXPERIMENT" --allow-paid
+          if [[ "${{ steps.plan.outputs.profile }}" == "fixed-tools" ]]; then
+            export ROYAL_LAB_CONTROL_URL="postgresql://royal_lab:royal-lab-disposable-only@127.0.0.1:55432/royal_lab_control"
+            pnpm -s lab sweep --experiment "$EXPERIMENT" --allow-paid --control-url-env ROYAL_LAB_CONTROL_URL
+          else
+            pnpm -s lab sweep --experiment "$EXPERIMENT" --allow-paid
+          fi
       - name: Offline reports
         if: always()
         run: |
