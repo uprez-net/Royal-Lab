@@ -27,11 +27,10 @@ Everything is written in plain language. Spreadsheets show as tables, emails as
 emails, and markdown as formatted text. Evidence reads like "the estimate
 workbook, row 8". Technical detail sits in optional sections.
 
-The site is published to GitHub Pages by `.github/workflows/review-desk-pages.yml`,
-which uploads only `site/review-desk`. It goes to
-`https://uprez-net.github.io/Royal-Lab/` once Pages is enabled for this
-repository. The page holds no content, answers or credentials. Task content and
-answers live in private Vercel Blob:
+**Live at [uprez-net.github.io/Royal-Lab](https://uprez-net.github.io/Royal-Lab/)**
+(reviewers need a personal link to open it). `.github/workflows/review-desk-pages.yml`
+publishes only `site/review-desk` on every change to it. The page holds no content,
+answers or credentials. Task content and answers live in private Vercel Blob:
 
 1. `pnpm review-desk:content` builds the reviewer-visible content from the
    repository and uploads it to `content/desk.json`. Re-run it after packs change.
