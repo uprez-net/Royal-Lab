@@ -14,6 +14,24 @@ T01–T12 adapters are implemented. Human business review, actual judge calibrat
 and paid baseline runs remain pending; there are no model scores. The D13–D16
 analytics cases (#20) use visible policy 1.2.0.
 
+## Reviewer forms
+
+**[Builder Review Desk](https://claude.ai/artifact/HDZsjZJYsxRkkUf9y5iPXt)** is a
+private page on claude.ai where other builders and reviewers:
+
+- label the 16 calibration answers blind,
+- review any of the 52 task packs, and
+- propose new tasks with made-up details.
+
+Share it from the page's Share menu. Invite people in your organization as
+Contributor. Invite people outside it as Editor, or they can't save.
+
+Each reviewer's answers sit under `subs/<their id>`, which only the page owner can
+read. Other reviewers and editors never see them. The pack and example content is
+loaded by `scripts/review-desk-seed.mjs`; re-run it and re-load the data when packs
+change. A submission is input, not a recorded review. Labels still go through
+`pnpm lab calibration-record`, and pack reviews go through `src/fixtures/reviews.ts`.
+
 ## Start
 
 Read the [documentation guide](docs/README.md),
