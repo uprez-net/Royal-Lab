@@ -744,6 +744,15 @@ async function sweepJudge(root: string, plan: import('#contracts/experiment').Ex
   return {
     profile,
     credentials: Object.fromEntries(profile.judges.map((judge) => [judge.id, key])),
+    // A release profile grades only with the calibration pack its hash binds.
+    ...(profile.purpose === 'release'
+      ? {
+          calibration: {
+            directory: root,
+            file: `fixtures/judge-calibration/calibration-${profile.id}.json`,
+          },
+        }
+      : {}),
   };
 }
 function summarizeOutcome(

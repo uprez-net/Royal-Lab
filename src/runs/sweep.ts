@@ -113,6 +113,8 @@ export interface SweepJudge {
   profile: JudgeProfile;
   credentials: Record<string, string>;
   fetch?: typeof globalThis.fetch;
+  // Release profiles grade only with their hash-bound calibration pack.
+  calibration?: { directory: string; file: string };
 }
 export interface SweepOptions {
   allowPaid: boolean;
@@ -339,6 +341,7 @@ export async function gradeTrial(
             profile: semantic.profile,
             credentials: semantic.credentials,
             allowPaid: mode === 'benchmark',
+            ...(semantic.calibration ? { calibration: semantic.calibration } : {}),
             ...(mode === 'offline-control'
               ? { mode: 'offline-control' as const, fetch: semantic.fetch! }
               : {}),
