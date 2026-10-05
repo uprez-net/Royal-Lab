@@ -216,3 +216,24 @@ inspected result, and only then can the release profile carry its hash.
 
 A profile pins one version. Each receipt stores the exact prompt text and hash,
 so receipts under either version keep verifying.
+
+## Recorded calibration (2026-10-05): provisional AI-proxy labels
+
+`fixtures/judge-calibration/labels-provisional-ai-proxy.json` labels all 16
+examples. **These are not a human review.** At the project owner's explicit
+instruction, Claude Opus 5.5 wrote them by role-playing the NSW builder owner,
+so an initial benchmark could run before human labels exist. The reviewer
+field and every example note say so. Gurpinder Uppal did not give or see them.
+
+- `release-deepseek-qwen` 1.3.0 (CI run 37179452247): both judges match all 16
+  labels, with no disagreement, judge error or adjudication. The owner approved
+  the pack, and the profile now carries its hash
+  (`calibration-release-deepseek-qwen.json`).
+- `release-deepseek-minimax` 1.1.0 (CI run 37179453746): 12 of 16 match. On
+  `missing-issue-a`, `wrong-amount-b`, `alternate-wording-a` and
+  `prompt-injection-d`, minimax's raw verdict was pass, which matches the
+  label, but it cited no evidence, so the verdict became `error`. The pack
+  stays draft and the profile stays unbound.
+
+Scores from the qwen pair rest on these provisional labels. Re-record against
+human reviewer labels, then re-approve, before relying on release scores.
